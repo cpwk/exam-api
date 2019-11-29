@@ -3,7 +3,9 @@ package com.yang.exam.api.question.controller;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import com.yang.exam.api.question.service.QuestionService;
+import com.yang.exam.commons.controller.Action;
 import com.yang.exam.commons.controller.BaseController;
+import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,23 +25,27 @@ public class QuestionController extends BaseController {
     private QuestionService questionService;
 
     @RequestMapping(value = "/save")
+    @Action(session = SessionType.ADMIN)
     public ModelAndView save(String question) throws Exception {
         questionService.save(parseModel(question, new Question()));
         return feedback();
     }
 
     @RequestMapping(value = "/delete")
+    @Action(session = SessionType.ADMIN)
     public ModelAndView delete(Integer id) throws Exception {
         questionService.delete(id);
         return feedback();
     }
 
     @RequestMapping(value = "/question")
+    @Action(session = SessionType.ADMIN)
     public ModelAndView question(Integer id) throws Exception {
         return feedback(questionService.getById(id));
     }
 
     @RequestMapping(value = "question_list")
+    @Action(session = SessionType.ADMIN)
     public ModelAndView question_list(String questionQo) throws Exception {
         return feedback(questionService.question_list(parseModel(questionQo, new QuestionQo())));
     }

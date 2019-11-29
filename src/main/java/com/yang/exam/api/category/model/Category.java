@@ -1,6 +1,7 @@
 package com.yang.exam.api.category.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author: yangchengcheng
@@ -30,6 +31,8 @@ public class Category {
     private Long createdAt;
     @Column
     private Long updatedAt;
+    @Transient
+    private List<Category> children;
 
     public Category() {
     }
@@ -96,5 +99,13 @@ public class Category {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public List<Category> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Category> children) {
+        this.children = children;
     }
 }

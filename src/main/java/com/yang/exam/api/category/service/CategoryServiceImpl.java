@@ -1,14 +1,17 @@
 package com.yang.exam.api.category.service;
 
 import com.yang.exam.api.category.model.Category;
+import com.yang.exam.api.category.model.CategoryError;
+import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.api.category.repository.CategoryRepository;
 import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.yang.exam.commons.exception.ErrorCode.ERR_DATA_NOT_FOUND;
 
 /**
  * @author: yangchengcheng
@@ -17,14 +20,16 @@ import static com.yang.exam.commons.exception.ErrorCode.ERR_DATA_NOT_FOUND;
  */
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryService, CategoryError {
+
+    private static final int FATHER = 0;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> category_list() throws Exception {
-        return categoryRepository.findAll();
+    public Page<Category> category_list(CategoryQo qo) throws Exception {
+        return categoryRepository.findAll(qo);
     }
 
     @Override
@@ -34,6 +39,12 @@ public class CategoryServiceImpl implements CategoryService {
             category.setUpdatedAt(System.currentTimeMillis());
         } else {
             category.setUpdatedAt(System.currentTimeMillis());
+        }
+        if (StringUtils.isEmpty(category.getName())
+                && category.getpId() == null
+                && category.getPriority() == null
+                && category.getStatus() == null) {
+            throw new ServiceException(ERR_COMPLETE_EMPTY);
         }
         categoryRepository.save(category);
         this.categoryRepository.save(category);
@@ -64,4 +75,56 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByPId(id);
     }
 
+    @Override
+    public List<Category> father() throws Exception {
+        List<Category> category = categoryRepository.findAll();
+        List<Category> cat = new ArrayList<>();
+        for (Category v : category) {
+            if (v.getpId().equals(FATHER)) {
+                cat.add(v);
+            }
+            List<Category> cate = new ArrayList<>();
+            for (Category va : category) {
+                if (v.getId().equals(va.getpId())) {
+                    cate.add(va);
+                }
+                List<Category> categ = new ArrayList<>();
+                for (Category val : category) {
+                    if (va.getId().equals(val.getpId())) {
+                        categ.add(val);
+                        va.setChildren(categ);
+                    }
+                }
+                v.setChildren(cate);
+            }
+        }
+        return cat;
+    }
 }
+
+
+//    @Override
+//    public List<Category> father() throws Exception {
+//        List<Category> category = categoryRepository.findAll();
+//        List<Category> cat = new ArrayList<>();
+//        for (Category v : category) {
+//            if (v.getpId().equals(FATHER)) {
+//                cat.add(v);
+//            }
+//            List<Category> cate = new ArrayList<>();
+//            for (Category va : category) {
+//                if (v.getId().equals(va.getpId())) {
+//                    cate.add(va);
+//                }
+//                List<Category> categ = new ArrayList<>();
+//                for (Category val : category) {
+//                    if (va.getId().equals(val.getpId())) {
+//                        categ.add(val);
+//                        va.setChildren(categ);
+//                    }
+//                }
+//                v.setChildren(cate);
+//            }
+//        }
+//        return cat;
+//    }

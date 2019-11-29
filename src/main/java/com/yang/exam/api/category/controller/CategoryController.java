@@ -1,6 +1,7 @@
 package com.yang.exam.api.category.controller;
 
 import com.yang.exam.api.category.model.Category;
+import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.commons.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class CategoryController extends BaseController {
     private CategoryService categoryService;
 
     @RequestMapping(value = "/category_list")
-    public ModelAndView category_list() throws Exception {
-        return feedback(categoryService.category_list());
+    public ModelAndView category_list(String categoryQo) throws Exception {
+        return feedback(categoryService.category_list(parseModel(categoryQo, new CategoryQo())));
     }
 
     @RequestMapping(value = "/save")
@@ -46,5 +47,10 @@ public class CategoryController extends BaseController {
     @RequestMapping(value = "/course")
     public ModelAndView course(Integer id) throws Exception {
         return feedback(categoryService.course(id));
+    }
+
+    @RequestMapping(value = "/father")
+    public ModelAndView father() throws Exception {
+        return feedback(categoryService.father());
     }
 }

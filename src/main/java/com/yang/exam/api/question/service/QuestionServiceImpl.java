@@ -1,5 +1,7 @@
 package com.yang.exam.api.question.service;
 
+import com.yang.exam.api.category.model.Category;
+import com.yang.exam.api.category.repository.CategoryRepository;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.model.QuestionError;
 import com.yang.exam.api.question.qo.QuestionQo;
@@ -25,12 +27,16 @@ import java.util.*;
 @Service
 public class QuestionServiceImpl implements QuestionService, QuestionError {
 
+    private static final byte STATUS = 2;
+
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private QuestionTagRepository questionTagRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
 
     @Override
@@ -48,7 +54,11 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
 
     @Override
     public void delete(Integer id) throws Exception {
-        questionRepository.deleteById(id);
+        Question exist = questionRepository.findById(id).get();
+        if (exist.getId() != null) {
+            exist.setStatus(STATUS);
+        }
+        save(exist);
     }
 
     @Override
@@ -65,9 +75,9 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         return question;
     }
 
+
     @Override
     public Page<Question> question_list(QuestionQo qo) throws Exception {
-
         Page<Question> questions = questionRepository.findAll(qo);
         Set<Integer> tagIds = new HashSet<>();
         for (Question q : questions) {
@@ -78,8 +88,14 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         for (Tag tag : tags) {
             tagMap.put(tag.getId(), tag);
         }
+        List<Category> categoryList = categoryRepository.findAll();
         List<Tag> tags1;
         for (Question qu : questions) {
+            for (Category c : categoryList) {
+                if (qu.getCategoryId().equals(c.getId())) {
+                    qu.setCategoryName(c);
+                }
+            }
             tags1 = new ArrayList<>(qu.getTagsId().size());
             for (Integer id : qu.getTagsId()) {
                 tags1.add(tagMap.get(id));
@@ -89,13 +105,12 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         return questions;
     }
 
-
     private void dataCheck(Question question) {
         if (StringUtils.isEmpty(question.getTopic())
                 && question.getCategoryId() == null
                 && question.getType() == null
                 && StringUtils.isEmpty(question.getAnswer())
-                && StringUtils.isEmpty(question.getDifficulty())) {
+                && question.getDifficulty() == null) {
             throw new ServiceException(ERR_COMPLETE_EMPTY);
         }
     }
@@ -111,3 +126,49 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
 
 
 }
+
+//    Page<Question> questions = questionRepository.findAll(qo);
+//    List<Tag> tags = tagRepository.findAll();
+//    List<Tag> tags1;
+//        for (Question qu : questions) {
+//                tags1 = new ArrayList<>(qu.getTagsId().size());
+//        for (Tag tag : tags) {
+//        for (Integer tagsId : qu.getTagsId()) {
+//        if (tagsId.equals(tag.getId())) {
+//        tags1.add(tag);
+//        qu.setTag(tags1);
+//        }
+//        }
+//        }
+//        }
+//        return questions;
+
+
+//    @Override
+//    public List<Category> categorys(CategoryQo categoryQo) {
+//        List<Category> categories =categoryRepository.findAll(categoryQo);
+//        List<Category> categories1 =new ArrayList<>();
+//        for (Category c:categories){
+//            if (c.getParentId()==0){
+//                c.setChildren(getChildren(c,categories));
+//                categories1.add(c);
+//            }
+//        }
+//        return categories1;
+//    }
+//
+//    private List<Category> getChildren(Category category,List<Category> all){
+//        List<Category> result = new ArrayList<>();
+//        for(Category c:all){
+//            if(category.getId().equals(c.getParentId())){
+//                result.add(c);
+//            }
+//        }
+//        if(result.size() == 0){
+//            return null;
+//        }
+//        for(Category c:result){
+//            c.setChildren(getChildren(c,all));
+//        }
+//        return result;
+//    }

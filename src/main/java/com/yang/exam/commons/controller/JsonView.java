@@ -1,4 +1,4 @@
-package com.chen.answerapi.commons.controller;
+package com.yang.exam.commons.controller;
 
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -21,6 +21,6 @@ public class JsonView extends AbstractView {
                                            HttpServletResponse response) throws Exception {
         response.setContentType("application/json; charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
-        response.getWriter().write(JsonSerializeManager.serialize(result));
+        response.getWriter().write(com.yang.exam.commons.controller.JsonSerializeManager.serialize(result));
     }
 }

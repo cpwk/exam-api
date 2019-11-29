@@ -1,11 +1,12 @@
 package com.yang.exam.api.question.model;
 
+import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.tag.model.Tag;
 import com.yang.exam.commons.converter.IntegerArrayConverter;
+import com.yang.exam.commons.converter.StringArrayConverter;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author: yangchengcheng
@@ -26,20 +27,27 @@ public class Question {
     @Column
     private Integer categoryId;
     @Column
-    private Integer type;
+    private Byte type;
     @Column
     private String answer;
     @Column
-    private String difficulty;
+    private Byte difficulty;
     @Convert(converter = IntegerArrayConverter.class)
     @Column
     private List<Integer> tagsId;
+    @Column
+    private Byte status;
+    @Convert(converter = StringArrayConverter.class)
+    @Column
+    private List<String> options;
     @Column
     private Long createdAt;
     @Column
     private Long updatedAt;
     @Transient
     private List<Tag> tag;
+    @Transient
+    private Category categoryName;
 
     public Question() {
     }
@@ -68,12 +76,20 @@ public class Question {
         this.categoryId = categoryId;
     }
 
-    public Integer getType() {
+    public Byte getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(Byte type) {
         this.type = type;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     public String getAnswer() {
@@ -84,11 +100,11 @@ public class Question {
         this.answer = answer;
     }
 
-    public String getDifficulty() {
+    public Byte getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(String difficulty) {
+    public void setDifficulty(Byte difficulty) {
         this.difficulty = difficulty;
     }
 
@@ -122,5 +138,21 @@ public class Question {
 
     public void setTag(List<Tag> tag) {
         this.tag = tag;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
+
+    public Category getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(Category categoryName) {
+        this.categoryName = categoryName;
     }
 }

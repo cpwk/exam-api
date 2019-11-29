@@ -1,6 +1,8 @@
 package com.yang.exam.api.category.service;
 
 import com.yang.exam.api.category.model.Category;
+import com.yang.exam.api.category.qo.CategoryQo;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,5 +18,7 @@ public interface CategoryService {
 
     List<Category> course(Integer id) throws Exception;
 
-    List<Category> category_list() throws Exception;
+    List<Category> father() throws Exception;
+
+    Page<Category> category_list(CategoryQo qo) throws Exception;
 }
