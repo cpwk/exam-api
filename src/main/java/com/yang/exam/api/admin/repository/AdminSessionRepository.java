@@ -6,5 +6,6 @@ import com.yang.exam.commons.reposiotry.BaseRepository;
 
 public interface AdminSessionRepository extends BaseRepository<AdminSession, Integer> {
 
+    AdminSession findByToken(String token);
 
 }

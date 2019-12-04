@@ -4,6 +4,8 @@ import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @author: yangchengcheng
  * @Date: 2019-11-21 17:04
@@ -20,5 +22,7 @@ public interface QuestionService {
     Question getById(Integer id);
 
     Page<Question> question_list(QuestionQo qo) throws Exception;
+
+    List<Question> findByType(Byte type);
 
 }

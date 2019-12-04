@@ -54,7 +54,7 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
 
     @Override
     public void delete(Integer id) throws Exception {
-        Question exist = questionRepository.findById(id).get();
+        Question exist = findById(id);
         if (exist.getId() != null) {
             exist.setStatus(STATUS);
         }
@@ -124,7 +124,10 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         }
     }
 
-
+    @Override
+    public List<Question> findByType(Byte type) {
+        return questionRepository.findAllByType(type);
+    }
 }
 
 //    Page<Question> questions = questionRepository.findAll(qo);

@@ -7,5 +7,5 @@ package com.yang.exam.commons.controller;
  * @create: 2019-08-16 14:34
  **/
 public enum SessionType {
-    ADMIN, NONE
+    ADMIN, NONE,USER
 }

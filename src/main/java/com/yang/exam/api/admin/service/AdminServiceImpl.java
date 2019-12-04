@@ -6,12 +6,16 @@ import com.yang.exam.api.admin.model.AdminSession;
 import com.yang.exam.api.admin.model.AdminSessionWrapper;
 import com.yang.exam.api.admin.repository.AdminRepostiory;
 import com.yang.exam.api.admin.repository.AdminSessionRepository;
+import com.yang.exam.commons.exception.ArgumentServiceException;
+import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.model.Constants;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import static com.yang.exam.commons.exception.ErrorCode.ERR_SESSION_EXPIRES;
 
 
 @Service
@@ -58,5 +62,30 @@ public class AdminServiceImpl implements AdminService, AdminError {
         session.setExpireAt(now + sessionDays * Constants.DAY_MILLIS);
         adminSessionRepository.save(session);
         return session;
+    }
+
+    @Override
+    public AdminSession findSessionByToken(String token) throws Exception {
+        if (StringUtils.isEmpty(token)) {
+            throw new ServiceException(ERR_SESSION_EXPIRES);
+        }
+        return adminSessionRepository.findByToken(token);
+    }
+
+    @Override
+    public Admin findById(Integer id) throws Exception {
+        return adminRepostiory.findById(id).orElse(null);
+    }
+
+    @Override
+    public Admin getById(Integer id) throws Exception {
+        if (id == null) {
+            throw new ArgumentServiceException("id");
+        }
+        Admin admin = findById(id);
+        if (admin == null) {
+            throw new ServiceException(ErrorCode.ERR_DATA_NOT_FOUND);
+        }
+        return admin;
     }
 }

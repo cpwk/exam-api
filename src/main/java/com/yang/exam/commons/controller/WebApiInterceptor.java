@@ -1,9 +1,16 @@
 package com.yang.exam.commons.controller;
 
 
+import com.yang.exam.api.admin.model.Admin;
+import com.yang.exam.api.admin.model.AdminSession;
+import com.yang.exam.api.admin.model.AdminSessionWrapper;
 import com.yang.exam.api.admin.service.AdminService;
 import com.yang.exam.commons.context.Context;
 import com.yang.exam.commons.context.Contexts;
+import com.yang.exam.commons.exception.ErrorCode;
+import com.yang.exam.commons.exception.RuntimeServiceException;
+import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
@@ -41,33 +48,33 @@ public class WebApiInterceptor implements HandlerInterceptor, WebApiConstant {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         boolean authorized = false;
         //获取api方法上的注解
-//        Action action = handlerMethod.getMethodAnnotation(Action.class);
-//        if (action == null) {
-////            return true;
-//            throw new RuntimeServiceException(handlerMethod.getMethod().getName() + "needs annotation Action");
-//        }
-//        for (SessionType session : action.session()) {
-//            if (session == SessionType.ADMIN) {
-//                authorized = checkAdminPermission(request);
-//            } else if (session == SessionType.NONE) {
-//                authorized = true;
-//            }
-//        }
-//        //抛出token无效的异常
-//        if (!authorized) {
-//            throw new ServiceException(ErrorCode.ERR_SESSION_EXPIRES);
-//        }
+        Action action = handlerMethod.getMethodAnnotation(Action.class);
+        if (action == null) {
+//            return true;
+            throw new RuntimeServiceException(handlerMethod.getMethod().getName() + "needs annotation Action");
+        }
+        for (SessionType session : action.session()) {
+            if (session == SessionType.ADMIN) {
+                authorized = checkAdminPermission(request);
+            } else if (session == SessionType.NONE) {
+                authorized = true;
+            }
+        }
+        //抛出token无效的异常
+        if (!authorized) {
+            throw new ServiceException(ErrorCode.ERR_SESSION_EXPIRES);
+        }
         return true;
     }
 
-//    private boolean checkAdminPermission(HttpServletRequest request) throws Exception {
-//        AdminSession session = adminService.findSessionByToken(WebUtils.getHeader(request, KEY_ADMIN_TOKEN));
-//        if (session == null || session.getExpireAt() < System.currentTimeMillis()) {
-//            return false;
-//        }
-//        Admin admin = adminService.getById(session.getAdminId());
-//        Contexts.get().setSession(new AdminSessionWrapper(admin, session));
-//        return true;
-//    }
+    private boolean checkAdminPermission(HttpServletRequest request) throws Exception {
+        AdminSession session = adminService.findSessionByToken(WebUtils.getHeader(request, KEY_ADMIN_TOKEN));
+        if (session == null || session.getExpireAt() < System.currentTimeMillis()) {
+            return false;
+        }
+        Admin admin = adminService.getById(session.getAdminId());
+        Contexts.get().setSession(new AdminSessionWrapper(admin, session));
+        return true;
+    }
 
 }
