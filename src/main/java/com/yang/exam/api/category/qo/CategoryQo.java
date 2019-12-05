@@ -11,7 +11,7 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
  */
 public class CategoryQo extends DataQueryObjectPage {
 
-    @QueryField(type = QueryType.FULL_LIKE,name = "name")
+    @QueryField(type = QueryType.FULL_LIKE, name = "name")
     private String name;
 
     public String getName() {

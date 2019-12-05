@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
-
 /**
  * @author: yangchengcheng
  * @Date: 2019-11-22 19:58
@@ -33,7 +31,7 @@ public class TagController extends BaseController {
 
     @RequestMapping(value = "tag")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView tag()throws Exception{
+    public ModelAndView tag() throws Exception {
         return feedback(tagService.tag());
     }
 

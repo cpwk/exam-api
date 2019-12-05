@@ -1,6 +1,5 @@
 package com.yang.exam.api.category.repository;
 
-import com.yang.exam.api.category.model.Category;
 import com.yang.exam.commons.reposiotry.BaseRepository;
 
 import java.util.List;

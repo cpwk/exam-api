@@ -1,7 +1,6 @@
 package com.yang.exam.api.admin.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.*;
 

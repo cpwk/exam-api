@@ -62,7 +62,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     @Override
     public Template getById(Integer id) throws Exception {
         Template template = findById(id);
-        if (findById(id) == null) {
+        if (template == null) {
             throw new ServiceException(ERR_DATA_NOT_FOUND);
         }
         return template;
@@ -89,7 +89,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
                 questions = questionService.findByType(v.getType());
                 while (set.size() < v.getNumber()) {
                     set.add(random.nextInt(questions.size()));
-                    System.out.println(questions.size());
+//                    System.out.println(questions.size());
                 }
                 for (Integer integer : set) {
                     newList.add(questions.get(integer));

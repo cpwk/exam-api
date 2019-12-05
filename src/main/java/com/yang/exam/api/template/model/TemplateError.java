@@ -8,5 +8,5 @@ import com.yang.exam.commons.exception.ErrorCode;
  * @Version：1.0
  */
 public interface TemplateError extends ErrorCode {
-    public static final int ERR_TEMPLATE_EMPTY=1400;
+    public static final int ERR_TEMPLATE_EMPTY = 1400;
 }

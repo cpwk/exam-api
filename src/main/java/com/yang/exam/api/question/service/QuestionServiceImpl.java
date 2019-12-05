@@ -42,7 +42,7 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     @Override
     public void save(Question question) throws Exception {
         dataCheck(question);
-        check(question);
+        time(question);
         questionRepository.save(question);
         for (int value : question.getTagsId()) {
             QuestionTag questionTag = new QuestionTag();
@@ -115,7 +115,7 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         }
     }
 
-    private void check(Question question) {
+    private void time(Question question) {
         if (question.getId() == null) {
             question.setCreatedAt(System.currentTimeMillis());
             question.setUpdatedAt(System.currentTimeMillis());

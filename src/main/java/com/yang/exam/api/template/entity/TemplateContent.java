@@ -1,11 +1,8 @@
 package com.yang.exam.api.template.entity;
 
-import com.yang.exam.commons.converter.StringArrayConverter;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
-import java.util.List;
 
 /**
  * @author: yangchengcheng

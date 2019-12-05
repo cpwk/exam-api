@@ -7,10 +7,11 @@ package com.yang.exam.api.question.entity;
  */
 public enum QuestionType {
 
-    SELECT((byte)1),MSELECT((byte)2),COMPLETION((byte)3),SAQS((byte)4);
+    SELECT((byte) 1), MSELECT((byte) 2), COMPLETION((byte) 3), SAQS((byte) 4);
 
     QuestionType(byte b) {
     }
+
     private Byte value;
 
     public Byte getValue() {

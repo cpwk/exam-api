@@ -21,7 +21,7 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/signIn")
     @Action(session = SessionType.NONE)
     public ModelAndView signIn(String admin) throws Exception {
-        return feedback(adminService.signIn(parseModel(admin,new Admin())));
+        return feedback(adminService.signIn(parseModel(admin, new Admin())));
     }
 
 }

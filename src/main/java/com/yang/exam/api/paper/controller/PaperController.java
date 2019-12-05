@@ -36,4 +36,10 @@ public class PaperController extends BaseController {
     public ModelAndView paper_list(String paperQo) throws Exception {
         return feedback(paperService.paper_list(parseModel(paperQo, new PaperQo())));
     }
+
+    @RequestMapping(value = "preview")
+    @Action(session = SessionType.ADMIN)
+    public ModelAndView preview(Integer id) throws Exception {
+        return feedback(paperService.getById(id));
+    }
 }

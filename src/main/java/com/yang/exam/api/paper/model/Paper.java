@@ -1,8 +1,11 @@
 package com.yang.exam.api.paper.model;
 
+import com.yang.exam.api.paper.converter.QuestionsArrayConverter;
+import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.model.Template;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author: yangchengcheng
@@ -17,11 +20,14 @@ public class Paper {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
     @Column
     private String name;
     @Column
     private Integer templateId;
+    @Column(name = "questions")
+    @Convert(converter = QuestionsArrayConverter.class)
+    private List<Question> questions;
     @Column
     private Long duration;
     @Column
@@ -38,11 +44,19 @@ public class Paper {
     public Paper() {
     }
 
-    public String getId() {
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
