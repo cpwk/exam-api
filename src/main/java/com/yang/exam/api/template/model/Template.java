@@ -1,5 +1,6 @@
 package com.yang.exam.api.template.model;
 
+import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.template.converter.TemplateContentArrayConverter;
 import com.yang.exam.api.template.entity.TemplateContent;
 
@@ -30,7 +31,7 @@ public class Template {
     @Column
     private Byte difficulty;
     @Column
-    private Byte category;
+    private Integer categoryId;
     @Column
     private Integer totalScore;
     @Column
@@ -41,6 +42,8 @@ public class Template {
     private Long createdAt;
     @Column
     private Long updatedAt;
+    @Transient
+    private Category category;
 
     public Integer getId() {
         return id;
@@ -48,30 +51,6 @@ public class Template {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getTotalScore() {
-        return totalScore;
-    }
-
-    public Byte getPassingScore() {
-        return passingScore;
-    }
-
-    public void setPassingScore(Byte passingScore) {
-        this.passingScore = passingScore;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    public void setTotalScore(Integer totalScore) {
-        this.totalScore = totalScore;
     }
 
     public String getTemplateName() {
@@ -106,6 +85,38 @@ public class Template {
         this.difficulty = difficulty;
     }
 
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Integer getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public Byte getPassingScore() {
+        return passingScore;
+    }
+
+    public void setPassingScore(Byte passingScore) {
+        this.passingScore = passingScore;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
     public Long getCreatedAt() {
         return createdAt;
     }
@@ -122,11 +133,11 @@ public class Template {
         this.updatedAt = updatedAt;
     }
 
-    public Byte getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Byte category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }

@@ -42,4 +42,11 @@ public class PaperController extends BaseController {
     public ModelAndView preview(Integer id) throws Exception {
         return feedback(paperService.getById(id));
     }
+
+    @RequestMapping(value = "delete")
+    @Action(session = SessionType.ADMIN)
+    public ModelAndView delete(Integer id) throws Exception {
+        paperService.delete(id);
+        return feedback();
+    }
 }

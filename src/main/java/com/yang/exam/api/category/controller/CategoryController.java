@@ -39,7 +39,7 @@ public class CategoryController extends BaseController {
 
     @RequestMapping(value = "/category_id")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView type_id(Integer id) throws Exception {
+    public ModelAndView getById(Integer id) throws Exception {
         return feedback(categoryService.getById(id));
     }
 

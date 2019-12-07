@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
     @Override
     public Category getById(Integer id) throws Exception {
         Category category = findById(id);
-        if (findById(id) == null) {
+        if (category == null) {
             throw new ServiceException(ERR_DATA_NOT_FOUND);
         }
         return category;

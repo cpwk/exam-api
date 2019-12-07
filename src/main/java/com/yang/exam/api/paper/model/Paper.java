@@ -1,5 +1,6 @@
 package com.yang.exam.api.paper.model;
 
+import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.paper.converter.QuestionsArrayConverter;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.model.Template;
@@ -123,4 +124,5 @@ public class Paper {
     public void setTemplate(Template template) {
         this.template = template;
     }
+
 }

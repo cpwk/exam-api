@@ -19,4 +19,6 @@ public interface PaperService {
 
     Paper getById(Integer id) throws Exception;
 
+    void delete(Integer id) throws Exception;
+
 }

@@ -1,5 +1,6 @@
 package com.yang.exam.api.template.service;
 
+import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
 import com.yang.exam.api.template.entity.TemplateContent;
@@ -32,9 +33,17 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     public Page<Template> template_list(TemplateQo templateQo) throws Exception {
-        return templateRepository.findAll(templateQo);
+//        template.setCategory(categoryService.getById(template.getCategoryId()));
+        Page<Template> templates = templateRepository.findAll(templateQo);
+        for (Template val : templates) {
+            val.setCategory(categoryService.getById(val.getCategoryId()));
+        }
+        return templates;
     }
 
     @Override
@@ -71,7 +80,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     @Override
     public void delete(Integer id) throws Exception {
         Template template = findById(id);
-        if (findById(id) != null) {
+        if (template != null) {
             template.setStatus(STATUS);
         }
         save(template);
@@ -106,7 +115,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
                 template.getDifficulty() == null ||
                 template.getStatus() == null ||
                 template.getTotalScore() == null ||
-                template.getCategory() == null ||
+                template.getCategoryId() == null ||
                 template.getDuration() == null ||
                 template.getPassingScore() == null) {
             throw new ServiceException(ERR_TEMPLATE_EMPTY);

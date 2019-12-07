@@ -1,12 +1,8 @@
 package com.yang.exam.api.user.model;
 
+
 import com.yang.exam.commons.context.SessionWrapper;
 
-/**
- * @author: yangchengcheng
- * @Date: 2019-11-21 20:20
- * @Version：1.0
- */
 public class UserSessionWrapper implements SessionWrapper {
     private User user;
     private UserSession userSession;

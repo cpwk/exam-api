@@ -1,5 +1,6 @@
 package com.yang.exam.api.paper.service;
 
+import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.api.paper.model.Paper;
 import com.yang.exam.api.paper.model.PaperError;
 import com.yang.exam.api.paper.qo.PaperQo;
@@ -26,6 +27,8 @@ import java.util.*;
 @Service
 public class PaperServiceImpl implements PaperService, PaperError {
 
+    private static final byte STATUS = 2;
+
     @Autowired
     private PaperResitpory paperResitpory;
 
@@ -34,6 +37,9 @@ public class PaperServiceImpl implements PaperService, PaperError {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public void save(Paper paper) throws Exception {
@@ -107,6 +113,14 @@ public class PaperServiceImpl implements PaperService, PaperError {
         return paper;
     }
 
+    @Override
+    public void delete(Integer id) throws Exception {
+        Paper paper = findById(id);
+        if (paper != null) {
+            paper.setStatus(STATUS);
+        }
+        save(paper);
+    }
 
     //    @Override
 //    public List<Question> create(Integer id) throws Exception {

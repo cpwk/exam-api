@@ -84,7 +84,7 @@ public class SupportServiceImpl implements SupportService, SupportError {
     @Override
     public void sendSms(VCode vCode) throws Exception {
 //        boolean isMobile = vCode.getAccountType() == VCodeConstants.MOBILE;
-        vCode.setCode(StringUtils.getRandNum(6));
+        vCode.setCode(StringUtils.getRandNum(VCODE_LENGTH));
         saveVCode(vCode.getKey(), vCode);
         if (StringUtils.isChinaMobile(vCode.getAccount())) {
             taskService.addTask(new SendVCodeSmsTask(vCode.getAccount(), vCode.getCode()));

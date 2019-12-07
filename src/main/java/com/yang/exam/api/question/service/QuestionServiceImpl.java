@@ -55,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     @Override
     public void delete(Integer id) throws Exception {
         Question exist = findById(id);
-        if (exist.getId() != null) {
+        if (exist != null) {
             exist.setStatus(STATUS);
         }
         save(exist);

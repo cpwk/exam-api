@@ -2,15 +2,9 @@ package com.yang.exam.api.user.model;
 
 import javax.persistence.*;
 
-/**
- * @author: yangchengcheng
- * @Date: 2019-11-21 20:19
- * @Version：1.0
- */
 @Entity
-@Table(name = "user_session")
+@Table
 public class UserSession {
-
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +16,7 @@ public class UserSession {
     @Column
     private Long signinAt;
     @Column
-    private Long expireAt;
+    private Long ExpireAt;
 
     public Integer getId() {
         return id;
@@ -57,10 +51,10 @@ public class UserSession {
     }
 
     public Long getExpireAt() {
-        return expireAt;
+        return ExpireAt;
     }
 
     public void setExpireAt(Long expireAt) {
-        this.expireAt = expireAt;
+        ExpireAt = expireAt;
     }
 }

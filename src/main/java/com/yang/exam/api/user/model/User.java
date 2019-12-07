@@ -1,12 +1,9 @@
 package com.yang.exam.api.user.model;
 
-import javax.persistence.*;
 
-/**
- * @author: yangchengcheng
- * @Date: 2019-11-21 19:59
- * @Version：1.0
- */
+import com.alibaba.fastjson.annotation.JSONField;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -18,27 +15,19 @@ public class User {
     private Integer id;
     @Column
     private String name;
+    @Column(name = "user_name")
+    private String username;
     @Column
-    private String userName;
+    @JSONField(serialize = false)
+    private String password;
     @Column
     private String mobile;
     @Column
     private String email;
     @Column
     private String avatar;
-    @Column
-    private String password;
 
     public User() {
-    }
-
-    public User(String name, String userName, String mobile, String email, String avatar, String password) {
-        this.name = name;
-        this.userName = userName;
-        this.mobile = mobile;
-        this.email = email;
-        this.avatar = avatar;
-        this.password = password;
     }
 
     public Integer getId() {
@@ -57,12 +46,20 @@ public class User {
         this.name = name;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getMobile() {
@@ -89,11 +86,4 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
