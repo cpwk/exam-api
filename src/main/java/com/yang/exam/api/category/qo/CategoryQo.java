@@ -1,6 +1,7 @@
 package com.yang.exam.api.category.qo;
 
 import com.yang.exam.commons.reposiotry.support.DataQueryObjectPage;
+import com.yang.exam.commons.reposiotry.support.DataQueryObjectSort;
 import com.yang.exam.commons.reposiotry.support.QueryField;
 import com.yang.exam.commons.reposiotry.support.QueryType;
 
@@ -9,10 +10,30 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
  * @Date: 2019-11-26 01:20
  * @Version：1.0
  */
-public class CategoryQo extends DataQueryObjectPage {
+public class CategoryQo extends DataQueryObjectSort {
 
     @QueryField(type = QueryType.FULL_LIKE, name = "name")
     private String name;
+
+    @QueryField(type = QueryType.EQUAL, name = "status")
+    private Byte status = 1;
+
+    public CategoryQo() {
+
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public CategoryQo(byte status) {
+        this.setStatus(status);
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status == 0 ? null : status;
+    }
+
 
     public String getName() {
         return name;

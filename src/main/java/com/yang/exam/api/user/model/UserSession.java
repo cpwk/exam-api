@@ -17,6 +17,10 @@ public class UserSession {
     private Long signinAt;
     @Column
     private Long ExpireAt;
+    @Column
+    private String location;
+    @Column
+    private String ip;
 
     public Integer getId() {
         return id;
@@ -56,5 +60,21 @@ public class UserSession {
 
     public void setExpireAt(Long expireAt) {
         ExpireAt = expireAt;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

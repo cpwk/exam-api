@@ -26,6 +26,16 @@ public class User {
     private String email;
     @Column
     private String avatar;
+    @Column
+    private Byte status;
+    @Column
+    private Byte sex;
+    @Column
+    private Long signinAt;
+    @Column
+    private Long signupAt;
+    @Column
+    private Long updatedAt;
 
     public User() {
     }
@@ -86,4 +96,43 @@ public class User {
         this.avatar = avatar;
     }
 
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Byte getSex() {
+        return sex;
+    }
+
+    public void setSex(Byte sex) {
+        this.sex = sex;
+    }
+
+    public Long getSigninAt() {
+        return signinAt;
+    }
+
+    public void setSigninAt(Long signinAt) {
+        this.signinAt = signinAt;
+    }
+
+    public Long getSignupAt() {
+        return signupAt;
+    }
+
+    public void setSignupAt(Long signupAt) {
+        this.signupAt = signupAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

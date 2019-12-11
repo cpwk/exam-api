@@ -10,7 +10,6 @@ import javax.persistence.Column;
  * @Version：1.0
  */
 
-@Controller
 public class TemplateContent {
 
     @Column

@@ -3,13 +3,16 @@ package com.yang.exam.api.user.service;
 
 import com.yang.exam.api.support.model.VCode;
 import com.yang.exam.api.user.model.User;
+import com.yang.exam.api.user.model.UserSession;
 import com.yang.exam.api.user.model.UserSessionWrapper;
+import com.yang.exam.api.user.qo.UserQo;
+import org.springframework.data.domain.Page;
 
 import java.util.Map;
 
 public interface UserService {
 
-    UserSessionWrapper signin(User user, VCode vCode) throws Exception;
+    UserSessionWrapper signin(User user, VCode vCode, String ip) throws Exception;
 
     void signup(User user, VCode vCode) throws Exception;
 
@@ -19,5 +22,12 @@ public interface UserService {
 
     User getById(Integer id);
 
-    Map update_personal(User user) throws Exception;
+    Map profile(User user) throws Exception;
+
+    Page<User> users(UserQo userQo) throws Exception;
+
+    void status(Integer id);
+
+    UserSession findSessionByToken(String token) throws Exception;
+
 }

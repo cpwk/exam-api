@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+
 /**
  * @author: yangchengcheng
  * @Date: 2019/11/29 11:12
@@ -24,8 +26,6 @@ import java.util.*;
 
 @Service
 public class TemplateServiceImpl implements TemplateService, TemplateError {
-
-    private static final byte STATUS = 2;
 
     @Autowired
     private TemplateRepository templateRepository;
@@ -81,7 +81,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     public void delete(Integer id) throws Exception {
         Template template = findById(id);
         if (template != null) {
-            template.setStatus(STATUS);
+            template.setStatus(STATUS_HALT);
         }
         save(template);
     }
@@ -98,7 +98,6 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
                 questions = questionService.findByType(v.getType());
                 while (set.size() < v.getNumber()) {
                     set.add(random.nextInt(questions.size()));
-//                    System.out.println(questions.size());
                 }
                 for (Integer integer : set) {
                     newList.add(questions.get(integer));

@@ -2,6 +2,7 @@ package com.yang.exam.api.question.service;
 
 import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.category.repository.CategoryRepository;
+import com.yang.exam.api.question.model.Parameter;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.model.QuestionError;
 import com.yang.exam.api.question.qo.QuestionQo;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+
 /**
  * @author: yangchengcheng
  * @Date: 2019-11-21 17:05
@@ -26,8 +29,6 @@ import java.util.*;
 
 @Service
 public class QuestionServiceImpl implements QuestionService, QuestionError {
-
-    private static final byte STATUS = 2;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -38,6 +39,31 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    private static final int LENGTH = 20;
+
+
+    @Override
+    public List<Question> generate(Parameter parameter) throws Exception {
+        List<Question> questionList1 = questionRepository.findByCategoryId(parameter.getCategoryId());
+        Random random = new Random();
+        List<Question> questionList = new ArrayList<>();
+//        for (Byte i : parameter.getType()) {
+//            List<Question> questionList2 = new ArrayList<>();
+//            for (Question val : questionList1) {
+//                if (i.equals(val.getType())) {
+//                    questionList2.add(val);
+//                }
+//            }
+//            Set<Integer> set = new HashSet(5);
+//            while (set.size() < 5) {
+//                set.add(random.nextInt(questionList2.size()));
+//            }
+//            for (Integer integer : set) {
+//                questionList.add(questionList2.get(integer));
+//            }
+//        }
+        return questionList;
+    }
 
     @Override
     public void save(Question question) throws Exception {
@@ -56,7 +82,7 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     public void delete(Integer id) throws Exception {
         Question exist = findById(id);
         if (exist != null) {
-            exist.setStatus(STATUS);
+            exist.setStatus(STATUS_HALT);
         }
         save(exist);
     }

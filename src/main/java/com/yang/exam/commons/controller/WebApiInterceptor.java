@@ -5,6 +5,10 @@ import com.yang.exam.api.admin.model.Admin;
 import com.yang.exam.api.admin.model.AdminSession;
 import com.yang.exam.api.admin.model.AdminSessionWrapper;
 import com.yang.exam.api.admin.service.AdminService;
+import com.yang.exam.api.user.model.User;
+import com.yang.exam.api.user.model.UserSession;
+import com.yang.exam.api.user.model.UserSessionWrapper;
+import com.yang.exam.api.user.service.UserService;
 import com.yang.exam.commons.context.Context;
 import com.yang.exam.commons.context.Contexts;
 import com.yang.exam.commons.exception.ErrorCode;
@@ -33,6 +37,9 @@ public class WebApiInterceptor implements HandlerInterceptor, WebApiConstant {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private UserService userService;
+
     /*
      * 只有该方法返回true才能继续执行所拦截的API方法
      */
@@ -56,6 +63,8 @@ public class WebApiInterceptor implements HandlerInterceptor, WebApiConstant {
         for (SessionType session : action.session()) {
             if (session == SessionType.ADMIN) {
                 authorized = checkAdminPermission(request);
+            } else if (session == SessionType.USER) {
+                authorized = checkUserPermission(request);
             } else if (session == SessionType.NONE) {
                 authorized = true;
             }
@@ -74,6 +83,16 @@ public class WebApiInterceptor implements HandlerInterceptor, WebApiConstant {
         }
         Admin admin = adminService.getById(session.getAdminId());
         Contexts.get().setSession(new AdminSessionWrapper(admin, session));
+        return true;
+    }
+
+    private boolean checkUserPermission(HttpServletRequest request) throws Exception {
+        UserSession session = userService.findSessionByToken(WebUtils.getHeader(request, KEY_USER_TOKEN));
+        if (session == null || session.getExpireAt() < System.currentTimeMillis()) {
+            return false;
+        }
+        User user = userService.getById(session.getUserId());
+        Contexts.get().setSession(new UserSessionWrapper(user, session));
         return true;
     }
 

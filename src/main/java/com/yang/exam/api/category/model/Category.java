@@ -77,6 +77,14 @@ public class Category {
         this.priority = priority;
     }
 
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
     public Long getCreatedAt() {
         return createdAt;
     }
@@ -91,14 +99,6 @@ public class Category {
 
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
     }
 
     public List<Category> getChildren() {

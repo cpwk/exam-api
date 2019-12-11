@@ -2,7 +2,10 @@ package com.yang.exam.api.paper.service;
 
 import com.yang.exam.api.paper.model.Paper;
 import com.yang.exam.api.paper.qo.PaperQo;
+import com.yang.exam.api.question.model.Question;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * @author: yangchengcheng

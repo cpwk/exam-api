@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+
 /**
  * @author: yangchengcheng
  * @Date: 2019/12/3 11:43
@@ -26,8 +28,6 @@ import java.util.*;
 
 @Service
 public class PaperServiceImpl implements PaperService, PaperError {
-
-    private static final byte STATUS = 2;
 
     @Autowired
     private PaperResitpory paperResitpory;
@@ -117,7 +117,7 @@ public class PaperServiceImpl implements PaperService, PaperError {
     public void delete(Integer id) throws Exception {
         Paper paper = findById(id);
         if (paper != null) {
-            paper.setStatus(STATUS);
+            paper.setStatus(STATUS_HALT);
         }
         save(paper);
     }

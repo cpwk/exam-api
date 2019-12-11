@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/usr")
 public class UserController extends BaseController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/signin")
     @Action(session = SessionType.NONE)
     public ModelAndView signin(String user, String vCode) throws Exception {
-        return feedback(userService.signin(parseModel(user, new User()), parseModel(vCode, new VCode())));
+        return feedback(userService.signin(parseModel(user, new User()), parseModel(vCode, new VCode()), getRemoteAddress()));
     }
 
     @RequestMapping(value = "/signup")
@@ -34,22 +34,22 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/resetPassword")
-    @Action(session = SessionType.NONE)
+    @Action(session = SessionType.USER)
     public ModelAndView reserPassword(String user, String vCode) throws Exception {
         userService.resetPassword(parseModel(user, new User()), parseModel(vCode, new VCode()));
         return feedback();
     }
 
     @RequestMapping(value = "/findById")
-    @Action(session = SessionType.NONE)
-    public ModelAndView findById(Integer id) throws Exception{
+    @Action(session = SessionType.USER)
+    public ModelAndView findById(Integer id) throws Exception {
         return feedback(userService.getById(id));
     }
 
-    @RequestMapping(value = "/update_personal")
-    @Action(session = SessionType.NONE)
-    public ModelAndView update_personal(String user) throws Exception {
-        return feedback(userService.update_personal(parseModel(user, new User())));
+    @RequestMapping(value = "/profile")
+    @Action(session = SessionType.USER)
+    public ModelAndView profile(String user) throws Exception {
+        return feedback(userService.profile(parseModel(user, new User())));
     }
 
 }

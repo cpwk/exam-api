@@ -8,4 +8,10 @@ import java.util.List;
 public interface QuestionRepository extends BaseRepository<Question, Integer> {
 
     List<Question> findAllByType(Byte type);
+
+    List<Question> findAllByCategoryId(Integer categoryId);
+
+    List<Question> findAllByDifficulty(Byte difficulty);
+
+    List<Question> findByCategoryId(Integer categoryId);
 }

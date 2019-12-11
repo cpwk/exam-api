@@ -1,5 +1,6 @@
 package com.yang.exam.api.question.service;
 
+import com.yang.exam.api.question.model.Parameter;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import org.springframework.data.domain.Page;
@@ -24,5 +25,7 @@ public interface QuestionService {
     Page<Question> question_list(QuestionQo qo) throws Exception;
 
     List<Question> findByType(Byte type);
+
+    List<Question> generate(Parameter parameter) throws Exception;
 
 }

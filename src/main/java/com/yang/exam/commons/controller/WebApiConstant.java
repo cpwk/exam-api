@@ -8,4 +8,5 @@ package com.yang.exam.commons.controller;
  **/
 public interface WebApiConstant {
     public static final String KEY_ADMIN_TOKEN = "admin-token";
+    public static final String KEY_USER_TOKEN = "user-token";
 }

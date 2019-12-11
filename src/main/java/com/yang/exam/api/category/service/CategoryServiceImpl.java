@@ -1,17 +1,28 @@
 package com.yang.exam.api.category.service;
 
+import com.sunnysuperman.kvcache.RepositoryProvider;
+import com.sunnysuperman.kvcache.converter.ListModelConverter;
 import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.category.model.CategoryError;
 import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.api.category.repository.CategoryRepository;
+import com.yang.exam.commons.cache.CacheOptions;
+import com.yang.exam.commons.cache.KvCacheFactory;
+import com.yang.exam.commons.cache.KvCacheWrap;
+import com.yang.exam.commons.entity.Constants;
+import com.yang.exam.commons.exception.DetailedException;
+import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: yangchengcheng
@@ -27,28 +38,92 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Override
-    public Page<Category> category_list(CategoryQo qo) throws Exception {
-        return categoryRepository.findAll(qo);
+
+    @Autowired
+    private KvCacheFactory kvCacheFactory;
+
+    private KvCacheWrap<Byte, List<Category>> categoryCache;
+
+    @PostConstruct
+    public void init() {
+
+        categoryCache = kvCacheFactory.create(new CacheOptions("category", 1, Constants.CACHE_REDIS_EXPIRE), new RepositoryProvider<Byte, List<Category>>() {
+
+            @Override
+            public List<Category> findByKey(Byte key) throws RepositoryException {
+                if (key == Constants.STATUS_OK) {
+                    return sortExamQuestionTypes(categoryRepository.findAll(new CategoryQo()));
+                } else {
+                    return sortExamQuestionTypes(categoryRepository.findAll(new CategoryQo((byte) 0)));
+                }
+            }
+
+            @Override
+            public Map<Byte, List<Category>> findByKeys(Collection<Byte> keys) throws RepositoryException {
+                throw new UnsupportedOperationException("keys");
+            }
+
+        }, new ListModelConverter<>(Category.class));
     }
+
+
+
 
     @Override
     public void save(Category category) throws Exception {
-        if (category.getId() == null) {
+
+        validateExamCategory(category);
+
+        Integer id = category.getId();
+        if (id == null || id == 0) {
             category.setCreatedAt(System.currentTimeMillis());
             category.setUpdatedAt(System.currentTimeMillis());
+            categoryRepository.save(category);
+            clearExamQuestionTypes();
         } else {
-            category.setUpdatedAt(System.currentTimeMillis());
+            Category of = category(id);
+            of.setSequence(category.getSequence());
+            of.setName(category.getName());
+            of.setpId(category.getpId());
+            of.setPriority(category.getPriority());
+            of.setUpdatedAt(System.currentTimeMillis());
+            categoryRepository.save(of);
+            clearExamQuestionTypes();
         }
-        if (StringUtils.isEmpty(category.getName())
-                && category.getpId() == null
-                && category.getPriority() == null
-                && category.getStatus() == null) {
-            throw new ServiceException(ERR_COMPLETE_EMPTY);
-        }
-        categoryRepository.save(category);
-        this.categoryRepository.save(category);
     }
+
+
+    private void validateExamCategory(Category category) throws Exception {
+
+        int pId = category.getpId();
+        if (StringUtils.isEmpty(category.getName())) {
+            throw new DetailedException("未知错误");
+        }
+        String sequence = category.getSequence();
+        if (pId > 0) {
+            Category parent = category(pId);
+            int _pId = parent.getpId();
+            if (_pId > 0) {
+                Category grandPa = category(_pId);
+                System.out.println(parent.getSequence());
+                System.out.println(grandPa.getSequence());
+                if (!(sequence.substring(0, 2).equals(grandPa.getSequence().substring(0, 2))) && (sequence.substring(0, 4).equals(parent.getSequence().substring(0, 4)))) {
+                    throw new DetailedException("未知错误");
+                }
+            } else {
+                if (!sequence.substring(0, 2).equals(parent.getSequence().substring(0, 2))) {
+                    throw new DetailedException("未知错误");
+                }
+            }
+        }
+        if (category.getStatus() == 0) {
+            category.setStatus(Constants.STATUS_HALT);
+        }
+        if (category.getPriority() == 0) {
+            category.setPriority(1);
+        }
+    }
+
 
     @Override
     public Category findById(Integer id) throws Exception {
@@ -66,65 +141,67 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
 
 
     @Override
-    public void delete(Integer id) throws Exception {
-        categoryRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Category> course(Integer id) throws Exception {
-        return categoryRepository.findByPId(id);
-    }
-
-    @Override
-    public List<Category> father() throws Exception {
-        List<Category> category = categoryRepository.findAll();
-        List<Category> cat = new ArrayList<>();
-        for (Category v : category) {
-            if (v.getpId().equals(FATHER)) {
-                cat.add(v);
-            }
-            List<Category> cate = new ArrayList<>();
-            for (Category va : category) {
-                if (v.getId().equals(va.getpId())) {
-                    cate.add(va);
-                }
-                List<Category> categ = new ArrayList<>();
-                for (Category val : category) {
-                    if (va.getId().equals(val.getpId())) {
-                        categ.add(val);
-                        va.setChildren(categ);
-                    }
-                }
-                v.setChildren(cate);
-            }
+    public void status(Integer id, Byte status) throws Exception {
+        if (!(status == Constants.STATUS_OK || status == Constants.STATUS_HALT)) {
+            throw new ServiceException(ERR_PERMISSION_DENIED);
         }
-        return cat;
+        Category category = findById(id);
+        if (category != null) {
+            String sequence = category.getSequence();
+            if (sequence.endsWith("0000")) {
+                sequence = sequence.substring(0, 2);
+            } else if (sequence.endsWith("00")) {
+                sequence = sequence.substring(0, 4);
+            }
+            categoryRepository.status(status, sequence);
+            clearExamQuestionTypes();
+        }
+    }
+
+
+
+    @Override
+    public List<Category> categoryLevel() throws Exception {
+        return categoryRepository.findAll();
+    }
+
+    private void clearExamQuestionTypes() {
+        categoryCache.remove((byte) 0);
+        categoryCache.remove(Constants.STATUS_OK);
+    }
+
+    @Override
+    public List<Category> categorys(boolean adm) {
+        List<Category> s = categoryCache.findByKey(adm ? 0 : Constants.STATUS_OK);
+        return s;
+    }
+
+    @Override
+    public Category category(int id) throws Exception {
+        Category category = findById(id);
+        if (category == null || category.getId() == null) {
+            throw new DetailedException("未知错误");
+        }
+        return category;
+    }
+
+    private List<Category> sortExamQuestionTypes(List<Category> list) {
+
+        List<Category> result = list.stream().filter((Category t) -> t.getpId() == 0).collect(Collectors.toList());
+        for (Category v : result) {
+            List<Category> list2 = list.stream().filter((Category t) -> t.getpId().intValue() == v.getId().intValue()).collect(Collectors.toList());
+            for (Category va : list2) {
+                List<Category> list3 = list.stream().filter((Category t) -> t.getpId().intValue() == va.getId().intValue()).collect(Collectors.toList());
+                va.setChildren(list3);
+            }
+            v.setChildren(list2);
+        }
+        return result;
+    }
+
+    @Override
+    public void remove(int id) throws Exception {
+        categoryRepository.deleteById(id);
+        clearExamQuestionTypes();
     }
 }
-
-
-//    @Override
-//    public List<Category> father() throws Exception {
-//        List<Category> category = categoryRepository.findAll();
-//        List<Category> cat = new ArrayList<>();
-//        for (Category v : category) {
-//            if (v.getpId().equals(FATHER)) {
-//                cat.add(v);
-//            }
-//            List<Category> cate = new ArrayList<>();
-//            for (Category va : category) {
-//                if (v.getId().equals(va.getpId())) {
-//                    cate.add(va);
-//                }
-//                List<Category> categ = new ArrayList<>();
-//                for (Category val : category) {
-//                    if (va.getId().equals(val.getpId())) {
-//                        categ.add(val);
-//                        va.setChildren(categ);
-//                    }
-//                }
-//                v.setChildren(cate);
-//            }
-//        }
-//        return cat;
-//    }

@@ -6,6 +6,7 @@ import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.commons.controller.Action;
 import com.yang.exam.commons.controller.BaseController;
 import com.yang.exam.commons.controller.SessionType;
+import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +25,6 @@ public class CategoryController extends BaseController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(value = "/category_list")
-    @Action(session = SessionType.ADMIN)
-    public ModelAndView category_list(String categoryQo) throws Exception {
-        return feedback(categoryService.category_list(parseModel(categoryQo, new CategoryQo())));
-    }
-
     @RequestMapping(value = "/save")
     @Action(session = SessionType.ADMIN)
     public ModelAndView save(String category) throws Exception {
@@ -43,22 +38,37 @@ public class CategoryController extends BaseController {
         return feedback(categoryService.getById(id));
     }
 
-    @RequestMapping(value = "/delete")
+    @RequestMapping(value = "/status")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView delete(Integer id) throws Exception {
-        categoryService.delete(id);
+    public ModelAndView status(Integer id, Byte status) throws Exception {
+        categoryService.status(id, status);
         return feedback();
     }
 
-    @RequestMapping(value = "/course")
+    @RequestMapping(value = "/categorys")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView course(Integer id) throws Exception {
-        return feedback(categoryService.course(id));
+    public ModelAndView categorys() {
+        return feedback(categoryService.categorys(true));
     }
 
-    @RequestMapping(value = "/father")
+    @RequestMapping(value = "/remove")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView father() throws Exception {
-        return feedback(categoryService.father());
+    public ModelAndView removeExamQuestionType(Integer id) throws Exception {
+        categoryService.remove(id);
+        return feedback(null);
     }
+
+
+//    @RequestMapping(value = "/category")
+//    @Action(session = SessionType.ADMIN)
+//    public ModelAndView category() throws ServiceException {
+//        return feedback(categoryService.category());
+//    }
+
+//    @RequestMapping(value = "/category_list")
+//    @Action(session = SessionType.ADMIN)
+//    public ModelAndView category_list(String categoryQo) throws ServiceException {
+//        return feedback(categoryService.category_list(parseModel(categoryQo, new CategoryQo())));
+//    }
+
 }

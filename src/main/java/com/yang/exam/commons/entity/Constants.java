@@ -28,4 +28,10 @@ public class Constants {
     public static final int ACCOUNT_ADMIN = 1;
     public static final int ACCOUNT_USER = 2;
 
+    //状态
+    public static final byte STATUS_DISABLE = 2;
+    public static final byte STATUS_START = 1;
+
+
+
 }

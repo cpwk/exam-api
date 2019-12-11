@@ -11,6 +11,8 @@ public class Constants {
 
     public static final int ADMIN_TOKEN_LENGTH = 64;
 
+    public static final int USER_TOKEN_LENGTH = 64;
+
     public static int PAGESIZE_MIN = 10;
 
     public static int PAGESIZE_MAX = 50;
