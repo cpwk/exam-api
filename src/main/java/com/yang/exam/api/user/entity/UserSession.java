@@ -1,4 +1,4 @@
-package com.yang.exam.api.user.model;
+package com.yang.exam.api.user.entity;
 
 import javax.persistence.*;
 

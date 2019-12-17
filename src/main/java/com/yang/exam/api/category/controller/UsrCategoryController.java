@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/usr/category")
-public class UserCategoryController extends BaseController {
+public class UsrCategoryController extends BaseController {
 
     @Autowired
     private CategoryService categoryService;

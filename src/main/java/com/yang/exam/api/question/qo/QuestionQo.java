@@ -23,14 +23,14 @@ public class QuestionQo extends DataQueryObjectPage {
     }
 
     @QueryField(type = QueryType.EQUAL, name = "type")
-    private Byte type;
+    private Byte type = 0;
 
     public Byte getType() {
         return type;
     }
 
     public void setType(Byte type) {
-        this.type = type;
+        this.type = type == 0 ? null : type;
     }
 
     @QueryField(type = QueryType.EQUAL, name = "categoryId")
@@ -45,14 +45,14 @@ public class QuestionQo extends DataQueryObjectPage {
     }
 
     @QueryField(type = QueryType.EQUAL, name = "difficulty")
-    private Byte difficulty;
+    private Byte difficulty = 0;
 
     public Byte getDifficulty() {
         return difficulty;
     }
 
     public void setDifficulty(Byte difficulty) {
-        this.difficulty = difficulty;
+        this.difficulty = difficulty == 0 ? null : difficulty;
     }
 
 }

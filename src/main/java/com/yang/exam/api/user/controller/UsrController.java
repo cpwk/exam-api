@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/usr")
-public class UserController extends BaseController {
+public class UsrController extends BaseController {
 
     @Autowired
     private UserService userService;

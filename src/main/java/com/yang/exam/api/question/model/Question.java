@@ -44,10 +44,12 @@ public class Question {
     private Long createdAt;
     @Column
     private Long updatedAt;
+    @Column
+    private String userAnswer;
     @Transient
     private List<Tag> tag;
     @Transient
-    private Category categoryName;
+    private Category category;
 
     public Question() {
     }
@@ -148,11 +150,19 @@ public class Question {
         this.options = options;
     }
 
-    public Category getCategoryName() {
-        return categoryName;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryName(Category categoryName) {
-        this.categoryName = categoryName;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
     }
 }

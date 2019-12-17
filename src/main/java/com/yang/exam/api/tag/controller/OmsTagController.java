@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping(path = "/oms/tag")
-public class TagController extends BaseController {
+public class OmsTagController extends BaseController {
 
     @Autowired
     private TagService tagService;
@@ -32,7 +32,7 @@ public class TagController extends BaseController {
     @RequestMapping(value = "tag")
     @Action(session = SessionType.ADMIN)
     public ModelAndView tag() throws Exception {
-        return feedback(tagService.tag());
+        return feedback(tagService.findTags());
     }
 
     @RequestMapping(value = "/delete")

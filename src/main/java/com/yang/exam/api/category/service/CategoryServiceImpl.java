@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,9 +66,6 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
         }, new ListModelConverter<>(Category.class));
     }
 
-
-
-
     @Override
     public void save(Category category) throws Exception {
 
@@ -92,54 +89,6 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
         }
     }
 
-
-    private void validateExamCategory(Category category) throws Exception {
-
-        int pId = category.getpId();
-        if (StringUtils.isEmpty(category.getName())) {
-            throw new DetailedException("未知错误");
-        }
-        String sequence = category.getSequence();
-        if (pId > 0) {
-            Category parent = category(pId);
-            int _pId = parent.getpId();
-            if (_pId > 0) {
-                Category grandPa = category(_pId);
-                System.out.println(parent.getSequence());
-                System.out.println(grandPa.getSequence());
-                if (!(sequence.substring(0, 2).equals(grandPa.getSequence().substring(0, 2))) && (sequence.substring(0, 4).equals(parent.getSequence().substring(0, 4)))) {
-                    throw new DetailedException("未知错误");
-                }
-            } else {
-                if (!sequence.substring(0, 2).equals(parent.getSequence().substring(0, 2))) {
-                    throw new DetailedException("未知错误");
-                }
-            }
-        }
-        if (category.getStatus() == 0) {
-            category.setStatus(Constants.STATUS_HALT);
-        }
-        if (category.getPriority() == 0) {
-            category.setPriority(1);
-        }
-    }
-
-
-    @Override
-    public Category findById(Integer id) throws Exception {
-        return categoryRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public Category getById(Integer id) throws Exception {
-        Category category = findById(id);
-        if (category == null) {
-            throw new ServiceException(ERR_DATA_NOT_FOUND);
-        }
-        return category;
-    }
-
-
     @Override
     public void status(Integer id, Byte status) throws Exception {
         if (!(status == Constants.STATUS_OK || status == Constants.STATUS_HALT)) {
@@ -158,21 +107,14 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
         }
     }
 
-
-
     @Override
     public List<Category> categoryLevel() throws Exception {
         return categoryRepository.findAll();
     }
 
-    private void clearExamQuestionTypes() {
-        categoryCache.remove((byte) 0);
-        categoryCache.remove(Constants.STATUS_OK);
-    }
-
     @Override
-    public List<Category> categorys(boolean adm) {
-        List<Category> s = categoryCache.findByKey(adm ? 0 : Constants.STATUS_OK);
+    public List<Category> categorys(boolean usr) {
+        List<Category> s = categoryCache.findByKey(usr ? 0 : Constants.STATUS_OK);
         return s;
     }
 
@@ -180,9 +122,44 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
     public Category category(int id) throws Exception {
         Category category = findById(id);
         if (category == null || category.getId() == null) {
-            throw new DetailedException("未知错误");
+            throw new ServiceException(ERR_UNKNOWN);
         }
         return category;
+    }
+
+    @Override
+    public void remove(int id) throws Exception {
+        categoryRepository.deleteById(id);
+        clearExamQuestionTypes();
+    }
+
+    @Override
+    public Map<Integer, Category> findByids(Collection<Integer> ids) throws Exception {
+        Map<Integer, Category> categoryMap = new HashMap<>();
+        List<Category> categories = categoryRepository.findAllById(ids);
+        for (Category category : categories) {
+            categoryMap.put(category.getId(), category);
+        }
+        return categoryMap;
+    }
+
+    @Override
+    public Category findById(Integer id) throws Exception {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Category getById(Integer id) throws Exception {
+        Category category = findById(id);
+        if (category == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        return category;
+    }
+
+    private void clearExamQuestionTypes() {
+        categoryCache.remove((byte) 0);
+        categoryCache.remove(Constants.STATUS_OK);
     }
 
     private List<Category> sortExamQuestionTypes(List<Category> list) {
@@ -199,9 +176,34 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
         return result;
     }
 
-    @Override
-    public void remove(int id) throws Exception {
-        categoryRepository.deleteById(id);
-        clearExamQuestionTypes();
+    private void validateExamCategory(Category category) throws Exception {
+
+        int pId = category.getpId();
+        if (StringUtils.isEmpty(category.getName())) {
+            throw new ServiceException(ERR_CATEGORY_NAME_EMPTY);
+        }
+        String sequence = category.getSequence();
+        if (pId > 0) {
+            Category parent = category(pId);
+            int _pId = parent.getpId();
+            if (_pId > 0) {
+                Category grandPa = category(_pId);
+                System.out.println(parent.getSequence());
+                System.out.println(grandPa.getSequence());
+                if (!(sequence.substring(0, 2).equals(grandPa.getSequence().substring(0, 2))) && (sequence.substring(0, 4).equals(parent.getSequence().substring(0, 4)))) {
+                    throw new ServiceException(ERR_UNKNOWN);
+                }
+            } else {
+                if (!sequence.substring(0, 2).equals(parent.getSequence().substring(0, 2))) {
+                    throw new ServiceException(ERR_UNKNOWN);
+                }
+            }
+        }
+        if (category.getStatus() == 0) {
+            category.setStatus(Constants.STATUS_HALT);
+        }
+        if (category.getPriority() == 0) {
+            category.setPriority(1);
+        }
     }
 }

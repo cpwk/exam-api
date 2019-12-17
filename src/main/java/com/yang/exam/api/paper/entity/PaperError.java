@@ -1,4 +1,4 @@
-package com.yang.exam.api.paper.model;
+package com.yang.exam.api.paper.entity;
 
 import com.yang.exam.commons.exception.ErrorCode;
 
@@ -8,6 +8,6 @@ import com.yang.exam.commons.exception.ErrorCode;
  * @Version：1.0
  */
 public interface PaperError extends ErrorCode {
-    public static final int ERR_PAPER_EMPTY = 1500;
+    public static final int ERR_PAPER_NAME_EMPTY = 1500;
 }
 

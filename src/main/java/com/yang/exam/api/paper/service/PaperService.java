@@ -16,12 +16,12 @@ public interface PaperService {
 
     void save(Paper paper) throws Exception;
 
-    Page<Paper> paper_list(PaperQo paperQo) throws Exception;
+    Page<Paper> paperList(PaperQo paperQo) throws Exception;
 
     Paper findById(Integer id) throws Exception;
 
     Paper getById(Integer id) throws Exception;
 
-    void delete(Integer id) throws Exception;
+    void status(Integer id) throws Exception;
 
 }

@@ -1,6 +1,7 @@
-package com.yang.exam.api.user.model;
+package com.yang.exam.api.user.entity;
 
 
+import com.yang.exam.api.user.model.User;
 import com.yang.exam.commons.context.SessionWrapper;
 
 public class UserSessionWrapper implements SessionWrapper {

@@ -2,8 +2,8 @@ package com.yang.exam.api.admin.service;
 
 
 import com.yang.exam.api.admin.model.Admin;
-import com.yang.exam.api.admin.model.AdminSession;
-import com.yang.exam.api.admin.model.AdminSessionWrapper;
+import com.yang.exam.api.admin.entity.AdminSession;
+import com.yang.exam.api.admin.entity.AdminSessionWrapper;
 
 public interface AdminService {
 

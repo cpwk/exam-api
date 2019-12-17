@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/oms/category")
-public class CategoryController extends BaseController {
+public class OmsCategoryController extends BaseController {
 
     @Autowired
     private CategoryService categoryService;
@@ -57,18 +57,5 @@ public class CategoryController extends BaseController {
         categoryService.remove(id);
         return feedback(null);
     }
-
-
-//    @RequestMapping(value = "/category")
-//    @Action(session = SessionType.ADMIN)
-//    public ModelAndView category() throws ServiceException {
-//        return feedback(categoryService.category());
-//    }
-
-//    @RequestMapping(value = "/category_list")
-//    @Action(session = SessionType.ADMIN)
-//    public ModelAndView category_list(String categoryQo) throws ServiceException {
-//        return feedback(categoryService.category_list(parseModel(categoryQo, new CategoryQo())));
-//    }
 
 }

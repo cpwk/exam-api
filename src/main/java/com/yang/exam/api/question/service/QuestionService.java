@@ -1,6 +1,6 @@
 package com.yang.exam.api.question.service;
 
-import com.yang.exam.api.question.model.Parameter;
+import com.yang.exam.api.question.entity.QuestionOptions;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import org.springframework.data.domain.Page;
@@ -14,18 +14,15 @@ import java.util.List;
  */
 public interface QuestionService {
 
+    Question findById(Integer id) throws Exception;
+
+    Question getById(Integer id) throws Exception;
+
     void save(Question question) throws Exception;
 
-    void delete(Integer id) throws Exception;
+    void status(Integer id) throws Exception;
 
-    Question findById(Integer id);
+    Page<Question> questionList(QuestionQo qo, QuestionOptions options) throws Exception;
 
-    Question getById(Integer id);
-
-    Page<Question> question_list(QuestionQo qo) throws Exception;
-
-    List<Question> findByType(Byte type);
-
-    List<Question> generate(Parameter parameter) throws Exception;
-
+    List<Question> getAllByCategoryId(Integer categoryId) throws Exception;
 }

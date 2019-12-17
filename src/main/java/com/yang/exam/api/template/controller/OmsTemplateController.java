@@ -19,15 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/oms/template")
-public class TemplateController extends BaseController {
+public class OmsTemplateController extends BaseController {
 
     @Autowired
     private TemplateService templateService;
 
     @RequestMapping(value = "template_list")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView template_list(String templateQo) throws Exception {
-        return feedback(templateService.template_list(parseModel(templateQo, new TemplateQo())));
+    public ModelAndView templateList(String templateQo) throws Exception {
+        return feedback(templateService.templateList(parseModel(templateQo, new TemplateQo())));
     }
 
     @RequestMapping(value = "save")
@@ -40,20 +40,20 @@ public class TemplateController extends BaseController {
     @RequestMapping(value = "create")
     @Action(session = SessionType.ADMIN)
     public ModelAndView create(Integer id) throws Exception {
-        return feedback(templateService.create(id));
+        return feedback(templateService.questions(id));
     }
 
-    @RequestMapping(value = "template_id")
+    @RequestMapping(value = "getById")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView template_id(Integer id) throws Exception {
+    public ModelAndView getById(Integer id) throws Exception {
         return feedback(templateService.getById(id));
     }
 
 
-    @RequestMapping(value = "delete")
+    @RequestMapping(value = "status")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView delete(Integer id) throws Exception {
-        templateService.delete(id);
+    public ModelAndView status(Integer id) throws Exception {
+        templateService.status(id);
         return feedback();
     }
 

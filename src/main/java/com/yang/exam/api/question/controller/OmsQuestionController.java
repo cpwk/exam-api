@@ -1,5 +1,6 @@
 package com.yang.exam.api.question.controller;
 
+import com.yang.exam.api.question.entity.QuestionOptions;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import com.yang.exam.api.question.service.QuestionService;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/oms/question")
-public class QuestionController extends BaseController {
+public class OmsQuestionController extends BaseController {
 
     @Autowired
     private QuestionService questionService;
@@ -31,10 +32,10 @@ public class QuestionController extends BaseController {
         return feedback();
     }
 
-    @RequestMapping(value = "/delete")
+    @RequestMapping(value = "/status")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView delete(Integer id) throws Exception {
-        questionService.delete(id);
+    public ModelAndView status(Integer id) throws Exception {
+        questionService.status(id);
         return feedback();
     }
 
@@ -46,8 +47,8 @@ public class QuestionController extends BaseController {
 
     @RequestMapping(value = "question_list")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView question_list(String questionQo) throws Exception {
-        return feedback(questionService.question_list(parseModel(questionQo, new QuestionQo())));
+    public ModelAndView questionList(String questionQo) throws Exception {
+        return feedback(questionService.questionList(parseModel(questionQo, new QuestionQo()), QuestionOptions.getOmsListInstance()));
     }
 
 

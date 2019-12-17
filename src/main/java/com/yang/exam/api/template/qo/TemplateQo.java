@@ -12,14 +12,14 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
 public class TemplateQo extends DataQueryObjectPage {
 
     @QueryField(type = QueryType.EQUAL, name = "status")
-    private Byte status;
+    private Byte status = 0;
 
     public Byte getStatus() {
         return status;
     }
 
     public void setStatus(Byte status) {
-        this.status = status;
+        this.status = status == 0 ? null : status;
     }
 
     @QueryField(type = QueryType.FULL_LIKE, name = "templateName")

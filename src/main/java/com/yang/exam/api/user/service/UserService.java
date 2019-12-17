@@ -3,8 +3,8 @@ package com.yang.exam.api.user.service;
 
 import com.yang.exam.api.support.model.VCode;
 import com.yang.exam.api.user.model.User;
-import com.yang.exam.api.user.model.UserSession;
-import com.yang.exam.api.user.model.UserSessionWrapper;
+import com.yang.exam.api.user.entity.UserSession;
+import com.yang.exam.api.user.entity.UserSessionWrapper;
 import com.yang.exam.api.user.qo.UserQo;
 import org.springframework.data.domain.Page;
 

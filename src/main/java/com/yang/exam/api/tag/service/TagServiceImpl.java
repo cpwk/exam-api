@@ -5,7 +5,10 @@ import com.yang.exam.api.tag.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: yangchengcheng
@@ -26,7 +29,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> tag() throws Exception {
+    public List<Tag> findTags() throws Exception {
         return tagRepository.findAll();
     }
 
@@ -38,4 +41,13 @@ public class TagServiceImpl implements TagService {
         }
     }
 
+    @Override
+    public Map<Integer, Tag> findTagByIds(Collection<Integer> ids) throws Exception {
+        List<Tag> tags = tagRepository.findAllById(ids);
+        Map<Integer, Tag> map = new HashMap<>();
+        for(Tag tag:tags){
+            map.put(tag.getId(),tag);
+        }
+        return map;
+    }
 }

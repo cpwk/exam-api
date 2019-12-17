@@ -9,18 +9,18 @@ import java.util.List;
 
 public interface TemplateService {
 
-    Page<Template> template_list(TemplateQo templateQo) throws Exception;
+    void save(Template template) throws Exception;
+
+    Page<Template> templateList(TemplateQo templateQo) throws Exception;
 
     List<Template> template() throws Exception;
-
-    void save(Template template) throws Exception;
 
     Template findById(Integer id) throws Exception;
 
     Template getById(Integer id) throws Exception;
 
-    void delete(Integer id) throws Exception;
+    void status(Integer id) throws Exception;
 
-    List<Question> create(Integer id) throws Exception;
+    List<Question> questions(Integer templateId) throws Exception;
 
 }

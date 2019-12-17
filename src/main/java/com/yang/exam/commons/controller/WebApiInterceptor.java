@@ -2,12 +2,12 @@ package com.yang.exam.commons.controller;
 
 
 import com.yang.exam.api.admin.model.Admin;
-import com.yang.exam.api.admin.model.AdminSession;
-import com.yang.exam.api.admin.model.AdminSessionWrapper;
+import com.yang.exam.api.admin.entity.AdminSession;
+import com.yang.exam.api.admin.entity.AdminSessionWrapper;
 import com.yang.exam.api.admin.service.AdminService;
 import com.yang.exam.api.user.model.User;
-import com.yang.exam.api.user.model.UserSession;
-import com.yang.exam.api.user.model.UserSessionWrapper;
+import com.yang.exam.api.user.entity.UserSession;
+import com.yang.exam.api.user.entity.UserSessionWrapper;
 import com.yang.exam.api.user.service.UserService;
 import com.yang.exam.commons.context.Context;
 import com.yang.exam.commons.context.Contexts;

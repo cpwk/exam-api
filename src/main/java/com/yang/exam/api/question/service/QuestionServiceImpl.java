@@ -1,16 +1,16 @@
 package com.yang.exam.api.question.service;
 
 import com.yang.exam.api.category.model.Category;
-import com.yang.exam.api.category.repository.CategoryRepository;
-import com.yang.exam.api.question.model.Parameter;
+import com.yang.exam.api.category.service.CategoryService;
+import com.yang.exam.api.question.entity.QuestionError;
+import com.yang.exam.api.question.entity.QuestionOptions;
 import com.yang.exam.api.question.model.Question;
-import com.yang.exam.api.question.model.QuestionError;
 import com.yang.exam.api.question.qo.QuestionQo;
 import com.yang.exam.api.question.repository.QuestionRepository;
 import com.yang.exam.api.questionTag.model.QuestionTag;
-import com.yang.exam.api.questionTag.repository.QuestionTagRepository;
+import com.yang.exam.api.questionTag.service.QuestionTagService;
 import com.yang.exam.api.tag.model.Tag;
-import com.yang.exam.api.tag.repository.TagRepository;
+import com.yang.exam.api.tag.service.TagService;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
  * @author: yangchengcheng
@@ -33,37 +35,11 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private QuestionTagRepository questionTagRepository;
+    private TagService tagService;
     @Autowired
-    private TagRepository tagRepository;
+    private CategoryService categoryService;
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    private static final int LENGTH = 20;
-
-
-    @Override
-    public List<Question> generate(Parameter parameter) throws Exception {
-        List<Question> questionList1 = questionRepository.findByCategoryId(parameter.getCategoryId());
-        Random random = new Random();
-        List<Question> questionList = new ArrayList<>();
-//        for (Byte i : parameter.getType()) {
-//            List<Question> questionList2 = new ArrayList<>();
-//            for (Question val : questionList1) {
-//                if (i.equals(val.getType())) {
-//                    questionList2.add(val);
-//                }
-//            }
-//            Set<Integer> set = new HashSet(5);
-//            while (set.size() < 5) {
-//                set.add(random.nextInt(questionList2.size()));
-//            }
-//            for (Integer integer : set) {
-//                questionList.add(questionList2.get(integer));
-//            }
-//        }
-        return questionList;
-    }
+    private QuestionTagService questionTagService;
 
     @Override
     public void save(Question question) throws Exception {
@@ -74,26 +50,35 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
             QuestionTag questionTag = new QuestionTag();
             questionTag.setTagId(value);
             questionTag.setQuestionId(question.getId());
-            questionTagRepository.save(questionTag);
+            questionTagService.save(questionTag);
         }
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
+    public void status(Integer id) throws Exception {
         Question exist = findById(id);
-        if (exist != null) {
+        if (exist == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        if (exist.getStatus().equals(STATUS_OK)) {
             exist.setStatus(STATUS_HALT);
+        } else {
+            exist.setStatus(STATUS_OK);
         }
         save(exist);
     }
 
     @Override
-    public Question findById(Integer id) {
-        return questionRepository.findById(id).orElse(null);
+    public Question findById(Integer id) throws Exception {
+        Question question = questionRepository.findById(id).orElse(null);
+        if (question != null) {
+            wrap(Collections.singletonList(question), QuestionOptions.getDefaultInstance());
+        }
+        return question;
     }
 
     @Override
-    public Question getById(Integer id) {
+    public Question getById(Integer id) throws Exception {
         Question question = findById(id);
         if (question == null) {
             throw new ServiceException(ERR_DATA_NOT_FOUND);
@@ -101,43 +86,63 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
         return question;
     }
 
-
     @Override
-    public Page<Question> question_list(QuestionQo qo) throws Exception {
+    public Page<Question> questionList(QuestionQo qo, QuestionOptions options) throws Exception {
         Page<Question> questions = questionRepository.findAll(qo);
-        Set<Integer> tagIds = new HashSet<>();
-        for (Question q : questions) {
-            tagIds.addAll(q.getTagsId());
-        }
-        List<Tag> tags = tagRepository.findAllById(tagIds);
-        Map<Integer, Tag> tagMap = new HashMap<>();
-        for (Tag tag : tags) {
-            tagMap.put(tag.getId(), tag);
-        }
-        List<Category> categoryList = categoryRepository.findAll();
-        List<Tag> tags1;
-        for (Question qu : questions) {
-            for (Category c : categoryList) {
-                if (qu.getCategoryId().equals(c.getId())) {
-                    qu.setCategoryName(c);
-                }
-            }
-            tags1 = new ArrayList<>(qu.getTagsId().size());
-            for (Integer id : qu.getTagsId()) {
-                tags1.add(tagMap.get(id));
-                qu.setTag(tags1);
-            }
-        }
+        wrap(questions.getContent(), options);
         return questions;
     }
 
+    @Override
+    public List<Question> getAllByCategoryId(Integer categoryId) throws Exception {
+        return questionRepository.findAllByCategoryId(categoryId);
+    }
+
+    private void wrap(Collection<Question> questions, QuestionOptions options) throws Exception {
+        if (options.isWithCategory()) {
+            List<Integer> categoryIds = questions.stream().map(Question::getCategoryId).collect(Collectors.toList());
+            Map<Integer, Category> categoryMap = categoryService.findByids(categoryIds);
+            for (Question question : questions) {
+                question.setCategory(categoryMap.get(question.getCategoryId()));
+            }
+        }
+        if (options.isWithTag()) {
+            Set<Integer> tagIds = new HashSet<>();
+            for (Question q : questions) {
+                tagIds.addAll(q.getTagsId());
+            }
+            Map<Integer, Tag> tagMap = tagService.findTagByIds(tagIds);
+            for (Question q : questions) {
+                List<Tag> tags = new ArrayList<>();
+                for (Integer tid : q.getTagsId()) {
+                    tags.add(tagMap.get(tid));
+                }
+                q.setTag(tags);
+            }
+        }
+    }
+
     private void dataCheck(Question question) {
-        if (StringUtils.isEmpty(question.getTopic())
-                && question.getCategoryId() == null
-                && question.getType() == null
-                && StringUtils.isEmpty(question.getAnswer())
-                && question.getDifficulty() == null) {
-            throw new ServiceException(ERR_COMPLETE_EMPTY);
+        if (question.getDifficulty() == null) {
+            throw new ServiceException(ERR_QUESTION_DIFFICULTY_EMPTY);
+        }
+        if (question.getCategoryId() == null) {
+            throw new ServiceException(ERR_QUESTION_CATEGORYID_EMPTY);
+        }
+        if (question.getTagsId().size() < 1) {
+            throw new ServiceException(ERR_QUESTION_TAGSID_EMPTY);
+        }
+        if (question.getType() == null) {
+            throw new ServiceException(ERR_QUESTION_TYPE_EMPTY);
+        }
+        if (StringUtils.isEmpty(question.getTopic())) {
+            throw new ServiceException(ERR_QUESTION_TOPIC_EMPTY);
+        }
+        if ((question.getType() == 1 || question.getType() == 2) && question.getOptions().size() < 4) {
+            throw new ServiceException(ERR_QUESTION_OPTIONS_EMPTY);
+        }
+        if (StringUtils.isEmpty(question.getAnswer())) {
+            throw new ServiceException(ERR_QUESTION_ANSWER_EMPTY);
         }
     }
 
@@ -149,55 +154,4 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
             question.setUpdatedAt(System.currentTimeMillis());
         }
     }
-
-    @Override
-    public List<Question> findByType(Byte type) {
-        return questionRepository.findAllByType(type);
-    }
 }
-
-//    Page<Question> questions = questionRepository.findAll(qo);
-//    List<Tag> tags = tagRepository.findAll();
-//    List<Tag> tags1;
-//        for (Question qu : questions) {
-//                tags1 = new ArrayList<>(qu.getTagsId().size());
-//        for (Tag tag : tags) {
-//        for (Integer tagsId : qu.getTagsId()) {
-//        if (tagsId.equals(tag.getId())) {
-//        tags1.add(tag);
-//        qu.setTag(tags1);
-//        }
-//        }
-//        }
-//        }
-//        return questions;
-
-
-//    @Override
-//    public List<Category> categorys(CategoryQo categoryQo) {
-//        List<Category> categories =categoryRepository.findAll(categoryQo);
-//        List<Category> categories1 =new ArrayList<>();
-//        for (Category c:categories){
-//            if (c.getParentId()==0){
-//                c.setChildren(getChildren(c,categories));
-//                categories1.add(c);
-//            }
-//        }
-//        return categories1;
-//    }
-//
-//    private List<Category> getChildren(Category category,List<Category> all){
-//        List<Category> result = new ArrayList<>();
-//        for(Category c:all){
-//            if(category.getId().equals(c.getParentId())){
-//                result.add(c);
-//            }
-//        }
-//        if(result.size() == 0){
-//            return null;
-//        }
-//        for(Category c:result){
-//            c.setChildren(getChildren(c,all));
-//        }
-//        return result;
-//    }

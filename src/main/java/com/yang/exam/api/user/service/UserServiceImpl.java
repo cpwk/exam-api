@@ -1,13 +1,12 @@
 package com.yang.exam.api.user.service;
 
-import com.yang.exam.api.admin.model.AdminSession;
 import com.yang.exam.api.support.SupportService.SupportService;
 import com.yang.exam.api.support.model.SupportError;
 import com.yang.exam.api.support.model.VCode;
 import com.yang.exam.api.user.model.User;
-import com.yang.exam.api.user.model.UserError;
-import com.yang.exam.api.user.model.UserSession;
-import com.yang.exam.api.user.model.UserSessionWrapper;
+import com.yang.exam.api.user.entity.UserError;
+import com.yang.exam.api.user.entity.UserSession;
+import com.yang.exam.api.user.entity.UserSessionWrapper;
 import com.yang.exam.api.user.qo.UserQo;
 import com.yang.exam.api.user.repository.UserRepository;
 import com.yang.exam.api.user.repository.UserSessionRepository;

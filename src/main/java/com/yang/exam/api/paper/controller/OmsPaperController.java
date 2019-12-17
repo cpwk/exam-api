@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/oms/paper")
-public class PaperController extends BaseController {
+public class OmsPaperController extends BaseController {
 
     @Autowired
     private PaperService paperService;
@@ -33,8 +33,8 @@ public class PaperController extends BaseController {
 
     @RequestMapping(value = "paper_list")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView paper_list(String paperQo) throws Exception {
-        return feedback(paperService.paper_list(parseModel(paperQo, new PaperQo())));
+    public ModelAndView paperList(String paperQo) throws Exception {
+        return feedback(paperService.paperList(parseModel(paperQo, new PaperQo())));
     }
 
     @RequestMapping(value = "preview")
@@ -43,10 +43,10 @@ public class PaperController extends BaseController {
         return feedback(paperService.getById(id));
     }
 
-    @RequestMapping(value = "delete")
+    @RequestMapping(value = "status")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView delete(Integer id) throws Exception {
-        paperService.delete(id);
+    public ModelAndView status(Integer id) throws Exception {
+        paperService.status(id);
         return feedback();
     }
 }

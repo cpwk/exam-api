@@ -4,8 +4,8 @@ import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
 import com.yang.exam.api.template.entity.TemplateContent;
+import com.yang.exam.api.template.entity.TemplateError;
 import com.yang.exam.api.template.model.Template;
-import com.yang.exam.api.template.model.TemplateError;
 import com.yang.exam.api.template.qo.TemplateQo;
 import com.yang.exam.api.template.repository.TemplateRepository;
 import com.yang.exam.commons.exception.ServiceException;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
  * @author: yangchengcheng
@@ -37,7 +38,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     private CategoryService categoryService;
 
     @Override
-    public Page<Template> template_list(TemplateQo templateQo) throws Exception {
+    public Page<Template> templateList(TemplateQo templateQo) throws Exception {
 //        template.setCategory(categoryService.getById(template.getCategoryId()));
         Page<Template> templates = templateRepository.findAll(templateQo);
         for (Template val : templates) {
@@ -78,46 +79,58 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
+    public void status(Integer id) throws Exception {
         Template template = findById(id);
-        if (template != null) {
+        if (template == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        if (template.getStatus().equals(STATUS_OK)) {
             template.setStatus(STATUS_HALT);
+        } else {
+            template.setStatus(STATUS_OK);
         }
         save(template);
     }
 
     @Override
-    public List<Question> create(Integer id) throws Exception {
-        Template template = findById(id);
+    public List<Question> questions(Integer templateId) throws Exception {
+        Template template = getById(templateId);
+        List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
         Random random = new Random();
-        List<Question> questions = null;
-        List<Question> newList = new ArrayList<>();
-        if (findById(id) != null) {
-            for (TemplateContent v : template.getContent()) {
-                Set<Integer> set = new HashSet(v.getNumber());
-                questions = questionService.findByType(v.getType());
-                while (set.size() < v.getNumber()) {
-                    set.add(random.nextInt(questions.size()));
-                }
-                for (Integer integer : set) {
-                    newList.add(questions.get(integer));
+        List<Question> questions = new ArrayList<>();
+        for (TemplateContent v : template.getContent()) {
+            List<Question> questionList1 = new ArrayList<>();
+            for (Question question : questionList) {
+                if (v.getType().equals(question.getType())) {
+                    questionList1.add(question);
                 }
             }
-
+            Set<Integer> set = new HashSet(v.getNumber());
+            while (set.size() < v.getNumber()) {
+                set.add(random.nextInt(questionList1.size()));
+            }
+            for (Integer integer : set) {
+                questions.add(questionList1.get(integer));
+            }
         }
-        return newList;
+        return questions;
     }
 
     private void check(Template template) throws Exception {
-        if (StringUtils.isEmpty(template.getTemplateName()) ||
-                template.getContent() == null ||
-                template.getDifficulty() == null ||
-                template.getStatus() == null ||
-                template.getTotalScore() == null ||
-                template.getCategoryId() == null ||
-                template.getDuration() == null ||
-                template.getPassingScore() == null) {
-            throw new ServiceException(ERR_TEMPLATE_EMPTY);
+        if (template.getDifficulty() == null) {
+            throw new ServiceException(ERR_DIFFICULTY_EMPTY);
+        }
+        if (StringUtils.isEmpty(template.getTemplateName())) {
+            throw new ServiceException(ERR_TEMPLATE_NAME_EMPTY);
+        }
+        if (template.getCategoryId() == null) {
+            throw new ServiceException(ERR_CATEGORYID_EMPTY);
+        }
+        if (template.getContent().size() < 1) {
+            throw new ServiceException(ERR_CONTENT_EMPTY);
+        }
+        if (template.getDuration() == null) {
+            throw new ServiceException(ERR_DURATION_EMPTY);
         }
     }
 }

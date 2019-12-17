@@ -5,7 +5,9 @@ import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface CategoryService {
 
@@ -17,7 +19,7 @@ public interface CategoryService {
 
     Category category(int id) throws Exception;
 
-    List<Category> categorys(boolean adm);
+    List<Category> categorys(boolean usr);
 
     void remove(int id) throws Exception;
 
@@ -25,9 +27,7 @@ public interface CategoryService {
 
     Category getById(Integer id) throws Exception;
 
+    Map<Integer,Category> findByids(Collection<Integer> ids)throws Exception;
+
 }
 
-
-//    List<Category> category() throws ServiceException;
-
-//    List<Category> category_list(CategoryQo qo) throws ServiceException;

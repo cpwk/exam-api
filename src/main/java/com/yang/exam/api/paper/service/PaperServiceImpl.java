@@ -1,13 +1,10 @@
 package com.yang.exam.api.paper.service;
 
-import com.yang.exam.api.category.service.CategoryService;
+import com.yang.exam.api.paper.entity.PaperError;
 import com.yang.exam.api.paper.model.Paper;
-import com.yang.exam.api.paper.model.PaperError;
 import com.yang.exam.api.paper.qo.PaperQo;
 import com.yang.exam.api.paper.resitpory.PaperResitpory;
 import com.yang.exam.api.question.model.Question;
-import com.yang.exam.api.question.service.QuestionService;
-import com.yang.exam.api.template.entity.TemplateContent;
 import com.yang.exam.api.template.model.Template;
 import com.yang.exam.api.template.service.TemplateService;
 import com.yang.exam.commons.exception.ServiceException;
@@ -16,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
  * @author: yangchengcheng
@@ -35,16 +33,10 @@ public class PaperServiceImpl implements PaperService, PaperError {
     @Autowired
     private TemplateService templateService;
 
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private CategoryService categoryService;
-
     @Override
     public void save(Paper paper) throws Exception {
         check(paper);
-        List<Question> newList = generate(paper);
+        List<Question> newList = templateService.questions(paper.getTemplateId());
         paper.setQuestions(newList);
         if (paper.getId() == null) {
             paper.setCreatedAt(System.currentTimeMillis());
@@ -54,38 +46,13 @@ public class PaperServiceImpl implements PaperService, PaperError {
     }
 
     private void check(Paper paper) {
-        if (StringUtils.isEmpty(paper.getName()) ||
-                paper.getPassingScore() == null ||
-                paper.getDuration() == null ||
-                paper.getTemplateId() == null ||
-                paper.getStatus() == null ||
-                paper.getTotalScore() == null) {
-            throw new ServiceException(ERR_PAPER_EMPTY);
+        if (StringUtils.isEmpty(paper.getName())) {
+            throw new ServiceException(ERR_PAPER_NAME_EMPTY);
         }
-    }
-
-    private List<Question> generate(Paper paper) throws Exception {
-        Template template = templateService.findById(paper.getTemplateId());
-        Random random = new Random();
-        List<Question> questions = null;
-        List<Question> newList = new ArrayList<>();
-        if (templateService.findById(paper.getTemplateId()) != null) {
-            for (TemplateContent v : template.getContent()) {
-                Set<Integer> set = new HashSet(v.getNumber());
-                questions = questionService.findByType(v.getType());
-                while (set.size() < v.getNumber()) {
-                    set.add(random.nextInt(questions.size()));
-                }
-                for (Integer integer : set) {
-                    newList.add(questions.get(integer));
-                }
-            }
-        }
-        return newList;
     }
 
     @Override
-    public Page<Paper> paper_list(PaperQo paperQo) throws Exception {
+    public Page<Paper> paperList(PaperQo paperQo) throws Exception {
         Page<Paper> papers = paperResitpory.findAll(paperQo);
         List<Template> templates = templateService.template();
         for (Paper p : papers) {
@@ -95,7 +62,6 @@ public class PaperServiceImpl implements PaperService, PaperError {
                 }
             }
         }
-
         return papers;
     }
 
@@ -114,34 +80,17 @@ public class PaperServiceImpl implements PaperService, PaperError {
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
+    public void status(Integer id) throws Exception {
         Paper paper = findById(id);
-        if (paper != null) {
+        if (paper == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        if (paper.getStatus().equals(STATUS_OK)) {
             paper.setStatus(STATUS_HALT);
+        } else {
+            paper.setStatus(STATUS_OK);
         }
         save(paper);
     }
 
-    //    @Override
-//    public List<Question> create(Integer id) throws Exception {
-//        Template template = findById(id);
-//        Random random = new Random();
-//        List<Question> questions = null;
-//        List<Question> newList = new ArrayList<>();
-//        if (findById(id) != null) {
-//            for (TemplateContent v : template.getContent()) {
-//                Set<Integer> set = new HashSet(v.getNumber());
-//                questions = questionService.findByType(v.getType());
-//                while (set.size() < v.getNumber()) {
-//                    set.add(random.nextInt(questions.size()));
-////                    System.out.println(questions.size());
-//                }
-//                for (Integer integer : set) {
-//                    newList.add(questions.get(integer));
-//                }
-//            }
-//
-//        }
-//        return newList;
-//    }
 }

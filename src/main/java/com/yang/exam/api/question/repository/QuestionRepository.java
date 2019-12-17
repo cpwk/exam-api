@@ -11,7 +11,4 @@ public interface QuestionRepository extends BaseRepository<Question, Integer> {
 
     List<Question> findAllByCategoryId(Integer categoryId);
 
-    List<Question> findAllByDifficulty(Byte difficulty);
-
-    List<Question> findByCategoryId(Integer categoryId);
 }

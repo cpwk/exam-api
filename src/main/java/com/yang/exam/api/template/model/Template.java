@@ -140,4 +140,5 @@ public class Template {
     public void setCategory(Category category) {
         this.category = category;
     }
+
 }
