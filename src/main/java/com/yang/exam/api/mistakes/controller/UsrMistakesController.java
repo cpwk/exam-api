@@ -23,9 +23,16 @@ public class UsrMistakesController extends BaseController {
     private MistakesService mistakesService;
 
     @RequestMapping(value = "mistakes_list")
-    @Action(session = SessionType.NONE)
+    @Action(session = SessionType.USER)
     public ModelAndView mistakesList(String mistakesQo) throws Exception {
         return feedback(mistakesService.mistakesList(parseModel(mistakesQo, new MistakesQo())));
+    }
+
+    @RequestMapping(value = "status")
+    @Action(session = SessionType.USER)
+    public ModelAndView status(Integer id) throws Exception {
+        mistakesService.status(id);
+        return feedback();
     }
 
 }

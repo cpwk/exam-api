@@ -9,9 +9,11 @@ import com.yang.exam.api.template.model.Template;
 import com.yang.exam.api.template.service.TemplateService;
 import com.yang.exam.api.usrPaper.entity.UsrPaperError;
 import com.yang.exam.api.usrPaper.model.UsrPaper;
+import com.yang.exam.api.usrPaper.qo.UsrPaperQo;
 import com.yang.exam.api.usrPaper.repository.UserPaperRepository;
 import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,6 +47,7 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
             usrPaper.setDifficulty(template.getDifficulty());
             usrPaper.setCategoryId(template.getCategoryId());
             usrPaper.setTotalTime(template.getDuration() - usrPaper.getTotalTime());
+            usrPaper.setContent(template.getContent());
         }
         if (usrPaper.getPaperName() == null) {
             usrPaper.setPaperName(getTime());
@@ -103,20 +106,38 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     }
 
     private void saveMistakes(UsrPaper usrPaper) throws Exception {
-        List<Integer> list = new ArrayList<>();
         for (Question question : usrPaper.getQuestions()) {
             Mistakes mistakes = new Mistakes();
             if (!question.getAnswer().equals(question.getUserAnswer())) {
-                if (mistakesService.findByQuestionId(question.getId()) == null){
+                if (mistakesService.findByUserIdAndQuestionId(usrPaper.getUserId(), question.getId()) == null) {
                     mistakes.setUserId(usrPaper.getUserId());
                     mistakes.setQuestionId(question.getId());
-                    list.add(question.getId());
                     mistakesService.save(mistakes);
                 }
             }
         }
-        usrPaper.setMistakes(list);
     }
+
+    @Override
+    public Page<UsrPaper> record(UsrPaperQo usrPaperQo) throws Exception {
+        return userPaperRepository.findAll(usrPaperQo);
+    }
+
+//    @Override
+//    public List<Question> mistakes(UsrPaperQo usrPaperQo) throws Exception {
+//        Page<UsrPaper> usrPapers = record(usrPaperQo);
+//        List<Question> questions = new ArrayList<>();
+//        Set<Integer> set = new HashSet<>();
+//        for (UsrPaper usrPaper : usrPapers) {
+//            set.addAll(usrPaper.getMistakes());
+//        }
+//        for (Integer va : set) {
+//            questions.add(questionService.getById(va));
+//        }
+//        return questions;
+//    }
+
+}
 
 //        public void method(UsrPaper usrPaper,String a){
 //        //
@@ -125,6 +146,3 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
 //    public void method(UsrPaper usrPaper){
 //        method(usrPaper,"aaaa");
 //    }
-
-
-}

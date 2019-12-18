@@ -17,4 +17,6 @@ public class Constants {
 
     public static int PAGESIZE_MAX = 50;
 
+    public static int CACHE_REDIS_EXPIRE = 3600 * 48;
+
 }

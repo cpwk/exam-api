@@ -43,8 +43,7 @@ public class UsrPaper {
     @Column
     private Long totalTime;
     @Column
-    @Convert(converter = IntegerArrayConverter.class)
-    private List<Integer> mistakes;
+    private Byte type;
     @Transient
     private Integer templateId;
 
@@ -139,11 +138,11 @@ public class UsrPaper {
         this.totalTime = totalTime;
     }
 
-    public List<Integer> getMistakes() {
-        return mistakes;
+    public Byte getType() {
+        return type;
     }
 
-    public void setMistakes(List<Integer> mistakes) {
-        this.mistakes = mistakes;
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

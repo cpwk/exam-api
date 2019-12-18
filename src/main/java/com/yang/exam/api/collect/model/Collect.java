@@ -1,15 +1,15 @@
-package com.yang.exam.api.mistakes.model;
+package com.yang.exam.api.collect.model;
 
 import javax.persistence.*;
 
 /**
  * @author: yangchengcheng
- * @Date: 2019/12/17 20:11
+ * @Date: 2019/12/18 18:59
  * @Version：1.0
  */
 @Entity
-@Table(name = "mistakes")
-public class Mistakes {
+@Table(name = "collect")
+public class Collect {
 
     @Id
     @Column
@@ -21,6 +21,8 @@ public class Mistakes {
     private Integer questionId;
     @Column
     private Byte status;
+    @Column
+    private Long createdAt;
 
     public Integer getId() {
         return id;
@@ -52,5 +54,13 @@ public class Mistakes {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 }

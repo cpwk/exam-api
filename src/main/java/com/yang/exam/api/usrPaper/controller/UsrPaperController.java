@@ -1,7 +1,7 @@
 package com.yang.exam.api.usrPaper.controller;
 
-import com.yang.exam.api.template.entity.TemplateContent;
 import com.yang.exam.api.usrPaper.model.UsrPaper;
+import com.yang.exam.api.usrPaper.qo.UsrPaperQo;
 import com.yang.exam.api.usrPaper.service.UsrPaperService;
 import com.yang.exam.commons.controller.Action;
 import com.yang.exam.commons.controller.BaseController;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 /**
  * @author: yangchengcheng
@@ -43,5 +41,17 @@ public class UsrPaperController extends BaseController {
     public ModelAndView questions(String usrPaper) throws Exception {
         return feedback(usrPaperService.questions(parseModel(usrPaper, new UsrPaper())));
     }
+
+    @RequestMapping(value = "record")
+    @Action(session = SessionType.USER)
+    public ModelAndView record(String usrPaperQo) throws Exception {
+        return feedback(usrPaperService.record(parseModel(usrPaperQo, new UsrPaperQo())));
+    }
+
+//    @RequestMapping(value = "mistakes")
+//    @Action(session = SessionType.NONE)
+//    public ModelAndView mistakes(String usrPaperQo) throws Exception {
+//        return feedback(usrPaperService.mistakes(parseModel(usrPaperQo, new UsrPaperQo())));
+//    }
 
 }

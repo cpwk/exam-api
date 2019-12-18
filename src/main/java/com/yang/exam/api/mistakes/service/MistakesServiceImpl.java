@@ -1,5 +1,6 @@
 package com.yang.exam.api.mistakes.service;
 
+import com.yang.exam.api.mistakes.entity.MistakesError;
 import com.yang.exam.api.mistakes.model.Mistakes;
 import com.yang.exam.api.mistakes.qo.MistakesQo;
 import com.yang.exam.api.mistakes.resitpory.MistakesResitpory;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.yang.exam.commons.exception.ErrorCode.ERR_DATA_NOT_FOUND;
+import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
+import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
  * @author: yangchengcheng
@@ -21,7 +23,7 @@ import static com.yang.exam.commons.exception.ErrorCode.ERR_DATA_NOT_FOUND;
  * @Version：1.0
  */
 @Service
-public class MistakesServiceImpl implements MistakesService {
+public class MistakesServiceImpl implements MistakesService, MistakesError {
 
     @Autowired
     private MistakesResitpory mistakesResitpory;
@@ -45,7 +47,12 @@ public class MistakesServiceImpl implements MistakesService {
 
     @Override
     public void save(Mistakes mistakes) {
-        mistakesResitpory.save(mistakes);
+        if (mistakes.getStatus() == null) {
+            mistakes.setStatus(STATUS_OK);
+        }
+        if (mistakesResitpory.findByUserIdAndQuestionId(mistakes.getUserId(), mistakes.getQuestionId()) == null) {
+            mistakesResitpory.save(mistakes);
+        }
     }
 
     @Override
@@ -60,7 +67,18 @@ public class MistakesServiceImpl implements MistakesService {
     }
 
     @Override
-    public Mistakes findByQuestionId(Integer questionId) throws Exception {
-        return mistakesResitpory.findByQuestionId(questionId);
+    public Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception {
+        return mistakesResitpory.findByUserIdAndQuestionId(userId, questionId);
+    }
+
+    @Override
+    public void status(Integer id) throws Exception {
+        Mistakes exist = getById(id);
+        if (exist.getStatus().equals(STATUS_OK)) {
+            exist.setStatus(STATUS_HALT);
+        } else {
+            exist.setStatus(STATUS_OK);
+        }
+        save(exist);
     }
 }

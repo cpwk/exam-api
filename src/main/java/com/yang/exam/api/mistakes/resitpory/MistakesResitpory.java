@@ -10,6 +10,6 @@ import com.yang.exam.commons.reposiotry.BaseRepository;
  */
 public interface MistakesResitpory extends BaseRepository<Mistakes, Integer> {
 
-    Mistakes findByQuestionId(Integer questionId);
+    Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId);
 
 }

@@ -2,7 +2,9 @@ package com.yang.exam.commons.context;
 
 
 public class Context {
+
     private String locale;
+
     private SessionWrapper session;
 
     public SessionWrapper getSession() {

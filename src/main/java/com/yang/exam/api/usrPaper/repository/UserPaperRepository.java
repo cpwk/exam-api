@@ -10,5 +10,4 @@ import com.yang.exam.commons.reposiotry.BaseRepository;
  */
 public interface UserPaperRepository extends BaseRepository<UsrPaper, Integer> {
 
-    UsrPaper findByCreatedAt(Long CreatedAt) throws Exception;
 }

@@ -16,6 +16,8 @@ public class Tag {
     private Integer id;
     @Column
     private String name;
+    @Column
+    private Integer categoryId;
 
     public Tag() {
     }
@@ -34,5 +36,13 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }

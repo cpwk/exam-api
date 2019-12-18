@@ -21,5 +21,7 @@ public interface MistakesService {
 
     Mistakes getById(Integer id) throws Exception;
 
-    Mistakes findByQuestionId(Integer questionId) throws Exception;
+    void status(Integer id) throws Exception;
+
+    Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception;
 }

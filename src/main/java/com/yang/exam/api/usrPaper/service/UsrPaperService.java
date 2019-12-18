@@ -2,6 +2,8 @@ package com.yang.exam.api.usrPaper.service;
 
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.usrPaper.model.UsrPaper;
+import com.yang.exam.api.usrPaper.qo.UsrPaperQo;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,5 +23,9 @@ public interface UsrPaperService {
     List<Question> questions(Integer templateId) throws Exception;
 
     List<Question> questions(UsrPaper usrPaper) throws Exception;
+
+    Page<UsrPaper> record(UsrPaperQo usrPaperQo) throws Exception;
+
+//    List<Question> mistakes(UsrPaperQo usrPaperQo) throws Exception;
 
 }

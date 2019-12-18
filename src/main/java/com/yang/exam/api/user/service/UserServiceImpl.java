@@ -1,5 +1,7 @@
 package com.yang.exam.api.user.service;
 
+import com.sunnysuperman.kvcache.RepositoryProvider;
+import com.sunnysuperman.kvcache.converter.BeanModelConverter;
 import com.yang.exam.api.support.SupportService.SupportService;
 import com.yang.exam.api.support.model.SupportError;
 import com.yang.exam.api.support.model.VCode;
@@ -10,15 +12,23 @@ import com.yang.exam.api.user.entity.UserSessionWrapper;
 import com.yang.exam.api.user.qo.UserQo;
 import com.yang.exam.api.user.repository.UserRepository;
 import com.yang.exam.api.user.repository.UserSessionRepository;
+import com.yang.exam.commons.cache.CacheOptions;
+import com.yang.exam.commons.cache.KvCacheFactory;
+import com.yang.exam.commons.cache.KvCacheWrap;
+import com.yang.exam.commons.context.Contexts;
+import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.ipseeker.IPSeekerUtil;
 import com.yang.exam.commons.model.Constants;
+import com.yang.exam.commons.utils.CollectionUtil;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,8 +38,6 @@ import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 @Service
 public class UserServiceImpl implements UserService, UserError, SupportError {
 
-    private static final int NAME_LENGTH_MIN = 2;
-    private static final int NAME_LENGTH_MAX = 20;
     private static final int USERNAME_LENGTH_MIN = 3;
     private static final int USERNAME_LENGTH_MAX = 10;
 
@@ -185,17 +193,17 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
         return user;
     }
 
-    @Override
-    public Map profile(User user) throws Exception {
-        Integer id = user.getId();
-        User exist = getById(id);
-        exist.setAvatar(user.getAvatar());
-        exist.setName(user.getName());
-        userRepository.save(exist);
-        Map<String, User> map = new HashMap<>();
-        map.put("user", exist);
-        return map;
-    }
+//    @Override
+//    public Map profile(User user) throws Exception {
+//        Integer id = user.getId();
+//        User exist = getById(id);
+//        exist.setAvatar(user.getAvatar());
+//        exist.setName(user.getName());
+//        userRepository.save(exist);
+//        Map<String, User> map = new HashMap<>();
+//        map.put("user", exist);
+//        return map;
+//    }
 
     @Override
     public Page<User> users(UserQo userQo) throws Exception {
@@ -225,5 +233,50 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
         return userSessionRepository.findByToken(token);
     }
 }
+
+
+//
+//    @Autowired
+//    private KvCacheFactory kvCacheFactory;
+//    private KvCacheWrap<Integer, User> userCache;
+//
+//    @PostConstruct
+//    public void init() {
+//        userCache = kvCacheFactory.create(new CacheOptions("user", 1, Constants.CACHE_REDIS_EXPIRE),
+//                new RepositoryProvider<Integer, User>() {
+//
+//                    @Override
+//                    public User findByKey(Integer key) throws RepositoryException {
+//                        return userRepository.getOne(key);
+//                    }
+//
+//                    @Override
+//                    public Map<Integer, User> findByKeys(Collection<Integer> ids) throws RepositoryException {
+//                        throw new UnsupportedOperationException("findByKeys");
+//                    }
+//
+//                }, new BeanModelConverter<>(User.class));
+//    }
+//
+//    @Override
+//    public User user(int id, boolean init) {
+//        User user = user(id);
+//        if (init) {
+//        }
+//        return user;
+//    }
+//
+//    private User user(int id) {
+//        return userCache.findByKey(id);
+//    }
+//
+//
+//    @Override
+//    public Map profile() throws Exception {
+//        Integer userId = Contexts.requestUserId();
+//        User user = user(userId, true);
+//        return CollectionUtil.arrayAsMap("trainee", user);
+//    }
+//
 
 
