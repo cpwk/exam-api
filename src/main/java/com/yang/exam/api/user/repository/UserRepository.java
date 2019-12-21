@@ -6,7 +6,7 @@ import com.yang.exam.commons.reposiotry.BaseRepository;
 
 public interface UserRepository extends BaseRepository<User, Integer> {
 
-    User findByUsername(String username)throws Exception;
+    User findByUsername(String username) throws Exception;
 
     User findByMobile(String mobile);
 

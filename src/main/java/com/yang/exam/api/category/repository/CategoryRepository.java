@@ -19,5 +19,5 @@ public interface CategoryRepository extends BaseRepository<com.yang.exam.api.cat
     @Transactional
     @Modifying
     @Query("update Category set status= :status where sequence like CONCAT(:sequence,'%')")
-    void status(byte status,String sequence);
+    void status(byte status, String sequence);
 }

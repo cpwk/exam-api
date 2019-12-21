@@ -4,7 +4,6 @@ import com.yang.exam.api.paper.entity.PaperError;
 import com.yang.exam.api.paper.model.Paper;
 import com.yang.exam.api.paper.qo.PaperQo;
 import com.yang.exam.api.paper.resitpory.PaperResitpory;
-import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.model.Template;
 import com.yang.exam.api.template.service.TemplateService;
 import com.yang.exam.commons.exception.ServiceException;
@@ -36,8 +35,8 @@ public class PaperServiceImpl implements PaperService, PaperError {
     @Override
     public void save(Paper paper) throws Exception {
         check(paper);
-        List<Question> newList = templateService.questions(paper.getTemplateId());
-        paper.setQuestions(newList);
+        Template template = templateService.getById(paper.getTemplateId());
+        paper.setQuestions(template.getQuestions());
         if (paper.getId() == null) {
             paper.setCreatedAt(System.currentTimeMillis());
         }

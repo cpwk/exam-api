@@ -5,6 +5,7 @@ import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
 import com.yang.exam.api.template.entity.TemplateContent;
 import com.yang.exam.api.template.entity.TemplateError;
+import com.yang.exam.api.template.entity.TemplateOptions;
 import com.yang.exam.api.template.model.Template;
 import com.yang.exam.api.template.qo.TemplateQo;
 import com.yang.exam.api.template.repository.TemplateRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
 import static com.yang.exam.commons.entity.Constants.STATUS_OK;
@@ -65,11 +67,6 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 
     @Override
-    public Template findById(Integer id) throws Exception {
-        return templateRepository.findById(id).orElse(null);
-    }
-
-    @Override
     public Template getById(Integer id) throws Exception {
         Template template = findById(id);
         if (template == null) {
@@ -93,27 +90,29 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 
     @Override
-    public List<Question> questions(Integer templateId) throws Exception {
-        Template template = getById(templateId);
-        List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
-        Random random = new Random();
-        List<Question> questions = new ArrayList<>();
-        for (TemplateContent v : template.getContent()) {
-            List<Question> questionList1 = new ArrayList<>();
-            for (Question question : questionList) {
-                if (v.getType().equals(question.getType())) {
-                    questionList1.add(question);
-                }
-            }
-            Set<Integer> set = new HashSet(v.getNumber());
-            while (set.size() < v.getNumber()) {
-                set.add(random.nextInt(questionList1.size()));
-            }
-            for (Integer integer : set) {
-                questions.add(questionList1.get(integer));
-            }
+    public Template findById(Integer id) throws Exception {
+        Template template = templateRepository.findById(id).orElse(null);
+        if (template != null) {
+            wrap(template, TemplateOptions.getDefaultInstance());
         }
-        return questions;
+        return template;
+    }
+
+    private void wrap(Template template, TemplateOptions options) throws Exception {
+        if (options.isWithQuestions()) {
+            List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
+            Random random = new Random();
+            List<Question> questions = new ArrayList<>();
+            for (TemplateContent v : template.getContent()) {
+                List<Question> questionList1 = questionList.stream().filter((Question question) -> question.getType().equals(v.getType())).collect(Collectors.toList());
+                Set<Integer> set = new HashSet(v.getNumber());
+                while (set.size() < v.getNumber()) {
+                    set.add(random.nextInt(questionList1.size()));
+                }
+                questions.addAll(set.stream().map(questionList1::get).collect(Collectors.toList()));
+            }
+            template.setQuestions(questions);
+        }
     }
 
     private void check(Template template) throws Exception {
@@ -134,3 +133,27 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
         }
     }
 }
+
+//    @Override
+//    public List<Question> questions(Integer templateId) throws Exception {
+//        Template template = getById(templateId);
+//        List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
+//        Random random = new Random();
+//        List<Question> questions = new ArrayList<>();
+//        for (TemplateContent v : template.getContent()) {
+//            List<Question> questionList1 = new ArrayList<>();
+//            for (Question question : questionList) {
+//                if (v.getType().equals(question.getType())) {
+//                    questionList1.add(question);
+//                }
+//            }
+//            Set<Integer> set = new HashSet(v.getNumber());
+//            while (set.size() < v.getNumber()) {
+//                set.add(random.nextInt(questionList1.size()));
+//            }
+//            for (Integer integer : set) {
+//                questions.add(questionList1.get(integer));
+//            }
+//        }
+//        return questions;
+//    }

@@ -47,6 +47,8 @@ public class Question {
     @Column
     private String userAnswer;
     @Transient
+    private Byte collected;
+    @Transient
     private List<Tag> tag;
     @Transient
     private Category category;
@@ -164,5 +166,13 @@ public class Question {
 
     public void setUserAnswer(String userAnswer) {
         this.userAnswer = userAnswer;
+    }
+
+    public Byte getCollected() {
+        return collected;
+    }
+
+    public void setCollected(Byte collected) {
+        this.collected = collected;
     }
 }

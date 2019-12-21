@@ -1,20 +1,18 @@
 package com.yang.exam.api.mistakes.service;
 
 import com.yang.exam.api.mistakes.entity.MistakesError;
+import com.yang.exam.api.mistakes.entity.MistakesOptions;
 import com.yang.exam.api.mistakes.model.Mistakes;
 import com.yang.exam.api.mistakes.qo.MistakesQo;
 import com.yang.exam.api.mistakes.resitpory.MistakesResitpory;
-import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
 import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
 import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
@@ -42,7 +40,7 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
         if (mistakes == null) {
             throw new ServiceException(ERR_DATA_NOT_FOUND);
         }
-        return null;
+        return mistakes;
     }
 
     @Override
@@ -56,14 +54,18 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
     }
 
     @Override
-    public List<Question> mistakesList(MistakesQo qo) throws Exception {
-
+    public Page<Mistakes> mistakesList(MistakesQo qo, MistakesOptions options) throws Exception {
         Page<Mistakes> mistakesList = mistakesResitpory.findAll(qo);
-        List<Question> list = new ArrayList<>();
-        for (Mistakes mistakes : mistakesList) {
-            list.add(questionService.getById(mistakes.getQuestionId()));
+        wrap(mistakesList.getContent(), options);
+        return mistakesList;
+    }
+
+    private void wrap(Collection<Mistakes> mistakes, MistakesOptions options) throws Exception {
+        if (options.isWithQuestion()) {
+            for (Mistakes mistakes1 : mistakes) {
+                mistakes1.setQuestion(questionService.getById(mistakes1.getQuestionId()));
+            }
         }
-        return list;
     }
 
     @Override
@@ -72,13 +74,8 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
     }
 
     @Override
-    public void status(Integer id) throws Exception {
+    public void delete(Integer id) throws Exception {
         Mistakes exist = getById(id);
-        if (exist.getStatus().equals(STATUS_OK)) {
-            exist.setStatus(STATUS_HALT);
-        } else {
-            exist.setStatus(STATUS_OK);
-        }
-        save(exist);
+        mistakesResitpory.delete(exist);
     }
 }

@@ -1,7 +1,5 @@
 package com.yang.exam.api.question.entity;
 
-import com.yang.exam.api.question.model.Question;
-
 /**
  * @author: yangchengcheng
  * @Date: 2019/12/12 16:05
@@ -13,7 +11,9 @@ public class QuestionOptions {
 
     private boolean withTag;
 
-    private QuestionOptions(){
+    private boolean withCollect;
+
+    private QuestionOptions() {
 
     }
 
@@ -23,6 +23,15 @@ public class QuestionOptions {
 
     public boolean isWithTag() {
         return withTag;
+    }
+
+    public boolean isWithCollect() {
+        return withCollect;
+    }
+
+    public QuestionOptions setWithCollect(boolean withCollect) {
+        this.withCollect = withCollect;
+        return this;
     }
 
     private QuestionOptions setWithCategory(boolean withCategory) {
@@ -35,7 +44,7 @@ public class QuestionOptions {
         return this;
     }
 
-    public static QuestionOptions getDefaultInstance(){
+    public static QuestionOptions getDefaultInstance() {
         return new QuestionOptions().setWithCategory(true).setWithTag(false);
     }
 
@@ -43,8 +52,8 @@ public class QuestionOptions {
         return new QuestionOptions().setWithCategory(true).setWithTag(true);
     }
 
-    public static QuestionOptions getUsrListInstance(){
-        return new QuestionOptions().setWithCategory(true).setWithTag(true);
+    public static QuestionOptions getUsrListInstance() {
+        return new QuestionOptions().setWithCategory(false).setWithTag(false).setWithCollect(true);
     }
 
 }

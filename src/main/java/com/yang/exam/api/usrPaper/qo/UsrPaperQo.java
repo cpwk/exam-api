@@ -1,5 +1,6 @@
 package com.yang.exam.api.usrPaper.qo;
 
+import com.yang.exam.commons.context.Contexts;
 import com.yang.exam.commons.reposiotry.support.DataQueryObjectPage;
 import com.yang.exam.commons.reposiotry.support.QueryField;
 import com.yang.exam.commons.reposiotry.support.QueryType;
@@ -12,7 +13,7 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
 public class UsrPaperQo extends DataQueryObjectPage {
 
     @QueryField(type = QueryType.EQUAL, name = "userId")
-    private Integer userId;
+    private Integer userId = Contexts.requestUser().getId();
 
     public Integer getUserId() {
         return userId;
@@ -31,5 +32,16 @@ public class UsrPaperQo extends DataQueryObjectPage {
 
     public void setType(Byte type) {
         this.type = type == 0 ? null : type;
+    }
+
+    @QueryField(type = QueryType.EQUAL, name = "status")
+    private Byte status = 1;
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status == 1 ? null : status;
     }
 }

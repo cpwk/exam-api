@@ -1,5 +1,6 @@
 package com.yang.exam.api.collect.controller;
 
+import com.yang.exam.api.collect.entity.CollectOptions;
 import com.yang.exam.api.collect.model.Collect;
 import com.yang.exam.api.collect.qo.CollectQo;
 import com.yang.exam.api.collect.service.CollectService;
@@ -30,16 +31,16 @@ public class UsrCollectController extends BaseController {
         return feedback();
     }
 
-    @RequestMapping(value = "status")
+    @RequestMapping(value = "delete")
     @Action(session = SessionType.USER)
-    public ModelAndView status(Integer id) throws Exception {
-        collectService.status(id);
+    public ModelAndView delete(Integer id) throws Exception {
+        collectService.delete(id);
         return feedback();
     }
 
     @RequestMapping(value = "collect_list")
     @Action(session = SessionType.USER)
-    public ModelAndView collectList(String CollectQo) throws Exception {
-        return feedback(collectService.collectList(parseModel(CollectQo, new CollectQo())));
+    public ModelAndView collectList(String collectQo) throws Exception {
+        return feedback(collectService.collectList(parseModel(collectQo, new CollectQo()), CollectOptions.getDefaultInstance()));
     }
 }

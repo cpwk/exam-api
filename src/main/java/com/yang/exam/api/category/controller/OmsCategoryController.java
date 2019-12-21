@@ -1,12 +1,10 @@
 package com.yang.exam.api.category.controller;
 
 import com.yang.exam.api.category.model.Category;
-import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.api.category.service.CategoryService;
 import com.yang.exam.commons.controller.Action;
 import com.yang.exam.commons.controller.BaseController;
 import com.yang.exam.commons.controller.SessionType;
-import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

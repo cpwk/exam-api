@@ -28,7 +28,7 @@ public class UsrTemplateController extends BaseController {
         return feedback(templateService.templateList(parseModel(templateQo, new TemplateQo())));
     }
 
-    @RequestMapping(value = "getById")
+    @RequestMapping(value = "template_id")
     @Action(session = SessionType.USER)
     public ModelAndView getById(Integer id) throws Exception {
         return feedback(templateService.getById(id));

@@ -1,13 +1,13 @@
 package com.yang.exam.commons.controller;
 
 
-import com.yang.exam.api.admin.model.Admin;
 import com.yang.exam.api.admin.entity.AdminSession;
 import com.yang.exam.api.admin.entity.AdminSessionWrapper;
+import com.yang.exam.api.admin.model.Admin;
 import com.yang.exam.api.admin.service.AdminService;
-import com.yang.exam.api.user.model.User;
+import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.entity.UserSession;
-import com.yang.exam.api.user.entity.UserSessionWrapper;
+import com.yang.exam.api.user.model.User;
 import com.yang.exam.api.user.service.UserService;
 import com.yang.exam.commons.context.Context;
 import com.yang.exam.commons.context.Contexts;
@@ -92,7 +92,7 @@ public class WebApiInterceptor implements HandlerInterceptor, WebApiConstant {
             return false;
         }
         User user = userService.getById(session.getUserId());
-        Contexts.get().setSession(new UserSessionWrapper(user, session));
+        Contexts.get().setSession(new UserSessionWrap(user, session));
         return true;
     }
 

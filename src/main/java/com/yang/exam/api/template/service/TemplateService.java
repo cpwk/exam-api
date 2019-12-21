@@ -1,6 +1,5 @@
 package com.yang.exam.api.template.service;
 
-import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.model.Template;
 import com.yang.exam.api.template.qo.TemplateQo;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,5 @@ public interface TemplateService {
     Template getById(Integer id) throws Exception;
 
     void status(Integer id) throws Exception;
-
-    List<Question> questions(Integer templateId) throws Exception;
 
 }

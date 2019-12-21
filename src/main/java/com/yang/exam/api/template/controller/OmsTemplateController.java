@@ -37,13 +37,7 @@ public class OmsTemplateController extends BaseController {
         return feedback();
     }
 
-    @RequestMapping(value = "create")
-    @Action(session = SessionType.ADMIN)
-    public ModelAndView create(Integer id) throws Exception {
-        return feedback(templateService.questions(id));
-    }
-
-    @RequestMapping(value = "getById")
+    @RequestMapping(value = "template_id")
     @Action(session = SessionType.ADMIN)
     public ModelAndView getById(Integer id) throws Exception {
         return feedback(templateService.getById(id));

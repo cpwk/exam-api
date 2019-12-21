@@ -6,6 +6,7 @@ import com.yang.exam.api.usrPaper.qo.UsrPaperQo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: yangchengcheng
@@ -16,16 +17,16 @@ public interface UsrPaperService {
 
     UsrPaper findById(Integer id) throws Exception;
 
+    Map usrPaperId(Integer id) throws Exception;
+
     UsrPaper getById(Integer id) throws Exception;
 
     void save(UsrPaper usrPaper) throws Exception;
-
-    List<Question> questions(Integer templateId) throws Exception;
 
     List<Question> questions(UsrPaper usrPaper) throws Exception;
 
     Page<UsrPaper> record(UsrPaperQo usrPaperQo) throws Exception;
 
-//    List<Question> mistakes(UsrPaperQo usrPaperQo) throws Exception;
+    void status(Integer id) throws Exception;
 
 }

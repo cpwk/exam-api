@@ -22,8 +22,19 @@ public class MistakesQo extends DataQueryObjectPage {
         this.userId = userId;
     }
 
+    @QueryField(type = QueryType.EQUAL, name = "type")
+    private Byte type = 0;
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type == 0 ? null : type;
+    }
+
     @QueryField(type = QueryType.EQUAL, name = "status")
-    private Byte status;
+    private Byte status = 1;
 
     public Byte getStatus() {
         return status;

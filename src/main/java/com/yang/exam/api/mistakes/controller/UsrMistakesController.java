@@ -1,5 +1,6 @@
 package com.yang.exam.api.mistakes.controller;
 
+import com.yang.exam.api.mistakes.entity.MistakesOptions;
 import com.yang.exam.api.mistakes.qo.MistakesQo;
 import com.yang.exam.api.mistakes.service.MistakesService;
 import com.yang.exam.commons.controller.Action;
@@ -25,13 +26,13 @@ public class UsrMistakesController extends BaseController {
     @RequestMapping(value = "mistakes_list")
     @Action(session = SessionType.USER)
     public ModelAndView mistakesList(String mistakesQo) throws Exception {
-        return feedback(mistakesService.mistakesList(parseModel(mistakesQo, new MistakesQo())));
+        return feedback(mistakesService.mistakesList(parseModel(mistakesQo, new MistakesQo()), MistakesOptions.getDefaultInstance()));
     }
 
-    @RequestMapping(value = "status")
+    @RequestMapping(value = "delete")
     @Action(session = SessionType.USER)
-    public ModelAndView status(Integer id) throws Exception {
-        mistakesService.status(id);
+    public ModelAndView delete(Integer id) throws Exception {
+        mistakesService.delete(id);
         return feedback();
     }
 

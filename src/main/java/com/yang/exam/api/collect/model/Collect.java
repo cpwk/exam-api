@@ -1,5 +1,7 @@
 package com.yang.exam.api.collect.model;
 
+import com.yang.exam.api.question.model.Question;
+
 import javax.persistence.*;
 
 /**
@@ -20,9 +22,11 @@ public class Collect {
     @Column
     private Integer questionId;
     @Column
-    private Byte status;
-    @Column
     private Long createdAt;
+    @Column
+    private Byte type;
+    @Transient
+    private Question question;
 
     public Integer getId() {
         return id;
@@ -48,19 +52,27 @@ public class Collect {
         this.questionId = questionId;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
     public Long getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

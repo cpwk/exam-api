@@ -7,7 +7,6 @@ import com.yang.exam.api.user.service.UserService;
 import com.yang.exam.commons.controller.Action;
 import com.yang.exam.commons.controller.BaseController;
 import com.yang.exam.commons.controller.SessionType;
-import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,23 +46,16 @@ public class UsrController extends BaseController {
         return feedback(userService.getById(id));
     }
 
-//    @RequestMapping(value = "/profile")
-//    @Action(session = SessionType.USER)
-//    public ModelAndView profile(String user) throws Exception {
-//        return feedback(userService.profile(parseModel(user, new User())));
-//    }
+    @RequestMapping(value = "/profile")
+    @Action(session = SessionType.USER)
+    public ModelAndView profile() throws Exception {
+        return feedback(userService.profile());
+    }
+
+    @RequestMapping(value = "/modify_profile")
+    @Action(session = SessionType.USER)
+    public ModelAndView modifyProfile(String user) throws Exception {
+        return feedback(userService.modifyProfile(parseModel(user, new User())));
+    }
 
 }
-
-
-//    @RequestMapping(value = "/profile")
-//    @Action(session = SessionType.USER)
-//    public ModelAndView profile() throws Exception {
-//        return feedback(userService.profile());
-//    }
-//
-//    @RequestMapping(value = "/user")
-//    @Action(session = SessionType.USER)
-//    public ModelAndView user(Integer id) throws ServiceException {
-//        return feedback(userService.user(id, false));
-//    }

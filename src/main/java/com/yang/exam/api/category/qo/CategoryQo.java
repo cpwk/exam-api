@@ -1,6 +1,5 @@
 package com.yang.exam.api.category.qo;
 
-import com.yang.exam.commons.reposiotry.support.DataQueryObjectPage;
 import com.yang.exam.commons.reposiotry.support.DataQueryObjectSort;
 import com.yang.exam.commons.reposiotry.support.QueryField;
 import com.yang.exam.commons.reposiotry.support.QueryType;
@@ -33,7 +32,6 @@ public class CategoryQo extends DataQueryObjectSort {
     public void setStatus(Byte status) {
         this.status = status == 0 ? null : status;
     }
-
 
     public String getName() {
         return name;

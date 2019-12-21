@@ -1,21 +1,20 @@
 package com.yang.exam.api.collect.service;
 
 import com.yang.exam.api.collect.entity.CollectError;
+import com.yang.exam.api.collect.entity.CollectOptions;
 import com.yang.exam.api.collect.model.Collect;
 import com.yang.exam.api.collect.qo.CollectQo;
 import com.yang.exam.api.collect.resitpory.CollectResitpory;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
+import com.yang.exam.commons.context.Contexts;
 import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
-import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
 /**
  * @author: yangchengcheng
@@ -36,10 +35,10 @@ public class CollectServiceImpl implements CollectService, CollectError {
         if (collect.getCreatedAt() == null) {
             collect.setCreatedAt(System.currentTimeMillis());
         }
-        if (collect.getStatus() == null) {
-            collect.setStatus(STATUS_OK);
-        }
-        if (collectResitpory.findByUserIdAndQuestionId(collect.getUserId(), collect.getQuestionId()) == null) {
+        if (collectResitpory.findByUserIdAndQuestionId(Contexts.requestUser().getId(), collect.getQuestionId()) == null) {
+            Question question = questionService.getById(collect.getQuestionId());
+            collect.setType(question.getType());
+            collect.setUserId(Contexts.requestUser().getId());
             collectResitpory.save(collect);
         }
     }
@@ -59,23 +58,30 @@ public class CollectServiceImpl implements CollectService, CollectError {
     }
 
     @Override
-    public void status(Integer id) throws Exception {
-        Collect exist = getById(id);
-        if (exist.getStatus().equals(STATUS_OK)) {
-            exist.setStatus(STATUS_HALT);
-        } else {
-            exist.setStatus(STATUS_OK);
-        }
-        save(exist);
+    public void delete(Integer questionId) throws Exception {
+        Integer id = Contexts.requestUser().getId();
+        Collect exist = collectResitpory.findByUserIdAndQuestionId(id, questionId);
+        collectResitpory.delete(exist);
     }
 
     @Override
-    public List<Question> collectList(CollectQo collectQo) throws Exception {
-        List<Question> questions = new ArrayList<>();
+    public List<Collect> findByUserId(Integer id) throws Exception {
+        List<Collect> collects = collectResitpory.findByUserId(id);
+        return collects;
+    }
+
+    @Override
+    public Page<Collect> collectList(CollectQo collectQo, CollectOptions options) throws Exception {
         Page<Collect> collects = collectResitpory.findAll(collectQo);
-        for (Collect collect : collects) {
-            questions.add(questionService.getById(collect.getQuestionId()));
+        wrap(collects.getContent(), options);
+        return collects;
+    }
+
+    private void wrap(Collection<Collect> collects, CollectOptions options) throws Exception {
+        if (options.isWithQuestion()) {
+            for (Collect collect : collects) {
+                collect.setQuestion(questionService.getById(collect.getQuestionId()));
+            }
         }
-        return questions;
     }
 }

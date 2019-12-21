@@ -5,10 +5,10 @@ import com.sunnysuperman.kvcache.converter.BeanModelConverter;
 import com.yang.exam.api.support.SupportService.SupportService;
 import com.yang.exam.api.support.model.SupportError;
 import com.yang.exam.api.support.model.VCode;
-import com.yang.exam.api.user.model.User;
+import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.entity.UserError;
 import com.yang.exam.api.user.entity.UserSession;
-import com.yang.exam.api.user.entity.UserSessionWrapper;
+import com.yang.exam.api.user.model.User;
 import com.yang.exam.api.user.qo.UserQo;
 import com.yang.exam.api.user.repository.UserRepository;
 import com.yang.exam.api.user.repository.UserSessionRepository;
@@ -48,7 +48,6 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
     @Value("${admin.session-days}")
     private int sessionDays;
 
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -56,8 +55,31 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
     @Autowired
     private UserSessionRepository userSessionRepository;
 
+    @Autowired
+    private KvCacheFactory kvCacheFactory;
+
+    private KvCacheWrap<Integer, User> userCache;
+
+    @PostConstruct
+    public void init() {
+        userCache = kvCacheFactory.create(new CacheOptions("user", 1, Constants.CACHE_REDIS_EXPIRE),
+                new RepositoryProvider<Integer, User>() {
+
+                    @Override
+                    public User findByKey(Integer key) throws RepositoryException {
+                        return userRepository.findById(key).orElse(null);
+                    }
+
+                    @Override
+                    public Map<Integer, User> findByKeys(Collection<Integer> ids) throws RepositoryException {
+                        throw new UnsupportedOperationException("findByKeys");
+                    }
+
+                }, new BeanModelConverter<>(User.class));
+    }
+
     @Override
-    public UserSessionWrapper signin(User user, VCode vCode, String ip) throws Exception {
+    public UserSessionWrap signin(User user, VCode vCode, String ip) throws Exception {
 
         User exist = null;
         if (StringUtils.isEmail(user.getUsername())) {
@@ -93,13 +115,7 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
             }
         }
         UserSession session = createSession(exist, ip);
-        return new UserSessionWrapper(exist, session);
-    }
-
-    private void compare(VCode vCode, VCode vc, String username) {
-        if (StringUtils.isEmpty(vCode.getCode()) || StringUtils.isNotEqual(username, vc.getAccount()) || StringUtils.isNotEqual(vCode.getCode(), vc.getCode())) {
-            throw new ServiceException(ERROR_VCODE_INVALID);
-        }
+        return new UserSessionWrap(exist, session);
     }
 
     private UserSession createSession(User user, String ip) {
@@ -113,6 +129,20 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
         userSession.setLocation(IPSeekerUtil.getFullLocation(ip));
         userSessionRepository.save(userSession);
         return userSession;
+    }
+
+    private void compare(VCode vCode, VCode vc, String username) {
+        if (StringUtils.isEmpty(vCode.getCode()) || StringUtils.isNotEqual(username, vc.getAccount()) || StringUtils.isNotEqual(vCode.getCode(), vc.getCode())) {
+            throw new ServiceException(ERROR_VCODE_INVALID);
+        }
+    }
+
+    @Override
+    public UserSession findSessionByToken(String token) throws Exception {
+        if (StringUtils.isEmpty(token)) {
+            throw new ServiceException(ERR_SESSION_EXPIRES);
+        }
+        return userSessionRepository.findByToken(token);
     }
 
     @Override
@@ -180,37 +210,45 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
     }
 
     @Override
-    public User findById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+    public Map modifyProfile(User user) throws Exception {
+        Integer id = Contexts.requestUser().getId();
+        User exist = getById(id);
+        exist.setAvatar(user.getAvatar());
+        exist.setUsername(user.getUsername());
+        userRepository.save(exist);
+        Map<String, User> map = new HashMap<>();
+        map.put("user", exist);
+        userCache.remove(id);
+        return map;
     }
 
     @Override
-    public User getById(Integer id) {
-        User user = findById(id);
-        if (user == null) {
-            throw new ServiceException(ERR_DATA_NOT_FOUND);
+    public Map profile() throws Exception {
+        Integer userId = Contexts.requestUser().getId();
+        User user = user(userId, true);
+        return CollectionUtil.arrayAsMap("user", user);
+    }
+
+    @Override
+    public User user(int id, boolean init) {
+        User user = user(id);
+        if (init) {
         }
         return user;
     }
 
-//    @Override
-//    public Map profile(User user) throws Exception {
-//        Integer id = user.getId();
-//        User exist = getById(id);
-//        exist.setAvatar(user.getAvatar());
-//        exist.setName(user.getName());
-//        userRepository.save(exist);
-//        Map<String, User> map = new HashMap<>();
-//        map.put("user", exist);
-//        return map;
-//    }
+    private User user(int id) {
+        return userCache.findByKey(id);
+    }
 
+    //oms
     @Override
     public Page<User> users(UserQo userQo) throws Exception {
         Page<User> users = userRepository.findAll(userQo);
         return users;
     }
 
+    //oms
     @Override
     public void status(Integer id) {
         User user = findById(id);
@@ -226,57 +264,18 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
     }
 
     @Override
-    public UserSession findSessionByToken(String token) throws Exception {
-        if (StringUtils.isEmpty(token)) {
-            throw new ServiceException(ERR_SESSION_EXPIRES);
-        }
-        return userSessionRepository.findByToken(token);
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public User getById(Integer id) {
+        User user = findById(id);
+        if (user == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        return user;
+    }
+
 }
-
-
-//
-//    @Autowired
-//    private KvCacheFactory kvCacheFactory;
-//    private KvCacheWrap<Integer, User> userCache;
-//
-//    @PostConstruct
-//    public void init() {
-//        userCache = kvCacheFactory.create(new CacheOptions("user", 1, Constants.CACHE_REDIS_EXPIRE),
-//                new RepositoryProvider<Integer, User>() {
-//
-//                    @Override
-//                    public User findByKey(Integer key) throws RepositoryException {
-//                        return userRepository.getOne(key);
-//                    }
-//
-//                    @Override
-//                    public Map<Integer, User> findByKeys(Collection<Integer> ids) throws RepositoryException {
-//                        throw new UnsupportedOperationException("findByKeys");
-//                    }
-//
-//                }, new BeanModelConverter<>(User.class));
-//    }
-//
-//    @Override
-//    public User user(int id, boolean init) {
-//        User user = user(id);
-//        if (init) {
-//        }
-//        return user;
-//    }
-//
-//    private User user(int id) {
-//        return userCache.findByKey(id);
-//    }
-//
-//
-//    @Override
-//    public Map profile() throws Exception {
-//        Integer userId = Contexts.requestUserId();
-//        User user = user(userId, true);
-//        return CollectionUtil.arrayAsMap("trainee", user);
-//    }
-//
-
 

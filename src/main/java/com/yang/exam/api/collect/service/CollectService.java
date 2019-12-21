@@ -1,8 +1,9 @@
 package com.yang.exam.api.collect.service;
 
+import com.yang.exam.api.collect.entity.CollectOptions;
 import com.yang.exam.api.collect.model.Collect;
 import com.yang.exam.api.collect.qo.CollectQo;
-import com.yang.exam.api.question.model.Question;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,12 +16,14 @@ public interface CollectService {
 
     void save(Collect collect) throws Exception;
 
-    void status(Integer id) throws Exception;
+    void delete(Integer questionId) throws Exception;
 
     Collect findById(Integer id) throws Exception;
 
     Collect getById(Integer id) throws Exception;
 
-    List<Question> collectList(CollectQo collectQo) throws Exception;
+    Page<Collect> collectList(CollectQo collectQo, CollectOptions options) throws Exception;
+
+    List<Collect> findByUserId(Integer id) throws Exception;
 
 }

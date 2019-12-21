@@ -4,7 +4,6 @@ import com.yang.exam.api.paper.converter.QuestionsArrayConverter;
 import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.converter.TemplateContentArrayConverter;
 import com.yang.exam.api.template.entity.TemplateContent;
-import com.yang.exam.commons.converter.IntegerArrayConverter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -44,8 +43,12 @@ public class UsrPaper {
     private Long totalTime;
     @Column
     private Byte type;
+    @Column
+    private Byte status;
     @Transient
     private Integer templateId;
+    @Transient
+    private List<Integer> questionIds;
 
     public UsrPaper() {
     }
@@ -144,5 +147,21 @@ public class UsrPaper {
 
     public void setType(Byte type) {
         this.type = type;
+    }
+
+    public List<Integer> getQuestionIds() {
+        return questionIds;
+    }
+
+    public void setQuestionIds(List<Integer> questionIds) {
+        this.questionIds = questionIds;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 }

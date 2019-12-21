@@ -1,7 +1,5 @@
 package com.yang.exam.api.template.entity;
 
-import org.springframework.stereotype.Controller;
-
 import javax.persistence.Column;
 
 /**

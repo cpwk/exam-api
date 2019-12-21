@@ -30,12 +30,6 @@ public class UsrPaperController extends BaseController {
         return feedback();
     }
 
-    @RequestMapping(value = "questions")
-    @Action(session = SessionType.USER)
-    public ModelAndView questions(Integer id) throws Exception {
-        return feedback(usrPaperService.questions(id));
-    }
-
     @RequestMapping(value = "question")
     @Action(session = SessionType.USER)
     public ModelAndView questions(String usrPaper) throws Exception {
@@ -48,10 +42,18 @@ public class UsrPaperController extends BaseController {
         return feedback(usrPaperService.record(parseModel(usrPaperQo, new UsrPaperQo())));
     }
 
-//    @RequestMapping(value = "mistakes")
-//    @Action(session = SessionType.NONE)
-//    public ModelAndView mistakes(String usrPaperQo) throws Exception {
-//        return feedback(usrPaperService.mistakes(parseModel(usrPaperQo, new UsrPaperQo())));
-//    }
+
+    @RequestMapping(value = "usrPaper_id")
+    @Action(session = SessionType.USER)
+    public ModelAndView usrPaperId(Integer id) throws Exception {
+        return feedback(usrPaperService.usrPaperId(id));
+    }
+
+    @RequestMapping(value = "status")
+    @Action(session = SessionType.USER)
+    public ModelAndView status(Integer id) throws Exception {
+        usrPaperService.status(id);
+        return feedback();
+    }
 
 }

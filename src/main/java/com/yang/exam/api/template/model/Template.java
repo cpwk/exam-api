@@ -1,6 +1,7 @@
 package com.yang.exam.api.template.model;
 
 import com.yang.exam.api.category.model.Category;
+import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.template.converter.TemplateContentArrayConverter;
 import com.yang.exam.api.template.entity.TemplateContent;
 
@@ -44,6 +45,8 @@ public class Template {
     private Long updatedAt;
     @Transient
     private Category category;
+    @Transient
+    private List<Question> questions;
 
     public Integer getId() {
         return id;
@@ -141,4 +144,11 @@ public class Template {
         this.category = category;
     }
 
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
 }

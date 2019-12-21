@@ -2,6 +2,7 @@ package com.yang.exam.commons.context;
 
 
 import com.yang.exam.api.user.authority.UserSessionWrap;
+import com.yang.exam.api.user.model.User;
 import com.yang.exam.commons.entity.ErrorCode01;
 import com.yang.exam.commons.exception.DetailedException;
 import com.yang.exam.commons.exception.ServiceException;
@@ -29,34 +30,29 @@ public class Contexts {
         return context.getLocale();
     }
 
-
-    //
-    //
-
-    public static Integer requestUserId() throws ServiceException {
+    public static User requestUser() throws ServiceException {
         Context context = get();
         if (context == null) {
             throw new ServiceException(ErrorCode01.SESSIONTIMEOUT.getCode());
         }
-        Integer id = sessionUserId();
-        if (id == null) {
+        User user = sessionUser();
+        if (user == null) {
             throw new DetailedException("need userId");
         }
-        return id;
+        return user;
     }
 
-    public static Integer sessionUserId() throws ServiceException {
+    public static User sessionUser() throws ServiceException {
         Context context = get();
         if (context == null) {
             return null;
         }
         SessionWrapper wrap = context.getSession();
-        Integer id = null;
-
+        User user = null;
         if (wrap instanceof UserSessionWrap) {
-            id = ((UserSessionWrap) wrap).getUser().getId();
+            user = ((UserSessionWrap) wrap).getUser();
         }
-        return id;
+        return user;
     }
 
 }

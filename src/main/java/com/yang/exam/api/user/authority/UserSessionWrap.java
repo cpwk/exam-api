@@ -1,6 +1,5 @@
 package com.yang.exam.api.user.authority;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
 import com.yang.exam.commons.context.SessionWrapper;
@@ -13,7 +12,7 @@ import com.yang.exam.commons.context.SessionWrapper;
 public class UserSessionWrap implements SessionWrapper {
 
     private User user;
-    @JSONField(serialize = false)
+    //    @JSONField(serialize = false)
     private UserSession userSession;
 
     public UserSessionWrap(User user, UserSession userSession) {

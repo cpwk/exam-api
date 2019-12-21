@@ -10,7 +10,6 @@ import com.yang.exam.commons.cache.CacheOptions;
 import com.yang.exam.commons.cache.KvCacheFactory;
 import com.yang.exam.commons.cache.KvCacheWrap;
 import com.yang.exam.commons.entity.Constants;
-import com.yang.exam.commons.exception.DetailedException;
 import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.utils.StringUtils;

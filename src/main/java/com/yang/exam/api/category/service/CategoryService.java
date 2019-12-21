@@ -1,9 +1,6 @@
 package com.yang.exam.api.category.service;
 
 import com.yang.exam.api.category.model.Category;
-import com.yang.exam.api.category.qo.CategoryQo;
-import com.yang.exam.commons.exception.ServiceException;
-import org.springframework.data.domain.Page;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +10,7 @@ public interface CategoryService {
 
     void save(Category category) throws Exception;
 
-    void status(Integer id,Byte status) throws Exception;
+    void status(Integer id, Byte status) throws Exception;
 
     List<Category> categoryLevel() throws Exception;
 
@@ -27,7 +24,7 @@ public interface CategoryService {
 
     Category getById(Integer id) throws Exception;
 
-    Map<Integer,Category> findByids(Collection<Integer> ids)throws Exception;
+    Map<Integer, Category> findByids(Collection<Integer> ids) throws Exception;
 
 }
 

@@ -1,5 +1,6 @@
 package com.yang.exam.api.collect.qo;
 
+import com.yang.exam.commons.context.Contexts;
 import com.yang.exam.commons.reposiotry.support.DataQueryObjectPage;
 import com.yang.exam.commons.reposiotry.support.QueryField;
 import com.yang.exam.commons.reposiotry.support.QueryType;
@@ -12,8 +13,7 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
 public class CollectQo extends DataQueryObjectPage {
 
     @QueryField(type = QueryType.EQUAL, name = "userId")
-
-    private Integer userId;
+    private Integer userId = Contexts.requestUser().getId();
 
     public Integer getUserId() {
         return userId;
@@ -23,14 +23,15 @@ public class CollectQo extends DataQueryObjectPage {
         this.userId = userId;
     }
 
-    @QueryField(type = QueryType.EQUAL, name = "status")
-    private Byte status;
+    @QueryField(type = QueryType.EQUAL, name = "type")
+    private Byte type = 0;
 
-    public Byte getStatus() {
-        return status;
+    public Byte getType() {
+        return type;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setType(Byte type) {
+        this.type = type == 0 ? null : type;
     }
+
 }
