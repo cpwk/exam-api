@@ -13,16 +13,15 @@ import java.util.List;
  * @Version：1.0
  */
 public interface QuestionService {
+    void save(Question question) throws Exception;
 
     Question findById(Integer id) throws Exception;
 
     Question getById(Integer id) throws Exception;
 
-    void save(Question question) throws Exception;
-
     void status(Integer id) throws Exception;
 
     Page<Question> questionList(QuestionQo qo, QuestionOptions options) throws Exception;
 
-    List<Question> getAllByCategoryId(Integer categoryId) throws Exception;
+    List<Integer> randomQuestionList(Integer categoryId, Byte difficulty, Byte status, Byte type, Integer limit) throws Exception;
 }

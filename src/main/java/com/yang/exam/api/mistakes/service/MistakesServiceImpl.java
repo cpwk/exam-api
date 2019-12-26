@@ -30,6 +30,16 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
     private QuestionService questionService;
 
     @Override
+    public void save(Mistakes mistakes) {
+        if (mistakes.getStatus() == null) {
+            mistakes.setStatus(STATUS_OK);
+        }
+        if (mistakesResitpory.findByUserIdAndQuestionId(mistakes.getUserId(), mistakes.getQuestionId()) == null) {
+            mistakesResitpory.save(mistakes);
+        }
+    }
+
+    @Override
     public Mistakes findById(Integer id) throws Exception {
         return mistakesResitpory.findById(id).orElse(null);
     }
@@ -44,13 +54,9 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
     }
 
     @Override
-    public void save(Mistakes mistakes) {
-        if (mistakes.getStatus() == null) {
-            mistakes.setStatus(STATUS_OK);
-        }
-        if (mistakesResitpory.findByUserIdAndQuestionId(mistakes.getUserId(), mistakes.getQuestionId()) == null) {
-            mistakesResitpory.save(mistakes);
-        }
+    public void delete(Integer id) throws Exception {
+        Mistakes exist = getById(id);
+        mistakesResitpory.delete(exist);
     }
 
     @Override
@@ -58,6 +64,11 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
         Page<Mistakes> mistakesList = mistakesResitpory.findAll(qo);
         wrap(mistakesList.getContent(), options);
         return mistakesList;
+    }
+
+    @Override
+    public Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception {
+        return mistakesResitpory.findByUserIdAndQuestionId(userId, questionId);
     }
 
     private void wrap(Collection<Mistakes> mistakes, MistakesOptions options) throws Exception {
@@ -68,14 +79,4 @@ public class MistakesServiceImpl implements MistakesService, MistakesError {
         }
     }
 
-    @Override
-    public Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception {
-        return mistakesResitpory.findByUserIdAndQuestionId(userId, questionId);
-    }
-
-    @Override
-    public void delete(Integer id) throws Exception {
-        Mistakes exist = getById(id);
-        mistakesResitpory.delete(exist);
-    }
 }

@@ -30,8 +30,8 @@ public class UsrTemplateController extends BaseController {
 
     @RequestMapping(value = "template_id")
     @Action(session = SessionType.USER)
-    public ModelAndView getById(Integer id) throws Exception {
-        return feedback(templateService.getById(id));
+    public ModelAndView templateId(Integer id) throws Exception {
+        return feedback(templateService.templateId(id));
     }
 
 }

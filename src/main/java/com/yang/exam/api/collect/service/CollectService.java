@@ -14,16 +14,14 @@ import java.util.List;
  */
 public interface CollectService {
 
-    void save(Collect collect) throws Exception;
-
-    void delete(Integer questionId) throws Exception;
+    void collect(Collect collect) throws Exception;
 
     Collect findById(Integer id) throws Exception;
 
     Collect getById(Integer id) throws Exception;
 
-    Page<Collect> collectList(CollectQo collectQo, CollectOptions options) throws Exception;
-
     List<Collect> findByUserId(Integer id) throws Exception;
+
+    Page<Collect> collectList(CollectQo collectQo, CollectOptions options) throws Exception;
 
 }

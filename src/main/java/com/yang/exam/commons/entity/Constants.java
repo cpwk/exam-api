@@ -11,6 +11,8 @@ public class Constants {
     public static int SESSION_EXPIRE_DAYS_ADMIN = 2;
     public static int SESSION_EXPIRE_DAYS_USER = 30;
 
+    public static final byte TYPE = 0;// 默认
+
     public static final byte STATUS_OK = 1;// 默认
     public static final byte STATUS_HALT = 2;// 删除、停用、取消
 
@@ -27,5 +29,11 @@ public class Constants {
     public static final int ACCOUNT_SYSTEM = 0;
     public static final int ACCOUNT_ADMIN = 1;
     public static final int ACCOUNT_USER = 2;
+
+    public static final int DAY_MILLIS = 24 * 60 * 60 * 1000;
+
+    public static final int ADMIN_TOKEN_LENGTH = 64;
+
+    public static final int USER_TOKEN_LENGTH = 64;
 
 }

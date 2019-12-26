@@ -10,14 +10,17 @@ public interface TemplateService {
 
     void save(Template template) throws Exception;
 
-    Page<Template> templateList(TemplateQo templateQo) throws Exception;
-
-    List<Template> template() throws Exception;
-
     Template findById(Integer id) throws Exception;
 
     Template getById(Integer id) throws Exception;
 
     void status(Integer id) throws Exception;
+
+    Page<Template> templateList(TemplateQo templateQo) throws Exception;
+
+    List<Template> template() throws Exception;
+
+    Template templateId(Integer id) throws Exception;
+
 
 }

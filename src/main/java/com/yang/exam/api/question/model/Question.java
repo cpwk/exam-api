@@ -24,18 +24,19 @@ public class Question {
     private Integer id;
     @Column//题目
     private String topic;
-    @Column
+    @Column(name = "category_id")
     private Integer categoryId;
-    @Column
+    @Column(name = "type")
     private Byte type;
     @Column
+//    @JSONField(serialize = false)
     private String answer;
     @Column
     private Byte difficulty;
     @Convert(converter = IntegerArrayConverter.class)
     @Column
     private List<Integer> tagsId;
-    @Column
+    @Column(name = "status")
     private Byte status;
     @Convert(converter = StringArrayConverter.class)
     @Column

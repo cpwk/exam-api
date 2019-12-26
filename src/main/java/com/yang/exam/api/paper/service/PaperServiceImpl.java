@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
 import static com.yang.exam.commons.entity.Constants.STATUS_OK;
 
@@ -34,34 +32,15 @@ public class PaperServiceImpl implements PaperService, PaperError {
 
     @Override
     public void save(Paper paper) throws Exception {
+
         check(paper);
-        Template template = templateService.getById(paper.getTemplateId());
+        Template template = templateService.templateId(paper.getTemplateId());
         paper.setQuestions(template.getQuestions());
         if (paper.getId() == null) {
             paper.setCreatedAt(System.currentTimeMillis());
         }
         paperResitpory.save(paper);
 
-    }
-
-    private void check(Paper paper) {
-        if (StringUtils.isEmpty(paper.getName())) {
-            throw new ServiceException(ERR_PAPER_NAME_EMPTY);
-        }
-    }
-
-    @Override
-    public Page<Paper> paperList(PaperQo paperQo) throws Exception {
-        Page<Paper> papers = paperResitpory.findAll(paperQo);
-        List<Template> templates = templateService.template();
-        for (Paper p : papers) {
-            for (Template template : templates) {
-                if (p.getTemplateId().equals(template.getId())) {
-                    p.setTemplate(template);
-                }
-            }
-        }
-        return papers;
     }
 
     @Override
@@ -92,4 +71,21 @@ public class PaperServiceImpl implements PaperService, PaperError {
         save(paper);
     }
 
+    @Override
+    public Page<Paper> paperList(PaperQo paperQo) throws Exception {
+        Page<Paper> papers = paperResitpory.findAll(paperQo);
+        for (Paper paper : papers) {
+            paper.setTemplate(templateService.getById(paper.getTemplateId()));
+        }
+        return papers;
+    }
+
+    private void check(Paper paper) {
+        if (StringUtils.isEmpty(paper.getName())) {
+            throw new ServiceException(ERR_PAPER_NAME_EMPTY);
+        }
+    }
+
+
 }
+

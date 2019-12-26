@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
 import static com.yang.exam.commons.entity.Constants.STATUS_OK;
@@ -40,21 +40,6 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     private CategoryService categoryService;
 
     @Override
-    public Page<Template> templateList(TemplateQo templateQo) throws Exception {
-//        template.setCategory(categoryService.getById(template.getCategoryId()));
-        Page<Template> templates = templateRepository.findAll(templateQo);
-        for (Template val : templates) {
-            val.setCategory(categoryService.getById(val.getCategoryId()));
-        }
-        return templates;
-    }
-
-    @Override
-    public List<Template> template() throws Exception {
-        return templateRepository.findAll();
-    }
-
-    @Override
     public void save(Template template) throws Exception {
         check(template);
         if (template.getId() == null) {
@@ -64,6 +49,11 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
             template.setUpdatedAt(System.currentTimeMillis());
         }
         templateRepository.save(template);
+    }
+
+    @Override
+    public Template findById(Integer id) throws Exception {
+        return templateRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -90,8 +80,22 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 
     @Override
-    public Template findById(Integer id) throws Exception {
-        Template template = templateRepository.findById(id).orElse(null);
+    public Page<Template> templateList(TemplateQo templateQo) throws Exception {
+        Page<Template> templates = templateRepository.findAll(templateQo);
+        for (Template val : templates) {
+            val.setCategory(categoryService.getById(val.getCategoryId()));
+        }
+        return templates;
+    }
+
+    @Override
+    public List<Template> template() throws Exception {
+        return templateRepository.findAll();
+    }
+
+    @Override
+    public Template templateId(Integer id) throws Exception {
+        Template template = getById(id);
         if (template != null) {
             wrap(template, TemplateOptions.getDefaultInstance());
         }
@@ -100,16 +104,13 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
 
     private void wrap(Template template, TemplateOptions options) throws Exception {
         if (options.isWithQuestions()) {
-            List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
-            Random random = new Random();
-            List<Question> questions = new ArrayList<>();
+            List<Integer> questionsIds = new ArrayList<>();
             for (TemplateContent v : template.getContent()) {
-                List<Question> questionList1 = questionList.stream().filter((Question question) -> question.getType().equals(v.getType())).collect(Collectors.toList());
-                Set<Integer> set = new HashSet(v.getNumber());
-                while (set.size() < v.getNumber()) {
-                    set.add(random.nextInt(questionList1.size()));
-                }
-                questions.addAll(set.stream().map(questionList1::get).collect(Collectors.toList()));
+                questionsIds.addAll(questionService.randomQuestionList(template.getCategoryId(), template.getDifficulty(), STATUS_OK, v.getType(), v.getNumber()));
+            }
+            List<Question> questions = new ArrayList<>();
+            for (Integer questionsId : questionsIds) {
+                questions.add(questionService.getById(questionsId));
             }
             template.setQuestions(questions);
         }
@@ -134,6 +135,7 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 }
 
+
 //    @Override
 //    public List<Question> questions(Integer templateId) throws Exception {
 //        Template template = getById(templateId);
@@ -156,4 +158,22 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
 //            }
 //        }
 //        return questions;
+//    }
+//
+
+//    private void wrapr(Template template, TemplateOptions options) throws Exception {
+//        if (options.isWithQuestions()) {
+//            List<Question> questionList = questionService.getAllByCategoryId(template.getCategoryId());
+//            Random random = new Random();
+//            List<Question> questions = new ArrayList<>();
+//            for (TemplateContent v : template.getContent()) {
+//                List<Question> questionList1 = questionList.stream().filter((Question question) -> question.getType().equals(v.getType())).collect(Collectors.toList());
+//                Set<Integer> set = new HashSet(v.getNumber());
+//                while (set.size() < v.getNumber()) {
+//                    set.add(random.nextInt(questionList1.size()));
+//                }
+//                questions.addAll(set.stream().map(questionList1::get).collect(Collectors.toList()));
+//            }
+//            template.setQuestions(questions);
+//        }
 //    }

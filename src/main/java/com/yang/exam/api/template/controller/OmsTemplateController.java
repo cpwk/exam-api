@@ -43,6 +43,11 @@ public class OmsTemplateController extends BaseController {
         return feedback(templateService.getById(id));
     }
 
+    @RequestMapping(value = "template_preview")
+    @Action(session = SessionType.ADMIN)
+    public ModelAndView templateId(Integer id) throws Exception {
+        return feedback(templateService.templateId(id));
+    }
 
     @RequestMapping(value = "status")
     @Action(session = SessionType.ADMIN)

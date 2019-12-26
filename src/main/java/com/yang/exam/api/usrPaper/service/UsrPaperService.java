@@ -14,19 +14,27 @@ import java.util.Map;
  * @Version：1.0
  */
 public interface UsrPaperService {
+    void save(UsrPaper usrPaper) throws Exception;
 
     UsrPaper findById(Integer id) throws Exception;
 
-    Map usrPaperId(Integer id) throws Exception;
-
     UsrPaper getById(Integer id) throws Exception;
 
-    void save(UsrPaper usrPaper) throws Exception;
-
-    List<Question> questions(UsrPaper usrPaper) throws Exception;
+    void status(Integer id) throws Exception;
 
     Page<UsrPaper> record(UsrPaperQo usrPaperQo) throws Exception;
 
-    void status(Integer id) throws Exception;
+    List<Question> questions(UsrPaper usrPaper) throws Exception;
+
+    UsrPaper saveMockExam(Integer templateId) throws Exception;
+
+    //收藏
+    Map usrPaperId(Integer id) throws Exception;
+
+    //
+    Map start(Integer id) throws Exception;
+
+    //
+    Map end(UsrPaper usrPaper) throws Exception;
 
 }

@@ -17,24 +17,17 @@ import org.springframework.web.servlet.ModelAndView;
  * @Date: 2019/12/18 18:59
  * @Version：1.0
  */
-@RequestMapping(path = "/usr/collect")
 @Controller
+@RequestMapping(path = "/usr/collect")
 public class UsrCollectController extends BaseController {
 
     @Autowired
     private CollectService collectService;
 
-    @RequestMapping(value = "save")
+    @RequestMapping(value = "collect")
     @Action(session = SessionType.USER)
     public ModelAndView save(String collect) throws Exception {
-        collectService.save(parseModel(collect, new Collect()));
-        return feedback();
-    }
-
-    @RequestMapping(value = "delete")
-    @Action(session = SessionType.USER)
-    public ModelAndView delete(Integer id) throws Exception {
-        collectService.delete(id);
+        collectService.collect(parseModel(collect, new Collect()));
         return feedback();
     }
 

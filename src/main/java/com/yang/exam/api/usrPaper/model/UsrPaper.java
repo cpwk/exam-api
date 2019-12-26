@@ -31,7 +31,7 @@ public class UsrPaper {
     @Column
     private Long createdAt;
     @Column
-    private Byte totalScore;
+    private Integer totalScore;
     @Column
     private Byte difficulty;
     @Column
@@ -45,10 +45,8 @@ public class UsrPaper {
     private Byte type;
     @Column
     private Byte status;
-    @Transient
+    @Column
     private Integer templateId;
-    @Transient
-    private List<Integer> questionIds;
 
     public UsrPaper() {
     }
@@ -93,11 +91,11 @@ public class UsrPaper {
         this.createdAt = createdAt;
     }
 
-    public Byte getTotalScore() {
+    public Integer getTotalScore() {
         return totalScore;
     }
 
-    public void setTotalScore(Byte totalScore) {
+    public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
     }
 
@@ -125,14 +123,6 @@ public class UsrPaper {
         this.content = content;
     }
 
-    public Integer getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(Integer templateId) {
-        this.templateId = templateId;
-    }
-
     public Long getTotalTime() {
         return totalTime;
     }
@@ -149,19 +139,19 @@ public class UsrPaper {
         this.type = type;
     }
 
-    public List<Integer> getQuestionIds() {
-        return questionIds;
-    }
-
-    public void setQuestionIds(List<Integer> questionIds) {
-        this.questionIds = questionIds;
-    }
-
     public Byte getStatus() {
         return status;
     }
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Integer getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Integer templateId) {
+        this.templateId = templateId;
     }
 }

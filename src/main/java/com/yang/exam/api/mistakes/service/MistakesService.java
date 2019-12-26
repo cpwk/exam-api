@@ -14,13 +14,13 @@ public interface MistakesService {
 
     void save(Mistakes mistakes);
 
-    Page<Mistakes> mistakesList(MistakesQo qo, MistakesOptions options) throws Exception;
-
     Mistakes findById(Integer id) throws Exception;
 
     Mistakes getById(Integer id) throws Exception;
 
     void delete(Integer id) throws Exception;
+
+    Page<Mistakes> mistakesList(MistakesQo qo, MistakesOptions options) throws Exception;
 
     Mistakes findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception;
 }

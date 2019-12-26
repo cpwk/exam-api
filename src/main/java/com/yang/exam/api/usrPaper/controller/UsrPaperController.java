@@ -30,30 +30,58 @@ public class UsrPaperController extends BaseController {
         return feedback();
     }
 
+
+    //作用随机条件生成
     @RequestMapping(value = "question")
     @Action(session = SessionType.USER)
     public ModelAndView questions(String usrPaper) throws Exception {
         return feedback(usrPaperService.questions(parseModel(usrPaper, new UsrPaper())));
     }
 
+
+    //作用记录查询
     @RequestMapping(value = "record")
     @Action(session = SessionType.USER)
     public ModelAndView record(String usrPaperQo) throws Exception {
         return feedback(usrPaperService.record(parseModel(usrPaperQo, new UsrPaperQo())));
     }
 
-
+    //判断收藏
     @RequestMapping(value = "usrPaper_id")
     @Action(session = SessionType.USER)
     public ModelAndView usrPaperId(Integer id) throws Exception {
         return feedback(usrPaperService.usrPaperId(id));
     }
 
+
+    //开始接口不返回答案
+    @RequestMapping(value = "start")
+    @Action(session = SessionType.NONE)
+    public ModelAndView start(Integer id) throws Exception {
+        return feedback(usrPaperService.start(id));
+    }
+
+    //结束接口返回答案
+    @RequestMapping(value = "end")
+    @Action(session = SessionType.USER)
+    public ModelAndView end(String usrPaper) throws Exception {
+        return feedback(usrPaperService.end(parseModel(usrPaper, new UsrPaper())));
+    }
+
+    //修改试卷状态用户不可见
     @RequestMapping(value = "status")
     @Action(session = SessionType.USER)
     public ModelAndView status(Integer id) throws Exception {
         usrPaperService.status(id);
         return feedback();
+    }
+
+
+    //生成考试试卷
+    @RequestMapping(value = "mockExam")
+    @Action(session = SessionType.USER)
+    public ModelAndView mockExam(Integer templateId) throws Exception {
+        return feedback(usrPaperService.saveMockExam(templateId));
     }
 
 }

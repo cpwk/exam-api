@@ -10,11 +10,8 @@ import javax.persistence.Column;
 
 public class TemplateContent {
 
-    @Column
     private Byte type;
-    @Column
     private Integer number;
-    @Column
     private Integer score;
 
     public TemplateContent() {

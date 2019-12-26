@@ -31,15 +31,17 @@ public class CollectServiceImpl implements CollectService, CollectError {
     private QuestionService questionService;
 
     @Override
-    public void save(Collect collect) throws Exception {
-        if (collect.getCreatedAt() == null) {
-            collect.setCreatedAt(System.currentTimeMillis());
-        }
-        if (collectResitpory.findByUserIdAndQuestionId(Contexts.requestUser().getId(), collect.getQuestionId()) == null) {
+    public void collect(Collect collect) throws Exception {
+        Integer userId = Contexts.requestUser().getId();
+        Collect exist = collectResitpory.findByUserIdAndQuestionId(userId, collect.getQuestionId());
+        if (exist == null) {
             Question question = questionService.getById(collect.getQuestionId());
+            collect.setUserId(userId);
             collect.setType(question.getType());
-            collect.setUserId(Contexts.requestUser().getId());
+            collect.setCreatedAt(System.currentTimeMillis());
             collectResitpory.save(collect);
+        } else {
+            collectResitpory.delete(exist);
         }
     }
 
@@ -58,16 +60,8 @@ public class CollectServiceImpl implements CollectService, CollectError {
     }
 
     @Override
-    public void delete(Integer questionId) throws Exception {
-        Integer id = Contexts.requestUser().getId();
-        Collect exist = collectResitpory.findByUserIdAndQuestionId(id, questionId);
-        collectResitpory.delete(exist);
-    }
-
-    @Override
     public List<Collect> findByUserId(Integer id) throws Exception {
-        List<Collect> collects = collectResitpory.findByUserId(id);
-        return collects;
+        return collectResitpory.findByUserId(id);
     }
 
     @Override
@@ -84,4 +78,5 @@ public class CollectServiceImpl implements CollectService, CollectError {
             }
         }
     }
+
 }

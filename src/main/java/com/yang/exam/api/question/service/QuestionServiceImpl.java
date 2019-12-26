@@ -55,20 +55,6 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     }
 
     @Override
-    public void status(Integer id) throws Exception {
-        Question exist = findById(id);
-        if (exist == null) {
-            throw new ServiceException(ERR_DATA_NOT_FOUND);
-        }
-        if (exist.getStatus().equals(STATUS_OK)) {
-            exist.setStatus(STATUS_HALT);
-        } else {
-            exist.setStatus(STATUS_OK);
-        }
-        save(exist);
-    }
-
-    @Override
     public Question findById(Integer id) throws Exception {
         Question question = questionRepository.findById(id).orElse(null);
         if (question != null) {
@@ -87,6 +73,20 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     }
 
     @Override
+    public void status(Integer id) throws Exception {
+        Question exist = findById(id);
+        if (exist == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        if (exist.getStatus().equals(STATUS_OK)) {
+            exist.setStatus(STATUS_HALT);
+        } else {
+            exist.setStatus(STATUS_OK);
+        }
+        save(exist);
+    }
+
+    @Override
     public Page<Question> questionList(QuestionQo qo, QuestionOptions options) throws Exception {
         Page<Question> questions = questionRepository.findAll(qo);
         wrap(questions.getContent(), options);
@@ -94,8 +94,8 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     }
 
     @Override
-    public List<Question> getAllByCategoryId(Integer categoryId) throws Exception {
-        return questionRepository.findAllByCategoryId(categoryId);
+    public List<Integer> randomQuestionList(Integer categoryId, Byte difficulty, Byte status, Byte type, Integer limit) throws Exception {
+        return questionRepository.randomQuestionList(categoryId, difficulty, status, type, limit);
     }
 
     private void wrap(Collection<Question> questions, QuestionOptions options) throws Exception {

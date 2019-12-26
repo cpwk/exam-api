@@ -36,7 +36,7 @@ public class Template {
     @Column
     private Integer totalScore;
     @Column
-    private Byte passingScore;
+    private Integer passingScore;
     @Column
     private Long duration;
     @Column
@@ -104,11 +104,11 @@ public class Template {
         this.totalScore = totalScore;
     }
 
-    public Byte getPassingScore() {
+    public Integer getPassingScore() {
         return passingScore;
     }
 
-    public void setPassingScore(Byte passingScore) {
+    public void setPassingScore(Integer passingScore) {
         this.passingScore = passingScore;
     }
 

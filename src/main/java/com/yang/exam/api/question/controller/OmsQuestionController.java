@@ -46,7 +46,7 @@ public class OmsQuestionController extends BaseController {
     }
 
     @RequestMapping(value = "question_list")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.NONE)
     public ModelAndView questionList(String questionQo) throws Exception {
         return feedback(questionService.questionList(parseModel(questionQo, new QuestionQo()), QuestionOptions.getOmsListInstance()));
     }

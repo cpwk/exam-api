@@ -23,4 +23,8 @@ public class TemplateOptions {
     public static TemplateOptions getDefaultInstance() {
         return new TemplateOptions().setWithQuestions(true);
     }
+
+    public static TemplateOptions getOmsDefaultInstance() {
+        return new TemplateOptions().setWithQuestions(false);
+    }
 }

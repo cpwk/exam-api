@@ -2,8 +2,8 @@ package com.yang.exam.api.category.service;
 
 import com.sunnysuperman.kvcache.RepositoryProvider;
 import com.sunnysuperman.kvcache.converter.ListModelConverter;
+import com.yang.exam.api.category.entity.CategoryError;
 import com.yang.exam.api.category.model.Category;
-import com.yang.exam.api.category.model.CategoryError;
 import com.yang.exam.api.category.qo.CategoryQo;
 import com.yang.exam.api.category.repository.CategoryRepository;
 import com.yang.exam.commons.cache.CacheOptions;
@@ -45,9 +45,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
 
     @PostConstruct
     public void init() {
-
         categoryCache = kvCacheFactory.create(new CacheOptions("category", 1, Constants.CACHE_REDIS_EXPIRE), new RepositoryProvider<Byte, List<Category>>() {
-
             @Override
             public List<Category> findByKey(Byte key) throws RepositoryException {
                 if (key == Constants.STATUS_OK) {
