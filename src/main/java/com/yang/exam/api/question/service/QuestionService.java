@@ -5,7 +5,9 @@ import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.qo.QuestionQo;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: yangchengcheng
@@ -18,6 +20,10 @@ public interface QuestionService {
     Question findById(Integer id) throws Exception;
 
     Question getById(Integer id) throws Exception;
+
+    List<Question> findListByIds(Collection<Integer> ids) throws Exception;
+
+    Map<Integer,Question> findByIds(Collection<Integer> ids) throws Exception;
 
     void status(Integer id) throws Exception;
 

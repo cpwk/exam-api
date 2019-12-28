@@ -1,7 +1,6 @@
 package com.yang.exam.api.template.service;
 
 import com.yang.exam.api.category.service.CategoryService;
-import com.yang.exam.api.question.model.Question;
 import com.yang.exam.api.question.service.QuestionService;
 import com.yang.exam.api.template.entity.TemplateContent;
 import com.yang.exam.api.template.entity.TemplateError;
@@ -103,17 +102,16 @@ public class TemplateServiceImpl implements TemplateService, TemplateError {
     }
 
     private void wrap(Template template, TemplateOptions options) throws Exception {
+        long k = System.currentTimeMillis();
         if (options.isWithQuestions()) {
             List<Integer> questionsIds = new ArrayList<>();
             for (TemplateContent v : template.getContent()) {
-                questionsIds.addAll(questionService.randomQuestionList(template.getCategoryId(), template.getDifficulty(), STATUS_OK, v.getType(), v.getNumber()));
+                questionsIds.addAll(questionService.randomQuestionList(template.getCategoryId(), v.getType(), template.getDifficulty(), STATUS_OK, v.getNumber()));
             }
-            List<Question> questions = new ArrayList<>();
-            for (Integer questionsId : questionsIds) {
-                questions.add(questionService.getById(questionsId));
-            }
-            template.setQuestions(questions);
+            template.setQuestions(questionService.findListByIds(questionsIds));
         }
+        long i = System.currentTimeMillis();
+        System.out.println("---1---" + (i - k));
     }
 
     private void check(Template template) throws Exception {

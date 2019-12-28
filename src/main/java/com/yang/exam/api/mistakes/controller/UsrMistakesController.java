@@ -25,8 +25,8 @@ public class UsrMistakesController extends BaseController {
 
     @RequestMapping(value = "mistakes_list")
     @Action(session = SessionType.USER)
-    public ModelAndView mistakesList(String mistakesQo) throws Exception {
-        return feedback(mistakesService.mistakesList(parseModel(mistakesQo, new MistakesQo()), MistakesOptions.getDefaultInstance()));
+    public ModelAndView mistakesList() throws Exception {
+        return feedback(mistakesService.mistakesList());
     }
 
     @RequestMapping(value = "delete")

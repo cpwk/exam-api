@@ -2,9 +2,9 @@ package com.yang.exam.api.admin.entity;
 
 
 import com.yang.exam.api.admin.model.Admin;
-import com.yang.exam.commons.context.SessionWrapper;
+import com.yang.exam.commons.context.SessionWrap;
 
-public class AdminSessionWrapper implements SessionWrapper {
+public class AdminSessionWrapper implements SessionWrap {
     private Admin admin;
     private AdminSession adminSession;
 

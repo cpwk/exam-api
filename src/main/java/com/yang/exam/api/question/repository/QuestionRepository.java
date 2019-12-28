@@ -8,10 +8,9 @@ import java.util.List;
 
 public interface QuestionRepository extends BaseRepository<Question, Integer> {
 
-    List<Question> findAllByCategoryId(Integer categoryId);
 
-    @Query(value = "select id from question where category_id=:categoryId and difficulty=:difficulty and status=:status and type=:type order by rand() limit :limit", nativeQuery = true)
-    List<Integer> randomQuestionList(Integer categoryId, Byte difficulty, Byte status, Byte type, Integer limit);
+    @Query(value = "select id from question where category_id=:categoryId and type=:type and difficulty=:difficulty and status=:status order by rand() limit :limit", nativeQuery = true)
+    List<Integer> randomQuestionList(Integer categoryId, Byte type, Byte difficulty, Byte status, Integer limit);
 
 //    @Transactional
 //    @Query(value = "select * from question a inner join (select id from question where categoryId =: categoryId  and type in (type) type  ORDER BY RAND() limit num) b on a.id=b.id;", nativeQuery = true)

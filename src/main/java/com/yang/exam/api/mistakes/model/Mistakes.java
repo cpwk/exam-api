@@ -1,8 +1,10 @@
 package com.yang.exam.api.mistakes.model;
 
 import com.yang.exam.api.question.model.Question;
+import com.yang.exam.commons.converter.IntegerArrayConverter;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author: yangchengcheng
@@ -20,13 +22,10 @@ public class Mistakes {
     @Column
     private Integer userId;
     @Column
-    private Integer questionId;
-    @Column
-    private Byte status;
-    @Column
-    private Byte type;
+    @Convert(converter = IntegerArrayConverter.class)
+    private List<Integer> questionId;
     @Transient
-    private Question question;
+    private List<Question> questions;
 
     public Integer getId() {
         return id;
@@ -44,35 +43,19 @@ public class Mistakes {
         this.userId = userId;
     }
 
-    public Integer getQuestionId() {
+    public List<Integer> getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(List<Integer> questionId) {
         this.questionId = questionId;
     }
 
-    public Byte getStatus() {
-        return status;
+    public List<Question> getQuestions() {
+        return questions;
     }
 
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Byte getType() {
-        return type;
-    }
-
-    public void setType(Byte type) {
-        this.type = type;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 }

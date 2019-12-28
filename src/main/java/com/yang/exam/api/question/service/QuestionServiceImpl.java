@@ -12,6 +12,7 @@ import com.yang.exam.api.questionTag.service.QuestionTagService;
 import com.yang.exam.api.tag.model.Tag;
 import com.yang.exam.api.tag.service.TagService;
 import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.utils.CollectionUtil;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,6 +74,27 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     }
 
     @Override
+    public List<Question> findListByIds(Collection<Integer> ids) throws Exception {
+        List<Question> items = questionRepository.findAllById(ids);
+        if (CollectionUtil.isEmpty(items)) {
+            return Collections.emptyList();
+        }
+        return items;
+    }
+
+    @Override
+    public Map<Integer, Question> findByIds(Collection<Integer> ids) throws Exception {
+        List<Question> items = findListByIds(ids);
+        return items.stream().collect(Collectors.toMap(Question::getId, item -> item));
+
+//         Map<Integer,Question> map = new HashMap<>();
+//         for(Question q : items){
+//             map.put(q.getId(),q);
+//         }
+//        return map;
+    }
+
+    @Override
     public void status(Integer id) throws Exception {
         Question exist = findById(id);
         if (exist == null) {
@@ -94,8 +116,8 @@ public class QuestionServiceImpl implements QuestionService, QuestionError {
     }
 
     @Override
-    public List<Integer> randomQuestionList(Integer categoryId, Byte difficulty, Byte status, Byte type, Integer limit) throws Exception {
-        return questionRepository.randomQuestionList(categoryId, difficulty, status, type, limit);
+    public List<Integer> randomQuestionList(Integer categoryId, Byte type, Byte difficulty, Byte status, Integer limit) throws Exception {
+        return questionRepository.randomQuestionList(categoryId, type, difficulty, status, limit);
     }
 
     private void wrap(Collection<Question> questions, QuestionOptions options) throws Exception {

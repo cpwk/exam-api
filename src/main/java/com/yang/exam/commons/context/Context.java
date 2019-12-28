@@ -5,13 +5,13 @@ public class Context {
 
     private String locale;
 
-    private SessionWrapper session;
+    private SessionWrap session;
 
-    public SessionWrapper getSession() {
+    public SessionWrap getSession() {
         return session;
     }
 
-    public void setSession(SessionWrapper session) {
+    public void setSession(SessionWrap session) {
         this.session = session;
     }
 

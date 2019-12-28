@@ -11,7 +11,8 @@ public class Constants {
     public static int SESSION_EXPIRE_DAYS_ADMIN = 2;
     public static int SESSION_EXPIRE_DAYS_USER = 30;
 
-    public static final byte TYPE = 0;// 默认
+    public static final byte INVALID_TYPE = 3;// 无效试卷
+    public static final long TOTAL_TIME = 0;//默认用时
 
     public static final byte STATUS_OK = 1;// 默认
     public static final byte STATUS_HALT = 2;// 删除、停用、取消

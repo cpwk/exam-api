@@ -49,4 +49,5 @@ public class OmsPaperController extends BaseController {
         paperService.status(id);
         return feedback();
     }
+
 }

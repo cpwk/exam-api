@@ -18,7 +18,7 @@ public class Contexts {
         return SessionThreadLocal.getInstance().get();
     }
 
-    public static SessionWrapper getSession() {
+    public static SessionWrap getSession() {
         return get().getSession();
     }
 
@@ -47,7 +47,7 @@ public class Contexts {
         if (context == null) {
             return null;
         }
-        SessionWrapper wrap = context.getSession();
+        SessionWrap wrap = context.getSession();
         User user = null;
         if (wrap instanceof UserSessionWrap) {
             user = ((UserSessionWrap) wrap).getUser();

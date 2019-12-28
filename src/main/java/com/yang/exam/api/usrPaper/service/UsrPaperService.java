@@ -14,6 +14,9 @@ import java.util.Map;
  * @Version：1.0
  */
 public interface UsrPaperService {
+
+    UsrPaper usrPaper(int id, boolean init);
+
     void save(UsrPaper usrPaper) throws Exception;
 
     UsrPaper findById(Integer id) throws Exception;

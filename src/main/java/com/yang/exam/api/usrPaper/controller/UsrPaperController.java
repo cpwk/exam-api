@@ -78,9 +78,9 @@ public class UsrPaperController extends BaseController {
 
 
     //生成考试试卷
-    @RequestMapping(value = "mockExam")
+    @RequestMapping(value = "saveMockExam")
     @Action(session = SessionType.USER)
-    public ModelAndView mockExam(Integer templateId) throws Exception {
+    public ModelAndView saveMockExam(Integer templateId) throws Exception {
         return feedback(usrPaperService.saveMockExam(templateId));
     }
 

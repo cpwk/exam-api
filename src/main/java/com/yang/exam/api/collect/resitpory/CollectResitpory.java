@@ -15,4 +15,5 @@ public interface CollectResitpory extends BaseRepository<Collect, Integer> {
     Collect findByUserIdAndQuestionId(Integer userId, Integer questionId) throws Exception;
 
     List<Collect> findByUserId(Integer userId) throws Exception;
+
 }

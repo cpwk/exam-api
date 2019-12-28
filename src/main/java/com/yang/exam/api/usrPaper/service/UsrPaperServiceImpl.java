@@ -1,5 +1,7 @@
 package com.yang.exam.api.usrPaper.service;
 
+import com.sunnysuperman.kvcache.RepositoryProvider;
+import com.sunnysuperman.kvcache.converter.BeanModelConverter;
 import com.yang.exam.api.collect.model.Collect;
 import com.yang.exam.api.collect.service.CollectService;
 import com.yang.exam.api.mistakes.model.Mistakes;
@@ -13,14 +15,21 @@ import com.yang.exam.api.usrPaper.entity.UsrPaperError;
 import com.yang.exam.api.usrPaper.model.UsrPaper;
 import com.yang.exam.api.usrPaper.qo.UsrPaperQo;
 import com.yang.exam.api.usrPaper.repository.UserPaperRepository;
+import com.yang.exam.commons.cache.CacheOptions;
+import com.yang.exam.commons.cache.KvCacheFactory;
+import com.yang.exam.commons.cache.KvCacheWrap;
 import com.yang.exam.commons.context.Contexts;
+import com.yang.exam.commons.entity.Constants;
+import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.utils.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,9 +59,61 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     @Autowired
     private CollectService collectService;
 
+    //
+    @Autowired
+    private KvCacheFactory kvCacheFactory;
+
+    private KvCacheWrap<Integer, UsrPaper> usrPaperCache;
+
+    @PostConstruct
+    public void init() {
+        usrPaperCache = kvCacheFactory.create(new CacheOptions("UsrPaper", 1, Constants.CACHE_REDIS_EXPIRE),
+                new RepositoryProvider<Integer, UsrPaper>() {
+
+                    @Override
+                    public UsrPaper findByKey(Integer key) throws RepositoryException {
+                        return userPaperRepository.findById(key).orElse(null);
+                    }
+
+                    @Override
+                    public Map<Integer, UsrPaper> findByKeys(Collection<Integer> ids) throws RepositoryException {
+                        throw new UnsupportedOperationException("findByKeys");
+                    }
+
+                }, new BeanModelConverter<>(UsrPaper.class));
+    }
+
+//    @Override
+//    public Map start(Integer id) throws Exception {
+//        UsrPaper usrPaper = usrPaper(id,true);
+//        Template template = templateService.getById(usrPaper.getTemplateId());
+//        if (usrPaper.getType() == INVALID_TYPE) {
+//            for (Question question : usrPaper.getQuestions()) {
+//                question.setAnswer(null);
+//            }
+//        }
+//        return CollectionUtil.arrayAsMap("usrPaper", usrPaper, "template", template);
+//    }
+
+    @Override
+    public UsrPaper usrPaper(int id, boolean init) {
+        UsrPaper usrPaper = usrPaper(id);
+        if (init) {
+        }
+        return usrPaper;
+    }
+
+    private UsrPaper usrPaper(int id) {
+        return usrPaperCache.findByKey(id);
+    }
+
+//
+
+
     @Override
     public void save(UsrPaper usrPaper) throws Exception {
         usrPaper.setUserId(Contexts.requestUser().getId());
+        usrPaper.setTotalTime(TOTAL_TIME);
         usrPaper.setStatus(STATUS_OK);
         usrPaper.setPaperName(getTime());
         usrPaper.setCreatedAt(System.currentTimeMillis());
@@ -77,7 +138,7 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     public void status(Integer id) throws Exception {
         UsrPaper exist = getById(id);
         exist.setStatus(STATUS_HALT);
-        save(exist);
+        userPaperRepository.save(exist);
     }
 
     @Override
@@ -89,13 +150,9 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     public List<Question> questions(UsrPaper usrPaper) throws Exception {
         List<Integer> questionsIds = new ArrayList<>();
         for (TemplateContent v : usrPaper.getContent()) {
-            questionsIds.addAll(questionService.randomQuestionList(usrPaper.getCategoryId(), usrPaper.getDifficulty(), STATUS_OK, v.getType(), v.getNumber()));
+            questionsIds.addAll(questionService.randomQuestionList(usrPaper.getCategoryId(), v.getType(), usrPaper.getDifficulty(), STATUS_OK, v.getNumber()));
         }
-        List<Question> questions = new ArrayList<>();
-        for (Integer questionsId : questionsIds) {
-            questions.add(questionService.getById(questionsId));
-        }
-        return questions;
+        return questionService.findListByIds(questionsIds);
     }
 
     @Override
@@ -107,12 +164,10 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     public Map start(Integer id) throws Exception {
         UsrPaper usrPaper = getById(id);
         Template template = templateService.getById(usrPaper.getTemplateId());
-        if (usrPaper.getType() == 0) {
+        if (usrPaper.getType() == INVALID_TYPE) {
             for (Question question : usrPaper.getQuestions()) {
                 question.setAnswer(null);
             }
-        } else {
-            return CollectionUtil.arrayAsMap("usrPaper", usrPaper, "template", template);
         }
         return CollectionUtil.arrayAsMap("usrPaper", usrPaper, "template", template);
     }
@@ -125,7 +180,7 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
         addAnswer(usrPaper, exist);
         exist.setType(usrPaper.getType());
         exist.setTotalTime(TIME);
-        save(exist);
+        userPaperRepository.save(exist);
         saveMistakes(exist);
         return CollectionUtil.arrayAsMap("usrPaper", exist, "template", template);
     }
@@ -134,34 +189,49 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     public Map usrPaperId(Integer id) throws Exception {
         Integer userId = Contexts.requestUser().getId();
         UsrPaper usrPaper = getById(id);
+        if (usrPaper.getType() == INVALID_TYPE) {
+            for (Question question : usrPaper.getQuestions()) {
+                question.setAnswer(null);
+            }
+        }
         List<Collect> collects = collectService.findByUserId(userId);
         return CollectionUtil.arrayAsMap("usrPaper", usrPaper, "collects", collects);
 
     }
 
     private String getTime() {
-        return "试卷" + System.currentTimeMillis() % 100000;
+        return "练习试卷" + System.currentTimeMillis() % 100000;
     }
 
     private void saveMistakes(UsrPaper usrPaper) throws Exception {
-        Integer userId = Contexts.requestUser().getId();
+        List<Integer> mistakesIds = new ArrayList<>();
         for (Question question : usrPaper.getQuestions()) {
-            Mistakes mistakes = new Mistakes();
             if (!question.getAnswer().equals(question.getUserAnswer())) {
-                if (mistakesService.findByUserIdAndQuestionId(userId, question.getId()) == null) {
-                    mistakes.setUserId(userId);
-                    mistakes.setQuestionId(question.getId());
-                    mistakes.setType(question.getType());
-                    mistakesService.save(mistakes);
+                if (!mistakesIds.contains(question.getId())) {
+                    mistakesIds.add(question.getId());
                 }
             }
         }
+        Mistakes mistakes = mistakesService.findByUserId(usrPaper.getUserId());
+        if (mistakes == null) {
+            Mistakes mistakes1 = new Mistakes();
+            mistakes1.setUserId(usrPaper.getUserId());
+            mistakes1.setQuestionId(mistakesIds);
+            mistakesService.save(mistakes1);
+        } else {
+            mistakes.setQuestionId(mistakesIds);
+            mistakesService.save(mistakes);
+        }
+
     }
 
     private UsrPaper saveUsrPaper(Integer templateId) throws Exception {
         Integer userId = Contexts.requestUser().getId();
         long NAME = System.currentTimeMillis() % 100000;
+        long k = System.currentTimeMillis();
         Template template = templateService.templateId(templateId);
+        long i = System.currentTimeMillis();
+        System.out.println(i - k);
         UsrPaper usrPaper = new UsrPaper();
         if (template != null) {
             usrPaper.setStatus(STATUS_OK);
@@ -172,7 +242,7 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
             usrPaper.setQuestions(template.getQuestions());
             usrPaper.setTemplateId(template.getId());
             usrPaper.setCreatedAt(System.currentTimeMillis());
-            usrPaper.setType(TYPE);
+            usrPaper.setType(INVALID_TYPE);
             userPaperRepository.save(usrPaper);
         }
         return usrPaper;
@@ -193,6 +263,9 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
             question.setUserAnswer(item.getUserAnswer());
             if (question.getAnswer().equals(question.getUserAnswer())) {
                 exist.setTotalScore(TOTALSCORE += 2);
+            }
+            if (exist.getTotalScore() == null) {
+                exist.setTotalScore(TOTALSCORE);
             }
         }
     }

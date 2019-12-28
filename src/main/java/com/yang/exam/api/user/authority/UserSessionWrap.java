@@ -2,14 +2,14 @@ package com.yang.exam.api.user.authority;
 
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
-import com.yang.exam.commons.context.SessionWrapper;
+import com.yang.exam.commons.context.SessionWrap;
 
 /**
  * @author: yangchengcheng
  * @Date: 2019/12/18 00:21
  * @Version：1.0
  */
-public class UserSessionWrap implements SessionWrapper {
+public class UserSessionWrap implements SessionWrap {
 
     private User user;
     //    @JSONField(serialize = false)

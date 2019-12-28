@@ -7,4 +7,5 @@ import com.yang.exam.commons.reposiotry.BaseRepository;
 public interface UserSessionRepository extends BaseRepository<UserSession, Integer> {
 
     UserSession findByToken(String token);
+
 }

@@ -1,7 +1,5 @@
 package com.yang.exam.api.template.entity;
 
-import javax.persistence.Column;
-
 /**
  * @author: yangchengcheng
  * @Date: 2019/11/29 11:18
