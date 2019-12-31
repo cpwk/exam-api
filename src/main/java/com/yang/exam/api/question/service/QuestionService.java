@@ -23,7 +23,7 @@ public interface QuestionService {
 
     List<Question> findListByIds(Collection<Integer> ids) throws Exception;
 
-    Map<Integer,Question> findByIds(Collection<Integer> ids) throws Exception;
+    Map<Integer, Question> findByIds(Collection<Integer> ids) throws Exception;
 
     void status(Integer id) throws Exception;
 

@@ -2,9 +2,9 @@ package com.yang.exam.api.user.service;
 
 import com.sunnysuperman.kvcache.RepositoryProvider;
 import com.sunnysuperman.kvcache.converter.BeanModelConverter;
-import com.yang.exam.api.support.SupportService.SupportService;
-import com.yang.exam.api.support.model.SupportError;
-import com.yang.exam.api.support.model.VCode;
+import com.yang.exam.commons.support.SupportService.SupportService;
+import com.yang.exam.commons.support.entity.SupportError;
+import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.entity.UserError;
 import com.yang.exam.api.user.entity.UserSession;
@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
             throw new ServiceException(ERR_VCODE_EMPTY);
         }
         if (userRepository.findByMobile(user.getMobile()) != null) {
-            throw new ServiceException(SupportError.ERROR_MOBILE_OCCUPY);
+            throw new ServiceException(ERROR_MOBILE_OCCUPY);
         }
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new ServiceException(ERR_USERNAME_EXISTENCE);
@@ -248,7 +248,6 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
         return users;
     }
 
-    //oms
     @Override
     public void status(Integer id) {
         User user = findById(id);
@@ -275,6 +274,11 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
             throw new ServiceException(ERR_DATA_NOT_FOUND);
         }
         return user;
+    }
+
+    @Override
+    public UserSession userSession(String token) {
+        return userSessionRepository.findByToken(token);
     }
 
 }

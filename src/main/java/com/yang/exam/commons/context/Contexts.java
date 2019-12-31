@@ -1,14 +1,16 @@
 package com.yang.exam.commons.context;
 
 
+import com.yang.exam.api.admin.entity.AdminSessionWrap;
+import com.yang.exam.api.admin.model.Admin;
 import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.model.User;
-import com.yang.exam.commons.entity.ErrorCode01;
 import com.yang.exam.commons.exception.DetailedException;
+import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.resources.LocaleBundles;
 
-public class Contexts {
+public class Contexts implements ErrorCode {
 
     public static void set(Context context) {
         SessionThreadLocal.getInstance().set(context);
@@ -33,7 +35,7 @@ public class Contexts {
     public static User requestUser() throws ServiceException {
         Context context = get();
         if (context == null) {
-            throw new ServiceException(ErrorCode01.SESSIONTIMEOUT.getCode());
+            throw new ServiceException(SESSIONTIMEOUT);
         }
         User user = sessionUser();
         if (user == null) {
@@ -53,6 +55,31 @@ public class Contexts {
             user = ((UserSessionWrap) wrap).getUser();
         }
         return user;
+    }
+
+    public static Admin requestAdmin() throws ServiceException {
+        Context context = get();
+        if (context == null) {
+            throw new ServiceException(SESSIONTIMEOUT);
+        }
+        Admin admin = sessionAdmin();
+        if (admin == null) {
+            throw new DetailedException("need userId");
+        }
+        return admin;
+    }
+
+    public static Admin sessionAdmin() throws ServiceException {
+        Context context = get();
+        if (context == null) {
+            return null;
+        }
+        SessionWrap wrap = context.getSession();
+        Admin admin = null;
+        if (wrap instanceof AdminSessionWrap) {
+            admin = ((AdminSessionWrap) wrap).getAdmin();
+        }
+        return admin;
     }
 
 }

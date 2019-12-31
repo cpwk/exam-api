@@ -2,9 +2,9 @@ package com.yang.exam.api.template.controller;
 
 import com.yang.exam.api.template.qo.TemplateQo;
 import com.yang.exam.api.template.service.TemplateService;
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

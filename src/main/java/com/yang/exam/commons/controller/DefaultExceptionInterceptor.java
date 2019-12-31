@@ -1,6 +1,8 @@
 package com.yang.exam.commons.controller;
 
 
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.ActionResultType;
 import com.yang.exam.commons.context.Contexts;
 import com.yang.exam.commons.exception.RuntimeServiceException;
 import com.yang.exam.commons.exception.ServiceException;

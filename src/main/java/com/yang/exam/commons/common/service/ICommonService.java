@@ -1,13 +1,12 @@
 package com.yang.exam.commons.common.service;
 
 
-import com.yang.exam.commons.entity.ValCode;
-import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.support.model.VCode;
 
 public interface ICommonService {
 
-    void saveValCode(Long key, ValCode valCode);
+    void saveValCode(Long key, VCode vCode);
 
-    ValCode getValCode(Long key) throws ServiceException;
+    VCode getValCode(Long key) throws Exception;
 
 }

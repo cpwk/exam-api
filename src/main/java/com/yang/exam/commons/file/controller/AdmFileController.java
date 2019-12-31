@@ -1,8 +1,8 @@
 package com.yang.exam.commons.file.controller;
 
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import com.yang.exam.commons.file.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

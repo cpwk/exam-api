@@ -2,19 +2,13 @@ package com.yang.exam.commons.common.service;
 
 import com.sunnysuperman.kvcache.RepositoryProvider;
 import com.sunnysuperman.kvcache.converter.BeanModelConverter;
+import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.commons.cache.CacheOptions;
 import com.yang.exam.commons.cache.KvCacheFactory;
 import com.yang.exam.commons.cache.KvCacheWrap;
-import com.yang.exam.commons.entity.ErrorCode01;
-import com.yang.exam.commons.entity.ValCode;
+import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
-import com.yang.exam.commons.mail.MailService;
-import com.yang.exam.commons.sms.ISmsService;
-import com.yang.exam.commons.sms.SmsTpl;
-import com.yang.exam.commons.task.ApiTask;
-import com.yang.exam.commons.task.TaskService;
-import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,51 +17,42 @@ import java.util.Collection;
 import java.util.Map;
 
 @Service
-public class CommonService implements ICommonService {
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
-    private ISmsService smsService;
+public class CommonService implements ICommonService, ErrorCode {
 
     @Autowired
     private KvCacheFactory kvCacheFactory;
 
-    private KvCacheWrap<Long, ValCode> valCodeCache;
+    private KvCacheWrap<Long, VCode> VCodeCache;
 
     @PostConstruct
     public void init() {
-        valCodeCache = kvCacheFactory.create(new CacheOptions("val_code", 2, 600),
-                new RepositoryProvider<Long, ValCode>() {
+        VCodeCache = kvCacheFactory.create(new CacheOptions("val_code", 2, 600),
+                new RepositoryProvider<Long, VCode>() {
 
                     @Override
-                    public ValCode findByKey(Long key) {
+                    public VCode findByKey(Long key) {
                         throw new RuntimeException();
                     }
 
                     @Override
-                    public Map<Long, ValCode> findByKeys(Collection<Long> ids) throws RepositoryException {
+                    public Map<Long, VCode> findByKeys(Collection<Long> ids) throws RepositoryException {
                         throw new UnsupportedOperationException("findByKeys");
                     }
 
-                }, new BeanModelConverter<>(ValCode.class));
+                }, new BeanModelConverter<>(VCode.class));
     }
 
     @Override
-    public void saveValCode(Long key, ValCode valCode) {
-        valCodeCache.save(key, valCode);
+    public void saveValCode(Long key, VCode vCode) {
+        VCodeCache.save(key, vCode);
     }
 
     @Override
-    public ValCode getValCode(Long key) throws ServiceException {
+    public VCode getValCode(Long key) throws Exception {
         try {
-            return valCodeCache.findByKey(key);
+            return VCodeCache.findByKey(key);
         } catch (Exception e) {
-            throw new ServiceException(ErrorCode01.ERROR_VALCODE.getCode());
+            throw new ServiceException(ERROR_VALCODE);
         }
     }
 

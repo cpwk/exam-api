@@ -3,7 +3,7 @@ package com.yang.exam.api.banner.service;
 import com.yang.exam.api.banner.model.Banner;
 import com.yang.exam.api.banner.qo.BannerQo;
 import com.yang.exam.api.banner.repository.IBannerRepository;
-import com.yang.exam.commons.exception.DetailedException;
+import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BannerService implements IBannerService {
+public class BannerService implements IBannerService, ErrorCode {
 
     @Autowired
     private IBannerRepository bannerRepository;
@@ -31,9 +31,9 @@ public class BannerService implements IBannerService {
     }
 
     @Override
-    public void save(Banner banner) throws ServiceException {
+    public void save(Banner banner) throws Exception {
         if (StringUtils.isEmpty(banner.getImg())) {
-            throw new DetailedException("请上传图片");
+            throw new ServiceException(PLEASE_UPLOAD_IMAGE);
         }
         bannerRepository.save(banner);
     }

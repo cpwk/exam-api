@@ -1,10 +1,11 @@
 package com.yang.exam.api.category.controller;
 
+import com.yang.exam.api.admin.authority.AdminPermission;
 import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.category.service.CategoryService;
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,33 +25,33 @@ public class OmsCategoryController extends BaseController {
     private CategoryService categoryService;
 
     @RequestMapping(value = "/save")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
     public ModelAndView save(String category) throws Exception {
         categoryService.save(parseModel(category, new Category()));
         return feedback();
     }
 
     @RequestMapping(value = "/category_id")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
     public ModelAndView getById(Integer id) throws Exception {
         return feedback(categoryService.getById(id));
     }
 
     @RequestMapping(value = "/status")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
     public ModelAndView status(Integer id, Byte status) throws Exception {
         categoryService.status(id, status);
         return feedback();
     }
 
     @RequestMapping(value = "/categorys")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
     public ModelAndView categorys() {
         return feedback(categoryService.categorys(true));
     }
 
     @RequestMapping(value = "/remove")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
     public ModelAndView removeExamQuestionType(Integer id) throws Exception {
         categoryService.remove(id);
         return feedback(null);

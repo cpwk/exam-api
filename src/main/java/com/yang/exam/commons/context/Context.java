@@ -7,6 +7,8 @@ public class Context {
 
     private SessionWrap session;
 
+    private String requestIp;
+
     public SessionWrap getSession() {
         return session;
     }
@@ -21,5 +23,13 @@ public class Context {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 }

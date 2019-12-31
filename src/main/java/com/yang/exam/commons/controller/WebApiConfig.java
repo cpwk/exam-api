@@ -25,4 +25,5 @@ public class WebApiConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(apiInterceptor()).addPathPatterns("/**");
     }
+
 }

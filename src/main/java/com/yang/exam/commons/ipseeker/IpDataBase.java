@@ -11,12 +11,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * 管理Ip库
- *
- * @author Cweili
- * @version 2013-4-16 下午3:42:50
- */
 public class IpDataBase {
 
     private static final String IP_FILE = "qqwry.dat";

@@ -4,7 +4,6 @@ package com.yang.exam.commons.controller;
 import com.sunnysuperman.commons.bean.Bean;
 import com.yang.exam.commons.exception.ArgumentServiceException;
 import com.yang.exam.commons.utils.WebUtils;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +33,7 @@ public class BaseController {
     }
 
     protected static <T> T parseModel(String modelJSON, T model)
-            throws ServiceException {
+            throws Exception {
         try {
             return Bean.fromJson(modelJSON, model, null);
         } catch (Exception e) {

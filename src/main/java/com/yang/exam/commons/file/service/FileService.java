@@ -13,7 +13,8 @@ import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.sunnysuperman.commons.util.FileUtil;
 import com.sunnysuperman.commons.util.JSONUtil;
 import com.sunnysuperman.commons.util.PlaceholderUtil;
-import com.yang.exam.commons.exception.DetailedException;
+import com.yang.exam.commons.exception.ErrorCode;
+import com.yang.exam.commons.exception.ServiceException;
 import com.yang.exam.commons.file.entity.AliUploadToken;
 import com.yang.exam.commons.file.entity.OSSConfig;
 import com.yang.exam.commons.file.entity.UploadOptions;
@@ -36,7 +37,7 @@ import java.util.Map;
 
 
 @Service
-public class FileService {
+public class FileService implements ErrorCode {
     private static final int MAX_UPLOAD_SIZE = 15 * 1024 * 1024;
     private static final String STS_API_VERSION = "2015-04-01";
     private String POLICY_TEMPLATE;
@@ -126,7 +127,7 @@ public class FileService {
 
     public UploadToken uploadToken(String namespace, String fileName, int fileSize, boolean cdn) throws Exception {
         if (fileSize > MAX_UPLOAD_SIZE) {
-            throw new DetailedException("超过最大上传文件大小");
+            throw new ServiceException(EXCEEDED_MAXIMUM_FILE_UPLOAD_SIZE);
         }
         String objectKey = generateObjectKey(namespace, fileName, 8);
         String policy;

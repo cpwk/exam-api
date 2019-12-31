@@ -1,10 +1,11 @@
 package com.yang.exam.api.user.controller;
 
+import com.yang.exam.api.admin.authority.AdminPermission;
 import com.yang.exam.api.user.qo.UserQo;
 import com.yang.exam.api.user.service.UserService;
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +26,13 @@ public class OmsController extends BaseController {
 
 
     @RequestMapping(value = "users")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.USER_EDIT)
     public ModelAndView users(String userQo) throws Exception {
         return feedback(userService.users(parseModel(userQo, new UserQo())));
     }
 
     @RequestMapping(value = "status")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.USER_EDIT)
     public ModelAndView status(Integer id) throws Exception {
         userService.status(id);
         return feedback();

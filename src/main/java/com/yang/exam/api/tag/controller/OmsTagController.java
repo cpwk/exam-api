@@ -1,10 +1,11 @@
 package com.yang.exam.api.tag.controller;
 
+import com.yang.exam.api.admin.authority.AdminPermission;
 import com.yang.exam.api.tag.model.Tag;
 import com.yang.exam.api.tag.service.TagService;
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +24,20 @@ public class OmsTagController extends BaseController {
     private TagService tagService;
 
     @RequestMapping(value = "/save")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.TAG_EDIT)
     public ModelAndView save(String tag) throws Exception {
         tagService.save(parseModel(tag, new Tag()));
         return feedback();
     }
 
     @RequestMapping(value = "tag")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.TAG_EDIT)
     public ModelAndView tag() throws Exception {
         return feedback(tagService.findTags());
     }
 
     @RequestMapping(value = "/delete")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.TAG_EDIT)
     public ModelAndView delete(Integer id) throws Exception {
         tagService.delete(id);
         return feedback();

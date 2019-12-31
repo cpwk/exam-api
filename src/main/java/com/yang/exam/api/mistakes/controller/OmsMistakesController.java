@@ -2,9 +2,9 @@ package com.yang.exam.api.mistakes.controller;
 
 import com.yang.exam.api.mistakes.model.Mistakes;
 import com.yang.exam.api.mistakes.service.MistakesService;
-import com.yang.exam.commons.controller.Action;
+import com.yang.exam.commons.authority.Action;
+import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
-import com.yang.exam.commons.controller.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,7 @@ public class OmsMistakesController extends BaseController {
 
     @RequestMapping(value = "save")
     @Action(session = SessionType.ADMIN)
-    public ModelAndView save(String mistakes) {
+    public ModelAndView save(String mistakes) throws Exception {
         mistakesService.save(parseModel(mistakes, new Mistakes()));
         return feedback();
     }

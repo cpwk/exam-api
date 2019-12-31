@@ -1,7 +1,7 @@
 package com.yang.exam.api.user.service;
 
 
-import com.yang.exam.api.support.model.VCode;
+import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
@@ -33,5 +33,8 @@ public interface UserService {
     Map profile() throws Exception;
 
     Map modifyProfile(User user) throws Exception;
+
+    UserSession userSession(String token);
+
 
 }
