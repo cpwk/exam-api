@@ -24,8 +24,8 @@ public class UsrCategoryController extends BaseController {
 
     @RequestMapping(value = "/category")
     @Action(session = SessionType.USER)
-    public ModelAndView category() throws Exception {
-        return feedback(categoryService.categorys(true));
+    public ModelAndView category(boolean usr) throws Exception {
+        return feedback(categoryService.categorys(usr));
     }
 
     @RequestMapping(value = "category_level")

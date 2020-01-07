@@ -42,6 +42,7 @@ public class AdminServiceImpl implements AdminService, AdminError {
 
     @Override
     public AdminSessionWrap signIn(Admin admin) throws Exception {
+        System.out.println(StringUtils.encryptPassword(admin.getPassword(), salt));
         if (StringUtils.isEmpty(admin.getUserName())) {
             throw new ServiceException(ERR_ADMIN_USERNAME_INVALID);
         }

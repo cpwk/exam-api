@@ -14,6 +14,7 @@ public class Constants {
     public static final byte INVALID_TYPE = 3;// 无效试卷
     public static final long TOTAL_TIME = 0;//默认用时
 
+    public static final byte STATUS_0 = 0;// 全部
     public static final byte STATUS_OK = 1;// 默认
     public static final byte STATUS_HALT = 2;// 删除、停用、取消
 

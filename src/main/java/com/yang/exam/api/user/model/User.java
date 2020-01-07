@@ -31,11 +31,7 @@ public class User {
     @Column
     private Byte sex;
     @Column
-    private Long signinAt;
-    @Column
     private Long signupAt;
-    @Column
-    private Long updatedAt;
 
     public User() {
     }
@@ -112,27 +108,11 @@ public class User {
         this.sex = sex;
     }
 
-    public Long getSigninAt() {
-        return signinAt;
-    }
-
-    public void setSigninAt(Long signinAt) {
-        this.signinAt = signinAt;
-    }
-
     public Long getSignupAt() {
         return signupAt;
     }
 
     public void setSignupAt(Long signupAt) {
         this.signupAt = signupAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Long updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

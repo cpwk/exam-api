@@ -15,6 +15,9 @@ public class CollectQo extends DataQueryObjectPage {
     @QueryField(type = QueryType.EQUAL, name = "userId")
     private Integer userId = Contexts.requestUser().getId();
 
+    @QueryField(type = QueryType.EQUAL, name = "type")
+    private Byte type = 0;
+
     public Integer getUserId() {
         return userId;
     }
@@ -22,9 +25,6 @@ public class CollectQo extends DataQueryObjectPage {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-
-    @QueryField(type = QueryType.EQUAL, name = "type")
-    private Byte type = 0;
 
     public Byte getType() {
         return type;

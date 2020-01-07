@@ -35,7 +35,7 @@ public class Contexts implements ErrorCode {
     public static User requestUser() throws ServiceException {
         Context context = get();
         if (context == null) {
-            throw new ServiceException(SESSIONTIMEOUT);
+            throw new ServiceException(ERR_SESSION_EXPIRES);
         }
         User user = sessionUser();
         if (user == null) {
@@ -60,7 +60,7 @@ public class Contexts implements ErrorCode {
     public static Admin requestAdmin() throws ServiceException {
         Context context = get();
         if (context == null) {
-            throw new ServiceException(SESSIONTIMEOUT);
+            throw new ServiceException(ERR_SESSION_EXPIRES);
         }
         Admin admin = sessionAdmin();
         if (admin == null) {

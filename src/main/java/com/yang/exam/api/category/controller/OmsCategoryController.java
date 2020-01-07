@@ -46,8 +46,8 @@ public class OmsCategoryController extends BaseController {
 
     @RequestMapping(value = "/categorys")
     @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.CATEGORY_EDIT)
-    public ModelAndView categorys() {
-        return feedback(categoryService.categorys(true));
+    public ModelAndView categorys(boolean oms) {
+        return feedback(categoryService.categorys(oms));
     }
 
     @RequestMapping(value = "/remove")

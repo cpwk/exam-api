@@ -106,12 +106,12 @@ public class CategoryServiceImpl implements CategoryService, CategoryError {
 
     @Override
     public List<Category> categoryLevel() throws Exception {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllByStatus(Constants.STATUS_OK);
     }
 
     @Override
-    public List<Category> categorys(boolean usr) {
-        List<Category> s = categoryCache.findByKey(usr ? 0 : Constants.STATUS_OK);
+    public List<Category> categorys(boolean oms) {
+        List<Category> s = categoryCache.findByKey(oms ? 0 : Constants.STATUS_OK);
         return s;
     }
 

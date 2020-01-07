@@ -1,17 +1,25 @@
 package com.yang.exam.api.user.service;
 
 
-import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.api.user.authority.UserSessionWrap;
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
 import com.yang.exam.api.user.qo.UserQo;
+import com.yang.exam.commons.support.model.VCode;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
 
 public interface UserService {
 
+    //oms
+    Page<User> users(UserQo userQo) throws Exception;
+
+    void status(Integer id);
+
+    User omsProfile(Integer id) throws Exception;
+
+    //usr
     UserSessionWrap signin(User user, VCode vCode, String ip) throws Exception;
 
     void signup(User user, VCode vCode) throws Exception;
@@ -21,10 +29,6 @@ public interface UserService {
     User findById(Integer id);
 
     User getById(Integer id);
-
-    Page<User> users(UserQo userQo) throws Exception;
-
-    void status(Integer id);
 
     UserSession findSessionByToken(String token) throws Exception;
 

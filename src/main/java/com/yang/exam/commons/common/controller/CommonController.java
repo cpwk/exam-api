@@ -41,7 +41,7 @@ public class CommonController extends BaseController implements ErrorCode {
             response.setDateHeader("Expire", 0);
             RandomValidateCodeUtil randomValidateCode = new RandomValidateCodeUtil();
             String randomString = randomValidateCode.getRandcode(request, response, key);//输出验证码图片方法
-            commonService.saveValCode(key, new VCode(randomString));
+            commonService.saveVCode(key, new VCode(randomString));
         } catch (Exception e) {
             e.printStackTrace();
         }

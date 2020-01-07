@@ -2,8 +2,7 @@ package com.yang.exam.api.banner.entity;
 
 public enum BannerType {
 
-    HOME_PC(1, "PC首页");
-//    , HOME_WX(2, "微信首页"),
+    HOME_PC(1, "PC首页"), SIGNUP(2, "PC 注册");
 //    JAVA_PRY_PC(3, "PC Java就业班"), JAVA_PRY_WX(4, "微信 Java就业班"),
 //    JAVA_ADV_PC(5, "PC Java高阶班"), JAVA_ADV_WX(6, "微信 Java高阶班"),
 //    SERVICE_PC(7, "PC 教学服务"), SERVICE_WX(8, "微信 教学服务"),

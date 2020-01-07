@@ -38,4 +38,10 @@ public class OmsController extends BaseController {
         return feedback();
     }
 
+    @RequestMapping(value = "omsProfile")
+    @Action(session = SessionType.ADMIN)
+    public ModelAndView omsProfile(Integer id) throws Exception {
+        return feedback(userService.omsProfile(id));
+    }
+
 }

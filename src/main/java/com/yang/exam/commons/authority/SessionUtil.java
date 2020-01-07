@@ -89,7 +89,7 @@ public class SessionUtil implements ErrorCode {
                         throw new ServiceException(NO_PERMISSION);
                     }
                 } else {
-                    throw new ServiceException(SESSIONTIMEOUT);
+                    throw new ServiceException(ERR_SESSION_EXPIRES);
                 }
             } else if (type == SessionType.USER) {
                 UserSession session = userService.userSession(token);
@@ -104,7 +104,7 @@ public class SessionUtil implements ErrorCode {
                         throw new ServiceException(NO_PERMISSION);
                     }
                 } else {
-                    throw new ServiceException(SESSIONTIMEOUT);
+                    throw new ServiceException(ERR_SESSION_EXPIRES);
                 }
             }
         }
@@ -114,7 +114,7 @@ public class SessionUtil implements ErrorCode {
 
             SessionWrap wrap = getSession(token);
             if (wrap == null) {
-                throw new ServiceException(SESSIONTIMEOUT);
+                throw new ServiceException(ERR_SESSION_EXPIRES);
             }
 
             if (StringUtils.isEmpty(permission) || permission.equals("NONE")) {

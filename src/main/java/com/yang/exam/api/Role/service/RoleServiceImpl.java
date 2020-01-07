@@ -1,24 +1,14 @@
 package com.yang.exam.api.Role.service;
 
-import com.sunnysuperman.kvcache.RepositoryProvider;
-import com.sunnysuperman.kvcache.converter.BeanModelConverter;
 import com.yang.exam.api.Role.Repository.RoleRepository;
 import com.yang.exam.api.Role.model.Role;
 import com.yang.exam.api.admin.authority.AdminPermissionVO;
-import com.yang.exam.commons.cache.CacheOptions;
-import com.yang.exam.commons.cache.KvCacheFactory;
-import com.yang.exam.commons.cache.KvCacheWrap;
-import com.yang.exam.commons.entity.Constants;
 import com.yang.exam.commons.exception.ErrorCode;
-import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: yangchengcheng
@@ -33,28 +23,28 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
     //
-    @Autowired
-    private KvCacheFactory kvCacheFactory;
-
-    private KvCacheWrap<Integer, Role> roleCache;
-
-    @PostConstruct
-    public void init() {
-        roleCache = kvCacheFactory.create(new CacheOptions("role", 1, Constants.CACHE_REDIS_EXPIRE),
-                new RepositoryProvider<Integer, Role>() {
-
-                    @Override
-                    public Role findByKey(Integer key) throws RepositoryException {
-                        return roleRepository.findById(key).orElse(null);
-                    }
-
-                    @Override
-                    public Map<Integer, Role> findByKeys(Collection<Integer> ids) throws RepositoryException {
-                        throw new UnsupportedOperationException("findByKeys");
-                    }
-
-                }, new BeanModelConverter<>(Role.class));
-    }
+//    @Autowired
+//    private KvCacheFactory kvCacheFactory;
+//
+//    private KvCacheWrap<Integer, Role> roleCache;
+//
+//    @PostConstruct
+//    public void init() {
+//        roleCache = kvCacheFactory.create(new CacheOptions("role", 1, Constants.CACHE_REDIS_EXPIRE),
+//                new RepositoryProvider<Integer, Role>() {
+//
+//                    @Override
+//                    public Role findByKey(Integer key) throws RepositoryException {
+//                        return roleRepository.findById(key).orElse(null);
+//                    }
+//
+//                    @Override
+//                    public Map<Integer, Role> findByKeys(Collection<Integer> ids) throws RepositoryException {
+//                        throw new UnsupportedOperationException("findByKeys");
+//                    }
+//
+//                }, new BeanModelConverter<>(Role.class));
+//    }
     //
 
     @Override
@@ -62,19 +52,20 @@ public class RoleServiceImpl implements RoleService {
 
 
         roleRepository.save(role);
-        roleCache.remove(role.getId());
+//        roleCache.remove(role.getId());
     }
 
     @Override
     public void remove_role(int id) {
         roleRepository.deleteById(id);
-        roleCache.remove(id);
+//        roleCache.remove(id);
 
     }
 
     @Override
     public Role role(Integer id) throws Exception {
-        return roleCache.findByKey(id);
+//        return roleCache.findByKey(id);
+        return getById(id);
     }
 
     @Override
@@ -90,7 +81,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findById(Integer id) throws Exception {
-        return roleCache.findByKey(id);
+//        return roleCache.findByKey(id);
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override

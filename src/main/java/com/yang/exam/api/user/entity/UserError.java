@@ -14,5 +14,7 @@ public interface UserError extends ErrorCode {
     public static final int ERR_VCODE_EMPTY = 1007;
     public static final int ERR_USER_EMAIL_INVALID = 1008;
     public static final int ERR_USER_DISABLE = 1009;
+    public static final int ERR_PASSWORD_EMPTY = 1010;
+
 
 }

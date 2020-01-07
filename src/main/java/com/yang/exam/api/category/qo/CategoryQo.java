@@ -11,11 +11,11 @@ import com.yang.exam.commons.reposiotry.support.QueryType;
  */
 public class CategoryQo extends DataQueryObjectSort {
 
-    @QueryField(type = QueryType.FULL_LIKE, name = "name")
-    private String name;
-
     @QueryField(type = QueryType.EQUAL, name = "status")
     private Byte status = 1;
+
+    @QueryField(type = QueryType.FULL_LIKE, name = "name")
+    private String name;
 
     public CategoryQo() {
 

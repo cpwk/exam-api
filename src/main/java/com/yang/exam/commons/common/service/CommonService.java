@@ -2,13 +2,13 @@ package com.yang.exam.commons.common.service;
 
 import com.sunnysuperman.kvcache.RepositoryProvider;
 import com.sunnysuperman.kvcache.converter.BeanModelConverter;
-import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.commons.cache.CacheOptions;
 import com.yang.exam.commons.cache.KvCacheFactory;
 import com.yang.exam.commons.cache.KvCacheWrap;
 import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.RepositoryException;
 import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.support.model.VCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class CommonService implements ICommonService, ErrorCode {
 
     @PostConstruct
     public void init() {
-        VCodeCache = kvCacheFactory.create(new CacheOptions("val_code", 2, 600),
+        VCodeCache = kvCacheFactory.create(new CacheOptions("img_code", 2, 600),
                 new RepositoryProvider<Long, VCode>() {
 
                     @Override
@@ -43,7 +43,7 @@ public class CommonService implements ICommonService, ErrorCode {
     }
 
     @Override
-    public void saveValCode(Long key, VCode vCode) {
+    public void saveVCode(Long key, VCode vCode) {
         VCodeCache.save(key, vCode);
     }
 

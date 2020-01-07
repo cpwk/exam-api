@@ -2,11 +2,11 @@ package com.yang.exam.commons.support.config.sms;
 
 public class SmsTpl {
 
-    public static final String tpl_reg = "SMS_176520884";
+    public static final String tpl_reg = "SMS_181865273";
     //ok
-    public static final String tpl_mod_pwd = "SMS_176520884";
-    public static final String tpl_file_reject = "SMS_176520884";
-    public static final String tpl_formal = "SMS_176520884";
+    public static final String tpl_mod_pwd = "SMS_181865273";
+    public static final String tpl_file_reject = "SMS_181865273";
+    public static final String tpl_formal = "SMS_181865273";
 
 
     private String templateCode;

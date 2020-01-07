@@ -5,7 +5,7 @@ import com.yang.exam.commons.support.model.VCode;
 
 public interface ICommonService {
 
-    void saveValCode(Long key, VCode vCode);
+    void saveVCode(Long key, VCode vCode);
 
     VCode getValCode(Long key) throws Exception;
 

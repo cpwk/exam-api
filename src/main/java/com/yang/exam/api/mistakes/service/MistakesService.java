@@ -11,10 +11,6 @@ public interface MistakesService {
 
     void save(Mistakes mistakes);
 
-    Mistakes findById(Integer id) throws Exception;
-
-    Mistakes getById(Integer id) throws Exception;
-
     Mistakes findByUserId(Integer id) throws Exception;
 
     void delete(Integer id) throws Exception;

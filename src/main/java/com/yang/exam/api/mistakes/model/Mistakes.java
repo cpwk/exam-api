@@ -23,7 +23,7 @@ public class Mistakes {
     private Integer userId;
     @Column
     @Convert(converter = IntegerArrayConverter.class)
-    private List<Integer> questionId;
+    private List<Integer> questionIds;
     @Transient
     private List<Question> questions;
 
@@ -43,12 +43,12 @@ public class Mistakes {
         this.userId = userId;
     }
 
-    public List<Integer> getQuestionId() {
-        return questionId;
+    public List<Integer> getQuestionIds() {
+        return questionIds;
     }
 
-    public void setQuestionId(List<Integer> questionId) {
-        this.questionId = questionId;
+    public void setQuestionIds(List<Integer> questionIds) {
+        this.questionIds = questionIds;
     }
 
     public List<Question> getQuestions() {

@@ -51,7 +51,7 @@ public class SupportServiceImpl implements SupportService, SupportError {
                 new RepositoryProvider<Long, VCode>() {
                     @Override
                     public VCode findByKey(Long account) throws Exception {
-                        throw new ServiceException(ERROR_MOBILE_VCODE_OVERTIME);
+                        throw new ServiceException(ERROR_VCODE);
                     }
 
                     @Override
@@ -67,7 +67,7 @@ public class SupportServiceImpl implements SupportService, SupportError {
         try {
             return vCodeCache.findByKey(Key);
         } catch (Exception e) {
-            throw new ServiceException(ERROR_VCODE_INVALID);
+            throw new ServiceException(ERROR_VCODE);
         }
     }
 
@@ -127,8 +127,8 @@ public class SupportServiceImpl implements SupportService, SupportError {
         protected void doApiWork() {
             MailHelper.MailInfo mail = new MailHelper.MailInfo();
             mail.setToAddress(vCode.getAccount());
-            mail.setSubject("重置密码");
-            mail.setContent("您正在找回密码，验证码是：" + vCode.getCode() + " <br/>5分钟内有效");
+            mail.setSubject("邮箱验证码");
+            mail.setContent("您本次操作的验证码为：" + vCode.getCode() + ",有效时间5分钟");
             mailService.send(mail);
         }
 

@@ -16,7 +16,7 @@ public interface CategoryService {
 
     Category category(int id) throws Exception;
 
-    List<Category> categorys(boolean usr);
+    List<Category> categorys(boolean oms);
 
     void remove(int id) throws Exception;
 
