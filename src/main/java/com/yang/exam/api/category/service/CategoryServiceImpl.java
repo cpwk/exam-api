@@ -31,16 +31,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService, CategoryError {
-
-    private static final int FATHER = 0;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
-
     @Autowired
     private KvCacheFactory kvCacheFactory;
-
     private KvCacheWrap<Byte, List<Category>> categoryCache;
 
     @PostConstruct
