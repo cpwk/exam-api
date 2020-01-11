@@ -6,10 +6,12 @@ import com.yang.exam.api.collect.service.CollectService;
 import com.yang.exam.api.mistakes.model.Mistakes;
 import com.yang.exam.api.mistakes.service.MistakesService;
 import com.yang.exam.api.user.authority.UserSessionWrap;
+import com.yang.exam.api.user.entity.OmsProfile;
 import com.yang.exam.api.user.entity.UserError;
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
 import com.yang.exam.api.user.qo.UserQo;
+import com.yang.exam.api.user.qo.UserSessionQo;
 import com.yang.exam.api.user.repository.UserRepository;
 import com.yang.exam.api.user.repository.UserSessionRepository;
 import com.yang.exam.api.usrPaper.service.UsrPaperService;
@@ -30,12 +32,12 @@ import com.yang.exam.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.yang.exam.commons.entity.Constants.STATUS_HALT;
@@ -311,15 +313,43 @@ public class UserServiceImpl implements UserService, UserError, SupportError {
         userRepository.save(user);
     }
 
+    @Override
+    public Page<UserSession> userSessions(UserSessionQo qo) throws Exception {
+        return userSessionRepository.findAll((Pageable) qo);
+    }
+
+    @Override
+    public UserSession findByUserSessionUserId(Integer id) throws Exception {
+        UserSession userSession = userSessionRepository.findByUserId(id);
+        if (userSession == null) {
+            throw new ServiceException(ERR_DATA_NOT_FOUND);
+        }
+        return userSession;
+    }
+
     //考试记录，收藏信息（总数），错题本（总数），个人信息，注册时间，登录日志
 
     @Override
-    public User omsProfile(Integer id) throws Exception {
+    public OmsProfile omsProfile(Integer id) throws Exception {
+        User user = getById(id);
+        OmsProfile omsProfile = new OmsProfile();
+        Mistakes mistakes = mistakesService.findByUserId(id);
         Integer totalUsrPaper = usrPaperService.totalNumber(id);
         Integer totalCollect = collectService.findByUserId(id).size();
-        Mistakes mistakes = mistakesService.findByUserId(id);
-        List<Integer> questionIds = mistakes.getQuestionIds();
-        return null;
+        Integer totalMistakes = mistakes.getQuestionIds().size();
+        omsProfile.setUsername(user.getUsername());
+        omsProfile.setName(user.getName());
+        omsProfile.setMobile(user.getMobile());
+        omsProfile.setEmail(user.getEmail());
+        omsProfile.setAvatar(user.getAvatar());
+        omsProfile.setStatus(user.getStatus());
+        omsProfile.setSex(user.getSex());
+        omsProfile.setSignupAt(user.getSignupAt());
+        omsProfile.setTotalUsrPaper(totalUsrPaper);
+        omsProfile.setTotalCollect(totalCollect);
+        omsProfile.setTotalMistakes(totalMistakes);
+        omsProfile.setUserSession(findByUserSessionUserId(id));
+        return omsProfile;
     }
 }
 

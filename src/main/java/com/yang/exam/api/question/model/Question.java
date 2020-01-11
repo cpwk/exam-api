@@ -4,6 +4,7 @@ import com.yang.exam.api.category.model.Category;
 import com.yang.exam.api.tag.model.Tag;
 import com.yang.exam.commons.converter.IntegerArrayConverter;
 import com.yang.exam.commons.converter.StringArrayConverter;
+import com.yang.exam.commons.utils.SimpleHtmlParser;
 
 import javax.persistence.*;
 import java.util.List;
@@ -66,7 +67,7 @@ public class Question {
     }
 
     public String getTopic() {
-        return topic;
+        return SimpleHtmlParser.removeScript(topic);
     }
 
     public void setTopic(String topic) {

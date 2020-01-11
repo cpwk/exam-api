@@ -64,4 +64,11 @@ public class AdminController extends BaseController {
     public ModelAndView profile() throws Exception {
         return feedback(adminService.profile());
     }
+
+    @RequestMapping(value = "/update_password")
+    @Action(session = SessionType.ADMIN)
+    public ModelAndView updatePassword(String password, String oldPassword) throws Exception {
+        adminService.update_password(password, oldPassword);
+        return feedback();
+    }
 }

@@ -2,9 +2,11 @@ package com.yang.exam.api.user.service;
 
 
 import com.yang.exam.api.user.authority.UserSessionWrap;
+import com.yang.exam.api.user.entity.OmsProfile;
 import com.yang.exam.api.user.entity.UserSession;
 import com.yang.exam.api.user.model.User;
 import com.yang.exam.api.user.qo.UserQo;
+import com.yang.exam.api.user.qo.UserSessionQo;
 import com.yang.exam.commons.support.model.VCode;
 import org.springframework.data.domain.Page;
 
@@ -17,7 +19,11 @@ public interface UserService {
 
     void status(Integer id);
 
-    User omsProfile(Integer id) throws Exception;
+    Page<UserSession> userSessions(UserSessionQo qo) throws Exception;
+
+    UserSession findByUserSessionUserId(Integer id) throws Exception;
+
+    OmsProfile omsProfile(Integer id) throws Exception;
 
     //usr
     UserSessionWrap signin(User user, VCode vCode, String ip) throws Exception;

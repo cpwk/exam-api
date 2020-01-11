@@ -10,5 +10,6 @@ import com.yang.exam.commons.exception.ErrorCode;
 public interface AdminError extends ErrorCode {
     public static final int ERR_ADMIN_USERNAME_INVALID = 1000;
     public static final int ERR_ADMIN_PASSWORD_INVALID = 1001;
+    public static final int ERR_ADMIN_OLDPASSWORD_INVALID = 1002;
 
 }

@@ -39,7 +39,7 @@ public class OmsController extends BaseController {
     }
 
     @RequestMapping(value = "omsProfile")
-    @Action(session = SessionType.ADMIN)
+    @Action(session = SessionType.NONE)
     public ModelAndView omsProfile(Integer id) throws Exception {
         return feedback(userService.omsProfile(id));
     }

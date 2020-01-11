@@ -146,6 +146,17 @@ public class AdminServiceImpl implements AdminService, AdminError {
         return CollectionUtil.arrayAsMap("admin", admin);
     }
 
+    @Override
+    public void update_password(String password, String oldPassword) throws Exception {
+        Integer adminId = Contexts.requestAdmin().getId();
+        Admin admin = getById(adminId);
+        if (oldPassword.equals(StringUtils.encryptPassword(admin.getPassword(), salt))) {
+            throw new ServiceException(ERR_ADMIN_OLDPASSWORD_INVALID);
+        }
+        admin.setPassword(StringUtils.encryptPassword(password, salt));
+        adminRepository.save(admin);
+    }
+
     private AdminSession createSession(Admin admin) {
         AdminSession session = new AdminSession();
         session.setAdminId(admin.getId());

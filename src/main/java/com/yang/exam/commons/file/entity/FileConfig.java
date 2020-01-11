@@ -1,4 +1,4 @@
-package com.yang.exam.commons.file.entity;//package cn.maidaotech.yangchengcheng.news.api.file.entity;
+package com.yang.exam.commons.file.entity;
 
 //import org.springframework.boot.context.properties.ConfigurationProperties;
 //import org.springframework.stereotype.Component;

@@ -32,4 +32,6 @@ public interface AdminService {
     void remove_admin(int id) throws Exception;
 
     Map profile() throws Exception;
+
+    void update_password(String password, String oldPassword) throws Exception;
 }

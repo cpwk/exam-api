@@ -1,56 +1,26 @@
-package com.yang.exam.api.user.model;
+package com.yang.exam.api.user.entity;
 
-
-import com.alibaba.fastjson.annotation.JSONField;
-import com.yang.exam.api.user.entity.UserSession;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "user")
-public class User {
-
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column
+/**
+ * @author: yangchengcheng
+ * @Date: 2020/1/7 14:57
+ * @Version：1.0
+ */
+public class OmsProfile {
     private String name;
-    @Column(name = "user_name")
     private String username;
-    @Column
-    @JSONField(serialize = false)
     private String password;
-    @Column
     private String mobile;
-    @Column
     private String email;
-    @Column
     private String avatar;
-    @Column
     private Byte status;
-    @Column
     private Byte sex;
-    @Column
     private Long signupAt;
-    @Transient
     private Integer totalUsrPaper;
-    @Transient
     private Integer totalCollect;
-    @Transient
     private Integer totalMistakes;
-    @Transient
     private UserSession userSession;
 
-    public User() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public OmsProfile() {
     }
 
     public String getName() {
@@ -123,5 +93,37 @@ public class User {
 
     public void setSignupAt(Long signupAt) {
         this.signupAt = signupAt;
+    }
+
+    public Integer getTotalUsrPaper() {
+        return totalUsrPaper;
+    }
+
+    public void setTotalUsrPaper(Integer totalUsrPaper) {
+        this.totalUsrPaper = totalUsrPaper;
+    }
+
+    public Integer getTotalCollect() {
+        return totalCollect;
+    }
+
+    public void setTotalCollect(Integer totalCollect) {
+        this.totalCollect = totalCollect;
+    }
+
+    public Integer getTotalMistakes() {
+        return totalMistakes;
+    }
+
+    public void setTotalMistakes(Integer totalMistakes) {
+        this.totalMistakes = totalMistakes;
+    }
+
+    public UserSession getUserSession() {
+        return userSession;
+    }
+
+    public void setUserSession(UserSession userSession) {
+        this.userSession = userSession;
     }
 }
