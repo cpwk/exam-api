@@ -1,6 +1,5 @@
 package com.yang.exam.commons.common.controller;
 
-import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.commons.authority.Action;
 import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.common.entity.FormItemTypeVO;
@@ -11,6 +10,7 @@ import com.yang.exam.commons.controller.BaseController;
 import com.yang.exam.commons.entity.KeyValue;
 import com.yang.exam.commons.exception.ErrorCode;
 import com.yang.exam.commons.exception.ServiceException;
+import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.commons.utils.RandomValidateCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

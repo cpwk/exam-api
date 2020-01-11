@@ -20,6 +20,15 @@ import java.util.Map;
  **/
 public class BaseController {
 
+    protected static <T> T parseModel(String modelJSON, T model)
+            throws Exception {
+        try {
+            return Bean.fromJson(modelJSON, model, null);
+        } catch (Exception e) {
+            throw new ArgumentServiceException("model");
+        }
+    }
+
     protected ModelAndView feedback() {
         return feedback(null);
     }
@@ -30,15 +39,6 @@ public class BaseController {
         data.put("errcode", 0);
         data.put("result", result);
         return new ModelAndView(new JsonView(data));
-    }
-
-    protected static <T> T parseModel(String modelJSON, T model)
-            throws Exception {
-        try {
-            return Bean.fromJson(modelJSON, model, null);
-        } catch (Exception e) {
-            throw new ArgumentServiceException("model");
-        }
     }
 
     HttpServletRequest getRequest() {

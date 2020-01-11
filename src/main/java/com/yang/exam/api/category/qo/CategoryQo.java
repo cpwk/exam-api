@@ -21,12 +21,12 @@ public class CategoryQo extends DataQueryObjectSort {
 
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
     public CategoryQo(byte status) {
         this.setStatus(status);
+    }
+
+    public Byte getStatus() {
+        return status;
     }
 
     public void setStatus(Byte status) {

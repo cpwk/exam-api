@@ -14,33 +14,6 @@ public class KvCacheWrap<K, T> extends DefaultKvCache<K, T> {
         this.taskService = taskService;
     }
 
-    private class RemoveCacheTask implements Runnable {
-        K key;
-        int retry;
-
-        public RemoveCacheTask(K key, int retry) {
-            super();
-            this.key = key;
-            this.retry = retry;
-        }
-
-        @Override
-        public void run() {
-            try {
-                tryToRemove(key);
-            } catch (Exception e) {
-                LOG.error(null, e);
-                retry++;
-                if (retry < 10) {
-                    taskService.scheduleTask(new RemoveCacheTask(key, retry), 100);
-                } else {
-                    L.error("Failed to explicitly remove cache: " + key);
-                }
-            }
-        }
-
-    }
-
     // 安全删除
     @Override
     public void remove(K id) {
@@ -80,6 +53,33 @@ public class KvCacheWrap<K, T> extends DefaultKvCache<K, T> {
     // 尝试保存，出错会抛出异常
     public void tryToSave(K key, T value) throws KvCacheException {
         super.save(key, value);
+    }
+
+    private class RemoveCacheTask implements Runnable {
+        K key;
+        int retry;
+
+        public RemoveCacheTask(K key, int retry) {
+            super();
+            this.key = key;
+            this.retry = retry;
+        }
+
+        @Override
+        public void run() {
+            try {
+                tryToRemove(key);
+            } catch (Exception e) {
+                LOG.error(null, e);
+                retry++;
+                if (retry < 10) {
+                    taskService.scheduleTask(new RemoveCacheTask(key, retry), 100);
+                } else {
+                    L.error("Failed to explicitly remove cache: " + key);
+                }
+            }
+        }
+
     }
 
 }

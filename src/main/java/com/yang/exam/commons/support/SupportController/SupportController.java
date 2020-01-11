@@ -1,10 +1,10 @@
 package com.yang.exam.commons.support.SupportController;
 
-import com.yang.exam.commons.support.SupportService.SupportService;
-import com.yang.exam.commons.support.model.VCode;
 import com.yang.exam.commons.authority.Action;
 import com.yang.exam.commons.authority.SessionType;
 import com.yang.exam.commons.controller.BaseController;
+import com.yang.exam.commons.support.SupportService.SupportService;
+import com.yang.exam.commons.support.model.VCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

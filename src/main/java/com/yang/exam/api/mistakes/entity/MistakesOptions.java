@@ -12,6 +12,10 @@ public class MistakesOptions {
     public MistakesOptions() {
     }
 
+    public static MistakesOptions getDefaultInstance() {
+        return new MistakesOptions().setWithQuestion(true);
+    }
+
     public boolean isWithQuestion() {
         return withQuestion;
     }
@@ -19,9 +23,5 @@ public class MistakesOptions {
     public MistakesOptions setWithQuestion(boolean withQuestion) {
         this.withQuestion = withQuestion;
         return this;
-    }
-
-    public static MistakesOptions getDefaultInstance() {
-        return new MistakesOptions().setWithQuestion(true);
     }
 }

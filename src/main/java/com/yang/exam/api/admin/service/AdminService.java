@@ -5,7 +5,6 @@ import com.yang.exam.api.admin.entity.AdminSession;
 import com.yang.exam.api.admin.entity.AdminSessionWrap;
 import com.yang.exam.api.admin.model.Admin;
 import com.yang.exam.api.admin.qo.AdminSessionQo;
-import com.yang.exam.api.user.model.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

@@ -17,33 +17,6 @@ public class QuestionOptions {
 
     }
 
-    public boolean isWithCategory() {
-        return withCategory;
-    }
-
-    public boolean isWithTag() {
-        return withTag;
-    }
-
-    public boolean isWithCollect() {
-        return withCollect;
-    }
-
-    public QuestionOptions setWithCollect(boolean withCollect) {
-        this.withCollect = withCollect;
-        return this;
-    }
-
-    private QuestionOptions setWithCategory(boolean withCategory) {
-        this.withCategory = withCategory;
-        return this;
-    }
-
-    private QuestionOptions setWithTag(boolean withTag) {
-        this.withTag = withTag;
-        return this;
-    }
-
     public static QuestionOptions getDefaultInstance() {
         return new QuestionOptions().setWithCategory(true).setWithTag(false);
     }
@@ -54,6 +27,33 @@ public class QuestionOptions {
 
     public static QuestionOptions getUsrListInstance() {
         return new QuestionOptions().setWithCategory(false).setWithTag(false).setWithCollect(true);
+    }
+
+    public boolean isWithCategory() {
+        return withCategory;
+    }
+
+    private QuestionOptions setWithCategory(boolean withCategory) {
+        this.withCategory = withCategory;
+        return this;
+    }
+
+    public boolean isWithTag() {
+        return withTag;
+    }
+
+    private QuestionOptions setWithTag(boolean withTag) {
+        this.withTag = withTag;
+        return this;
+    }
+
+    public boolean isWithCollect() {
+        return withCollect;
+    }
+
+    public QuestionOptions setWithCollect(boolean withCollect) {
+        this.withCollect = withCollect;
+        return this;
     }
 
 }

@@ -1,10 +1,6 @@
 package com.yang.exam.commons.file.entity;
 
 public class UploadOptions {
-    public enum AccessPermission {
-        DEFAULT, PRIVATE, PUBLIC_READ
-    }
-
     private String contentType;
     private AccessPermission permission;
     private String namespace;
@@ -54,6 +50,10 @@ public class UploadOptions {
     public UploadOptions setFileName(String fileName) {
         this.fileName = fileName;
         return this;
+    }
+
+    public enum AccessPermission {
+        DEFAULT, PRIVATE, PUBLIC_READ
     }
 
 }

@@ -24,6 +24,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 
     private final EntityManager entityManager;
     private final Class<T> clazz;
+    final private BaseRepositoryImpl exmple;
 
     public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
         super(domainClass, entityManager);
@@ -31,8 +32,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
         this.entityManager = entityManager;
         exmple = this;
     }
-
-    final private BaseRepositoryImpl exmple;
 
     @Override
     public List<T> findAll(DataQueryObjectSort dataQueryObjectSort) {

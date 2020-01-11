@@ -40,13 +40,30 @@ import java.util.Map;
 public class FileService implements ErrorCode {
     private static final int MAX_UPLOAD_SIZE = 15 * 1024 * 1024;
     private static final String STS_API_VERSION = "2015-04-01";
-    private String POLICY_TEMPLATE;
     private static final UUIDCreatorFactory.UUIDCreator TMP_FILE_ID_CREATOR = UUIDCreatorFactory.get();
-
+    private String POLICY_TEMPLATE;
     @Autowired
     private OSSConfig ossConfig;
     private OSSClient ossClient;
     private UUIDCreatorFactory.UUIDCreator ossFileNameCreator = UUIDCreatorFactory.get();
+
+    private static AssumeRoleResponse assumeRole(String accessKeyId, String accessKeySecret, String roleArn,
+                                                 String roleSessionName, String policy, int expireSeconds) throws Exception {
+        // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
+        IClientProfile profile = DefaultProfile.getProfile("cn-beijing", accessKeyId, accessKeySecret);
+        DefaultAcsClient client = new DefaultAcsClient(profile);
+        // 创建一个 AssumeRoleRequest 并设置请求参数
+        final AssumeRoleRequest request = new AssumeRoleRequest();
+        request.setVersion(STS_API_VERSION);
+        request.setMethod(MethodType.POST);
+        request.setProtocol(ProtocolType.HTTPS);
+        request.setRoleArn(roleArn);
+        request.setRoleSessionName(roleSessionName);
+        request.setPolicy(policy);
+        request.setDurationSeconds((long) expireSeconds);
+        // 发起请求，并得到response
+        return client.getAcsResponse(request);
+    }
 
     @PostConstruct
     public void init() throws Exception {
@@ -105,24 +122,6 @@ public class FileService implements ErrorCode {
         ossClient.putObject(ossConfig.getBucket(), objectKey, file, metadata);
         return new StringBuilder("http://").append(ossConfig.getCanonicalDomain()).append("/").append(objectKey)
                 .toString();
-    }
-
-    private static AssumeRoleResponse assumeRole(String accessKeyId, String accessKeySecret, String roleArn,
-                                                 String roleSessionName, String policy, int expireSeconds) throws Exception {
-        // 创建一个 Aliyun Acs Client, 用于发起 OpenAPI 请求
-        IClientProfile profile = DefaultProfile.getProfile("cn-beijing", accessKeyId, accessKeySecret);
-        DefaultAcsClient client = new DefaultAcsClient(profile);
-        // 创建一个 AssumeRoleRequest 并设置请求参数
-        final AssumeRoleRequest request = new AssumeRoleRequest();
-        request.setVersion(STS_API_VERSION);
-        request.setMethod(MethodType.POST);
-        request.setProtocol(ProtocolType.HTTPS);
-        request.setRoleArn(roleArn);
-        request.setRoleSessionName(roleSessionName);
-        request.setPolicy(policy);
-        request.setDurationSeconds((long) expireSeconds);
-        // 发起请求，并得到response
-        return client.getAcsResponse(request);
     }
 
     public UploadToken uploadToken(String namespace, String fileName, int fileSize, boolean cdn) throws Exception {

@@ -20,13 +20,11 @@ import java.util.*;
 
 public class SessionUtil implements ErrorCode {
 
+    public static Map<String, SessionWrap> map = new HashMap<>();
     @Autowired
     private AdminService adminService;
-
     @Autowired
     private UserService userService;
-
-    public static Map<String, SessionWrap> map = new HashMap<>();
 
     public static SessionWrap getSession(String token) {
         return map.get(token);
