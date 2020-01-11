@@ -25,6 +25,7 @@ public class OmsBannerController extends BaseController {
 
     private List<KeyValue> bannerTypes = BannerTypeVO.getTypes();
 
+
     @RequestMapping(value = "/bannerTypes")
     @Action(session = SessionType.ADMIN, adminPermission = AdminPermission.BANNER_EDIT)
     public ModelAndView bannerTypes() throws Exception {

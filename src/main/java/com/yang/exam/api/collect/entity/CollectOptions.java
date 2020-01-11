@@ -12,6 +12,10 @@ public class CollectOptions {
     public CollectOptions() {
     }
 
+    public static CollectOptions getDefaultInstance() {
+        return new CollectOptions().setWithQuestion(true);
+    }
+
     public boolean isWithQuestion() {
         return withQuestion;
     }
@@ -19,9 +23,5 @@ public class CollectOptions {
     public CollectOptions setWithQuestion(boolean withQuestion) {
         this.withQuestion = withQuestion;
         return this;
-    }
-
-    public static CollectOptions getDefaultInstance() {
-        return new CollectOptions().setWithQuestion(true);
     }
 }

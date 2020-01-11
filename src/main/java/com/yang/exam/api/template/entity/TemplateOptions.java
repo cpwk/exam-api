@@ -11,6 +11,14 @@ public class TemplateOptions {
     public TemplateOptions() {
     }
 
+    public static TemplateOptions getDefaultInstance() {
+        return new TemplateOptions().setWithQuestions(true);
+    }
+
+    public static TemplateOptions getOmsDefaultInstance() {
+        return new TemplateOptions().setWithQuestions(false);
+    }
+
     public boolean isWithQuestions() {
         return withQuestions;
     }
@@ -18,13 +26,5 @@ public class TemplateOptions {
     public TemplateOptions setWithQuestions(boolean withQuestions) {
         this.withQuestions = withQuestions;
         return this;
-    }
-
-    public static TemplateOptions getDefaultInstance() {
-        return new TemplateOptions().setWithQuestions(true);
-    }
-
-    public static TemplateOptions getOmsDefaultInstance() {
-        return new TemplateOptions().setWithQuestions(false);
     }
 }

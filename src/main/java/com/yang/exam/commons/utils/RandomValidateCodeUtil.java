@@ -13,14 +13,12 @@ import java.util.Random;
 
 public class RandomValidateCodeUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(RandomValidateCodeUtil.class);
     private String randString = "0123456789";
     private int width = 75;
     private int height = 30;
     private int lineSize = 40;
     private int stringNum = 4;
-
-    private static final Logger logger = LoggerFactory.getLogger(RandomValidateCodeUtil.class);
-
     private Random random = new Random();
 
     /**

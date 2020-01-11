@@ -10,6 +10,54 @@ import java.util.Properties;
 
 public class MailHelper {
 
+    public static void sendMail(MailConnectionInfo connectionInfo, MailInfo mailInfo) throws MessagingException {
+        Session session = Session.getDefaultInstance(connectionInfo.getProperties(), connectionInfo.getAuthenticator());
+        session.setDebug(true);
+        MimeMessage mail = new MimeMessage(session);
+        Address from = new InternetAddress(
+                mailInfo.getFromAddress() != null ? mailInfo.getFromAddress() : connectionInfo.getUsername());
+
+        String nick = "";
+        try {
+            nick = javax.mail.internet.MimeUtility.encodeText("飞奔的跑跑");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        mail.setFrom(new InternetAddress(nick + " <" + from + ">"));
+
+        if (mailInfo.getToAddresses() != null) {
+            String[] addrs = mailInfo.getToAddresses();
+            Address[] addresses = new Address[addrs.length];
+            for (int i = 0; i < addrs.length; i++) {
+                addresses[i] = new InternetAddress(addrs[i]);
+            }
+            mail.setRecipients(Message.RecipientType.TO, addresses);
+        } else {
+            Address to = new InternetAddress(mailInfo.getToAddress());
+            mail.setRecipient(Message.RecipientType.TO, to);
+        }
+
+        //抄送
+        if (mailInfo.getToAddresses_cc() != null) {
+            String[] addrs = mailInfo.getToAddresses_cc();
+            Address[] addresses = new Address[addrs.length];
+            for (int i = 0; i < addrs.length; i++) {
+                addresses[i] = new InternetAddress(addrs[i]);
+            }
+            mail.setRecipients(Message.RecipientType.CC, addresses);
+        }
+
+        mail.setSubject(mailInfo.getSubject());
+        if (mailInfo.getContent() != null) {
+            Multipart content = new MimeMultipart();
+            BodyPart part = new MimeBodyPart();
+            part.setContent(mailInfo.getContent(), "text/html; charset=utf-8");
+            content.addBodyPart(part);
+            mail.setContent(content);
+        }
+        Transport.send(mail);
+    }
+
     public static class UsernamePasswordAuthenticator extends Authenticator {
         String userName = null;
         String password = null;
@@ -150,54 +198,6 @@ public class MailHelper {
         public void setToAddresses_cc(String[] toAddresses_cc) {
             this.toAddresses_cc = toAddresses_cc;
         }
-    }
-
-    public static void sendMail(MailConnectionInfo connectionInfo, MailInfo mailInfo) throws MessagingException {
-        Session session = Session.getDefaultInstance(connectionInfo.getProperties(), connectionInfo.getAuthenticator());
-        session.setDebug(true);
-        MimeMessage mail = new MimeMessage(session);
-        Address from = new InternetAddress(
-                mailInfo.getFromAddress() != null ? mailInfo.getFromAddress() : connectionInfo.getUsername());
-
-        String nick = "";
-        try {
-            nick = javax.mail.internet.MimeUtility.encodeText("飞奔的跑跑");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        mail.setFrom(new InternetAddress(nick + " <" + from + ">"));
-
-        if (mailInfo.getToAddresses() != null) {
-            String[] addrs = mailInfo.getToAddresses();
-            Address[] addresses = new Address[addrs.length];
-            for (int i = 0; i < addrs.length; i++) {
-                addresses[i] = new InternetAddress(addrs[i]);
-            }
-            mail.setRecipients(Message.RecipientType.TO, addresses);
-        } else {
-            Address to = new InternetAddress(mailInfo.getToAddress());
-            mail.setRecipient(Message.RecipientType.TO, to);
-        }
-
-        //抄送
-        if (mailInfo.getToAddresses_cc() != null) {
-            String[] addrs = mailInfo.getToAddresses_cc();
-            Address[] addresses = new Address[addrs.length];
-            for (int i = 0; i < addrs.length; i++) {
-                addresses[i] = new InternetAddress(addrs[i]);
-            }
-            mail.setRecipients(Message.RecipientType.CC, addresses);
-        }
-
-        mail.setSubject(mailInfo.getSubject());
-        if (mailInfo.getContent() != null) {
-            Multipart content = new MimeMultipart();
-            BodyPart part = new MimeBodyPart();
-            part.setContent(mailInfo.getContent(), "text/html; charset=utf-8");
-            content.addBodyPart(part);
-            mail.setContent(content);
-        }
-        Transport.send(mail);
     }
 
 }

@@ -13,6 +13,8 @@ public class TemplateQo extends DataQueryObjectPage {
 
     @QueryField(type = QueryType.EQUAL, name = "status")
     private Byte status = 0;
+    @QueryField(type = QueryType.FULL_LIKE, name = "templateName")
+    private String templateName;
 
     public Byte getStatus() {
         return status;
@@ -21,9 +23,6 @@ public class TemplateQo extends DataQueryObjectPage {
     public void setStatus(Byte status) {
         this.status = status == 0 ? null : status;
     }
-
-    @QueryField(type = QueryType.FULL_LIKE, name = "templateName")
-    private String templateName;
 
     public String getTemplateName() {
         return templateName;

@@ -9,10 +9,10 @@ public enum QuestionType {
 
     SELECT((byte) 1), MSELECT((byte) 2), COMPLETION((byte) 3), SAQS((byte) 4);
 
+    private Byte value;
+
     QuestionType(byte b) {
     }
-
-    private Byte value;
 
     public Byte getValue() {
         return value;

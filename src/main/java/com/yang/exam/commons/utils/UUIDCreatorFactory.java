@@ -7,14 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class UUIDCreatorFactory {
 
-    public static class UUIDCreator {
-        private final AtomicInteger counter = new AtomicInteger(new SecureRandom().nextInt());
-
-        public String create() {
-            return new ObjectId(counter).toHexString();
-        }
-    }
-
     private static final UUIDCreator DEFAULT_CREATOR = UUIDCreatorFactory.get();
 
     public static UUIDCreator get() {
@@ -23,6 +15,14 @@ public final class UUIDCreatorFactory {
 
     public static UUIDCreator getDefault() {
         return DEFAULT_CREATOR;
+    }
+
+    public static class UUIDCreator {
+        private final AtomicInteger counter = new AtomicInteger(new SecureRandom().nextInt());
+
+        public String create() {
+            return new ObjectId(counter).toHexString();
+        }
     }
 
 }

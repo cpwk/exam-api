@@ -53,6 +53,27 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
     @Autowired
     private CollectService collectService;
 
+    public static boolean containsAllChars(String answer, String userAnswer) {
+        if (answer == null) {
+            return false;
+        }
+        if (userAnswer == null) {
+            return false;
+        }
+        if (answer.length() != userAnswer.length()) {
+            return false;
+        }
+        char[] chars = userAnswer.toCharArray();
+        boolean result = true;
+        for (char c : chars) {
+            if (!answer.contains(c + "")) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
     @Override
     public void save(UsrPaper usrPaper) throws Exception {
         usrPaper.setUserId(Contexts.requestUser().getId());
@@ -211,27 +232,6 @@ public class UsrPaperServiceImpl implements UsrPaperService, UsrPaperError {
             usrPaperRepository.save(usrPaper);
         }
         return usrPaper;
-    }
-
-    public static boolean containsAllChars(String answer, String userAnswer) {
-        if (answer == null) {
-            return false;
-        }
-        if (userAnswer == null) {
-            return false;
-        }
-        if (answer.length() != userAnswer.length()) {
-            return false;
-        }
-        char[] chars = userAnswer.toCharArray();
-        boolean result = true;
-        for (char c : chars) {
-            if (!answer.contains(c + "")) {
-                result = false;
-                break;
-            }
-        }
-        return result;
     }
 
     private void addAnswer(UsrPaper usrPaper, UsrPaper exist) {

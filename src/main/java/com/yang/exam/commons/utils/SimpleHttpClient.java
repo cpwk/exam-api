@@ -141,6 +141,53 @@ public class SimpleHttpClient {
         return response.body().string();
     }
 
+    public boolean download(String url, OutputStream out) throws IOException {
+        return download(url, out, null);
+    }
+
+    public boolean download(String url, OutputStream out, DownloadOptions options) throws IOException {
+        if (options == null) {
+            options = new DownloadOptions();
+        }
+        Request request = getRequestBuilder(url, options.getParams(), options.getHeaders());
+        Response response = execute(request);
+        InputStream in = null;
+        try {
+            if (options.getMaxSize() > 0) {
+                long length = FormatUtil.parseLongValue(response.header("Content-Length"), -1);
+                if (length < 0 || length > options.getMaxSize()) {
+                    return false;
+                }
+            }
+            if (options.isRetrieveResponseHeaders()) {
+                Map<String, List<String>> headers = response.headers().toMultimap();
+                Map<String, String> responseHeaders = new HashMap<>();
+                for (Entry<String, List<String>> entry : headers.entrySet()) {
+                    responseHeaders.put(entry.getKey(), entry.getValue().get(0));
+                }
+                options.setResponseHeaders(responseHeaders);
+            }
+            in = response.body().byteStream();
+            FileUtil.copy(in, out);
+            return response.isSuccessful();
+        } finally {
+            FileUtil.close(in);
+            FileUtil.close(out);
+        }
+    }
+
+    private OkHttpClient getClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS);
+        if (proxy != null) {
+            builder.proxy(proxy);
+        }
+        if (proxyAuthenticator != null) {
+            builder.proxyAuthenticator(proxyAuthenticator);
+        }
+        return builder.build();
+    }
+
     public static class DownloadOptions {
         private Map<String, Object> params;
         private Map<String, Object> headers;
@@ -193,53 +240,6 @@ public class SimpleHttpClient {
             return this;
         }
 
-    }
-
-    public boolean download(String url, OutputStream out) throws IOException {
-        return download(url, out, null);
-    }
-
-    public boolean download(String url, OutputStream out, DownloadOptions options) throws IOException {
-        if (options == null) {
-            options = new DownloadOptions();
-        }
-        Request request = getRequestBuilder(url, options.getParams(), options.getHeaders());
-        Response response = execute(request);
-        InputStream in = null;
-        try {
-            if (options.getMaxSize() > 0) {
-                long length = FormatUtil.parseLongValue(response.header("Content-Length"), -1);
-                if (length < 0 || length > options.getMaxSize()) {
-                    return false;
-                }
-            }
-            if (options.isRetrieveResponseHeaders()) {
-                Map<String, List<String>> headers = response.headers().toMultimap();
-                Map<String, String> responseHeaders = new HashMap<>();
-                for (Entry<String, List<String>> entry : headers.entrySet()) {
-                    responseHeaders.put(entry.getKey(), entry.getValue().get(0));
-                }
-                options.setResponseHeaders(responseHeaders);
-            }
-            in = response.body().byteStream();
-            FileUtil.copy(in, out);
-            return response.isSuccessful();
-        } finally {
-            FileUtil.close(in);
-            FileUtil.close(out);
-        }
-    }
-
-    private OkHttpClient getClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS);
-        if (proxy != null) {
-            builder.proxy(proxy);
-        }
-        if (proxyAuthenticator != null) {
-            builder.proxyAuthenticator(proxyAuthenticator);
-        }
-        return builder.build();
     }
 
 }

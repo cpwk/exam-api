@@ -46,44 +46,20 @@ import java.util.Map;
  * @version 2013-4-16 下午3:13:10
  */
 public class IPSeeker {
-    /**
-     * <pre>
-     * 用来封装ip相关信息，目前只有两个字段，ip所在的国家和地区
-     * </pre>
-     *
-     * @author luma
-     */
-    private class IPLocation {
-        public String country;
-        public String area;
-
-        public IPLocation() {
-            country = area = "";
-        }
-
-        public IPLocation getCopy() {
-            IPLocation ret = new IPLocation();
-            ret.country = country;
-            ret.area = area;
-            return ret;
-        }
-    }
-
     // 一些固定常量，比如记录长度等等
     private static final int IP_RECORD_LENGTH = 7;
     private static final byte REDIRECT_MODE_1 = 0x01;
     private static final byte REDIRECT_MODE_2 = 0x02;
-
     // Log对象
     private static Log log = LogFactory.getLog(IPSeeker.class);
+    // 单一模式实例
+    private static IPSeeker instance = new IPSeeker();
     // 用来做为cache，查询一个ip时首先查看cache，以减少不必要的重复查找
     private Map<String, IPLocation> ipCache;
     // 随机文件访问类
     private RandomAccessFile ipFile;
     // 内存映射文件
     private MappedByteBuffer mbb;
-    // 单一模式实例
-    private static IPSeeker instance = new IPSeeker();
     // 起始地区的开始和结束的绝对偏移
     private long ipBegin, ipEnd;
     // 为提高效率而采用的临时变量
@@ -91,7 +67,6 @@ public class IPSeeker {
     private byte[] buf;
     private byte[] b4;
     private byte[] b3;
-
     /**
      * 私有构造函数
      *
@@ -652,6 +627,29 @@ public class IPSeeker {
             log.error(e.getMessage());
         }
         return "";
+    }
+
+    /**
+     * <pre>
+     * 用来封装ip相关信息，目前只有两个字段，ip所在的国家和地区
+     * </pre>
+     *
+     * @author luma
+     */
+    private class IPLocation {
+        public String country;
+        public String area;
+
+        public IPLocation() {
+            country = area = "";
+        }
+
+        public IPLocation getCopy() {
+            IPLocation ret = new IPLocation();
+            ret.country = country;
+            ret.area = area;
+            return ret;
+        }
     }
 
 }

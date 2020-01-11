@@ -5,6 +5,14 @@ public class QueryBetween<T extends Comparable<?>> {
     public T before;
     public T after;
 
+    public QueryBetween() {
+    }
+
+    public QueryBetween(T before, T after) {
+        this.before = before;
+        this.after = after;
+    }
+
     public T getBefore() {
         return before;
     }
@@ -18,14 +26,6 @@ public class QueryBetween<T extends Comparable<?>> {
     }
 
     public void setAfter(T after) {
-        this.after = after;
-    }
-
-    public QueryBetween() {
-    }
-
-    public QueryBetween(T before, T after) {
-        this.before = before;
         this.after = after;
     }
 }

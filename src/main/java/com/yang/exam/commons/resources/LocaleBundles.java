@@ -15,24 +15,6 @@ import java.util.Map.Entry;
 
 @StaticInit
 public class LocaleBundles {
-    private static class SimpleLocaleBundle extends LocaleBundle {
-
-        public SimpleLocaleBundle(LocaleBundleOptions options) {
-            super(options);
-        }
-
-        @Override
-        protected void put(String key, String locale, String value) throws Exception {
-            super.put(key, locale, value);
-        }
-
-        @Override
-        protected void finishPut() {
-            super.finishPut();
-        }
-
-    }
-
     private static String DEFAULT_LOCALE;
     private static SimpleLocaleBundle BUNDLE = null;
 
@@ -91,6 +73,24 @@ public class LocaleBundles {
 
     public static String getWithArrayParams(String locale, String key, Object[] params) {
         return BUNDLE.getWithArrayParams(locale, key, params);
+    }
+
+    private static class SimpleLocaleBundle extends LocaleBundle {
+
+        public SimpleLocaleBundle(LocaleBundleOptions options) {
+            super(options);
+        }
+
+        @Override
+        protected void put(String key, String locale, String value) throws Exception {
+            super.put(key, locale, value);
+        }
+
+        @Override
+        protected void finishPut() {
+            super.finishPut();
+        }
+
     }
 
 }

@@ -14,10 +14,9 @@ import java.io.OutputStream;
 public class IpDataBase {
 
     private static final String IP_FILE = "qqwry.dat";
-    private static String TMP_FILE = "ip.tmp";
-
     private static final Log log = LogFactory.getLog(IpDataBase.class);
     private static final IpDataBase instance = new IpDataBase();
+    private static String TMP_FILE = "ip.tmp";
 
     private IpDataBase() {
 //        TMP_FILE = this.getClass().getResource("/").getPath().toString() + TMP_FILE;

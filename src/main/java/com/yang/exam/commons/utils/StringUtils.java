@@ -75,13 +75,9 @@ public class StringUtils extends StringUtil {
 
     public static final String UTF8 = "UTF-8";
     public static final Charset UTF8_CHARSET = Charset.forName(UTF8);
-
-    private static final String NUMERIC = "0123456789";
-
-    private static final String allnums = "0123456789";
-
     public static final String allstrs = "0123456789abcdefghijklmnopqrstuvwxyz";
-
+    private static final String NUMERIC = "0123456789";
+    private static final String allnums = "0123456789";
     private static final String ALPHA_NUMERIC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private static final Pattern EMAIL_CHECKER = Pattern

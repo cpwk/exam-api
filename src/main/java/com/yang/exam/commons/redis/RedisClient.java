@@ -12,21 +12,6 @@ import java.util.Map;
 
 public class RedisClient {
     private static final Logger LOG = LoggerFactory.getLogger(RedisClient.class);
-
-    public static interface RedisWork<T> {
-        T run(Jedis jedis);
-    }
-
-    private static class TestRedisWork implements RedisWork<Void> {
-
-        @Override
-        public Void run(Jedis jedis) {
-            jedis.expire("0", 1);
-            return null;
-        }
-
-    }
-
     private JedisPool pool;
 
     public RedisClient(JedisPool pool, boolean testOnStart) {
@@ -50,6 +35,72 @@ public class RedisClient {
                 }
             }
         }
+    }
+
+    public boolean expire(String key, int seconds) {
+        return doWork(new ExpireWork(key, seconds));
+    }
+
+    public boolean expireAt(String key, Date expireAt) {
+        return doWork(new ExpireAtWork(key, expireAt.getTime() / 1000));
+    }
+
+    public byte[] get(String key) {
+        return doWork(new GetWork(key));
+    }
+
+    public String getString(String key) {
+        return ByteUtil.toString(doWork(new GetWork(key)));
+    }
+
+    public void set(String key, byte[] value) {
+        doWork(new SetWork(key, value, 0));
+    }
+
+    public void setex(String key, byte[] value, int seconds) {
+        doWork(new SetWork(key, value, seconds));
+    }
+
+    public long increase(String key, long num) {
+        return doWork(new IncreaseWork(key, num));
+    }
+
+    public boolean sadd(String key, String member) {
+        return doWork(new SetAddWork(key, member));
+    }
+
+    public boolean srem(String key, String member) {
+        return doWork(new SetRemoveWork(key, member));
+    }
+
+    public boolean sismember(String key, String member) {
+        return doWork(new SetIsMemberWork(key, member));
+    }
+
+    public Long hincrBy(String key, String field, long incrBy) {
+        return doWork(new HincrByWork(key, field, incrBy));
+    }
+
+    public boolean hset(String key, String field, String value) {
+        return doWork(new HsetWork(key, field, value));
+    }
+
+    public Map<String, String> hgetAll(String key) {
+        return doWork(new HgetAllWork(key));
+    }
+
+    public static interface RedisWork<T> {
+        T run(Jedis jedis);
+    }
+
+    private static class TestRedisWork implements RedisWork<Void> {
+
+        @Override
+        public Void run(Jedis jedis) {
+            jedis.expire("0", 1);
+            return null;
+        }
+
     }
 
     private static class ExpireWork implements RedisWork<Boolean> {
@@ -192,46 +243,6 @@ public class RedisClient {
 
     }
 
-    public boolean expire(String key, int seconds) {
-        return doWork(new ExpireWork(key, seconds));
-    }
-
-    public boolean expireAt(String key, Date expireAt) {
-        return doWork(new ExpireAtWork(key, expireAt.getTime() / 1000));
-    }
-
-    public byte[] get(String key) {
-        return doWork(new GetWork(key));
-    }
-
-    public String getString(String key) {
-        return ByteUtil.toString(doWork(new GetWork(key)));
-    }
-
-    public void set(String key, byte[] value) {
-        doWork(new SetWork(key, value, 0));
-    }
-
-    public void setex(String key, byte[] value, int seconds) {
-        doWork(new SetWork(key, value, seconds));
-    }
-
-    public long increase(String key, long num) {
-        return doWork(new IncreaseWork(key, num));
-    }
-
-    public boolean sadd(String key, String member) {
-        return doWork(new SetAddWork(key, member));
-    }
-
-    public boolean srem(String key, String member) {
-        return doWork(new SetRemoveWork(key, member));
-    }
-
-    public boolean sismember(String key, String member) {
-        return doWork(new SetIsMemberWork(key, member));
-    }
-
     private static class HincrByWork implements RedisWork<Long> {
         String key;
         String field;
@@ -249,10 +260,6 @@ public class RedisClient {
             return jedis.hincrBy(key, field, incrBy);
         }
 
-    }
-
-    public Long hincrBy(String key, String field, long incrBy) {
-        return doWork(new HincrByWork(key, field, incrBy));
     }
 
     private static class HsetWork implements RedisWork<Boolean> {
@@ -274,10 +281,6 @@ public class RedisClient {
 
     }
 
-    public boolean hset(String key, String field, String value) {
-        return doWork(new HsetWork(key, field, value));
-    }
-
     private static class HgetAllWork implements RedisWork<Map<String, String>> {
         String key;
 
@@ -291,9 +294,5 @@ public class RedisClient {
             return jedis.hgetAll(key);
         }
 
-    }
-
-    public Map<String, String> hgetAll(String key) {
-        return doWork(new HgetAllWork(key));
     }
 }
