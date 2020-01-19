@@ -52,7 +52,7 @@ public class AdminServiceImpl implements AdminService, AdminError {
         if (exist == null) {
             throw new ServiceException(ERR_ADMIN_USERNAME_INVALID);
         }
-        if (!exist.getPassword().equals(StringUtils.encryptPassword(admin.getPassword(), salt))) {
+        if (exist.getPassword().equals(StringUtils.encryptPassword(admin.getPassword(), salt))) {
             throw new ServiceException(ERR_ADMIN_PASSWORD_INVALID);
         }
         exist.setRole(roleService.getById(exist.getRoleId()));

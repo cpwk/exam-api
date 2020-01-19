@@ -18,21 +18,27 @@
         <java.version>1.8</java.version>
     </properties>
 
-<<<<<<< HEAD
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>jitpack.io</id>-->
-<!--            <url>https://jitpack.io</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-=======
+    <
+    <
+    <
+    <
+    <
+    <
+    < HEAD
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>jitpack.io</id>-->
+    <!--            <url>https://jitpack.io</url>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
+    =======
     <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
->>>>>>> f0b03a42248238371d0cb08c1cbe82c5128199cb
+    >>>>>>> f0b03a42248238371d0cb08c1cbe82c5128199cb
 
     <dependencies>
         <!--springboot-->
